@@ -26,3 +26,9 @@ doc/api/
 .flutter-plugins
 .flutter-plugins-dependencies
 /.idea
+
+#Firebase
+android/app/google-services.json
+firebase.json
+firepit-log.txt
+lib/firebase_options.dart
