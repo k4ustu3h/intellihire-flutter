@@ -9,10 +9,11 @@ environment:
   sdk: ^3.8.1
 
 dependencies:
-  flutter:
-    sdk: flutter
+  dynamic_color: ^1.8.1
   firebase_auth: ^6.0.1
   firebase_core: ^4.0.0
+  flutter:
+    sdk: flutter
 
 dev_dependencies:
   flutter_lints: ^6.0.0

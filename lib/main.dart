@@ -1,7 +1,9 @@
+import "package:dynamic_color/dynamic_color.dart";
 import "package:firebase_core/firebase_core.dart";
 import "package:flutter/material.dart";
 import "package:intellihire/firebase_options.dart";
 import "package:intellihire/pages/auth_gate.dart";
+import "package:intellihire/util/ui/monet.dart";
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,13 +16,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "IntelliHire",
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: AuthGate(),
+    return DynamicColorBuilder(
+      builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
+        return MaterialApp(
+          title: "IntelliHire",
+          theme: lightTheme(lightDynamic),
+          darkTheme: darkTheme(darkDynamic),
+          themeMode: ThemeMode.system,
+          home: const AuthGate(),
+        );
+      },
     );
   }
 }
