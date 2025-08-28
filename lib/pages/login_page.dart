@@ -44,9 +44,9 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Login")),
+      appBar: AppBar(title: Text("Login")),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16.0),
         child: Column(
           children: [
             Padding(
@@ -70,14 +70,23 @@ class _LoginPageState extends State<LoginPage> {
                 obscureText: true,
               ),
             ),
-            FilledButton(onPressed: signIn, child: const Text("Sign In")),
+            Padding(
+              padding: EdgeInsets.only(bottom: 16),
+              child: FilledButton(
+                onPressed: signIn,
+                style: FilledButton.styleFrom(
+                  minimumSize: Size(double.infinity, 48),
+                ),
+                child: Text("Sign In"),
+              ),
+            ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const RegisterPage()),
-                );
+                Navigator.of(
+                  context,
+                ).push(MaterialPageRoute(builder: (context) => RegisterPage()));
               },
-              child: const Text("Don't have an account? Register here."),
+              child: Text("Don't have an account? Register here."),
             ),
           ],
         ),

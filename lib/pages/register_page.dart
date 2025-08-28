@@ -48,16 +48,16 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Register")),
+      appBar: AppBar(title: Text("Register")),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16.0),
         child: Column(
           children: [
             Padding(
               padding: EdgeInsets.only(bottom: 16),
               child: TextField(
                 controller: _emailController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: "Email",
                 ),
@@ -67,14 +67,20 @@ class _RegisterPageState extends State<RegisterPage> {
               padding: EdgeInsets.only(bottom: 16),
               child: TextField(
                 controller: _passwordController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: "Password",
                 ),
                 obscureText: true,
               ),
             ),
-            FilledButton(onPressed: signUp, child: const Text("Sign Up")),
+            FilledButton(
+              onPressed: signUp,
+              style: FilledButton.styleFrom(
+                minimumSize: Size(double.infinity, 48),
+              ),
+              child: Text("Sign Up"),
+            ),
           ],
         ),
       ),
