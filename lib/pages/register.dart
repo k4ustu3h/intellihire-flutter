@@ -1,32 +1,36 @@
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
-import "package:intellihire/pages/register_page.dart";
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class Register extends StatefulWidget {
+  const Register({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<Register> createState() => _RegisterState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterState extends State<Register> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  Future<void> signIn() async {
+  Future<void> signUp() async {
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
-    } on FirebaseAuthException catch (e) {
       if (mounted) {
-        String errorMessage;
-        if (e.code == "user-not-found" || e.code == "wrong-password") {
-          errorMessage = "Invalid email or password.";
-        } else {
-          errorMessage = e.message ?? "An unknown error occurred.";
-        }
+        Navigator.of(context).pop();
+      }
+    } on FirebaseAuthException catch (e) {
+      String errorMessage;
+      if (e.code == "weak-password") {
+        errorMessage = "The password provided is too weak.";
+      } else if (e.code == "email-already-in-use") {
+        errorMessage = "An account already exists for that email.";
+      } else {
+        errorMessage = e.message ?? "An unknown error occurred.";
+      }
+      if (mounted) {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text(errorMessage)));
@@ -44,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Login")),
+      appBar: AppBar(title: Text("Register")),
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
@@ -70,23 +74,12 @@ class _LoginPageState extends State<LoginPage> {
                 obscureText: true,
               ),
             ),
-            Padding(
-              padding: EdgeInsets.only(bottom: 16),
-              child: FilledButton(
-                onPressed: signIn,
-                style: FilledButton.styleFrom(
-                  minimumSize: Size(double.infinity, 48),
-                ),
-                child: Text("Sign In"),
+            FilledButton(
+              onPressed: signUp,
+              style: FilledButton.styleFrom(
+                minimumSize: Size(double.infinity, 48),
               ),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(
-                  context,
-                ).push(MaterialPageRoute(builder: (context) => RegisterPage()));
-              },
-              child: Text("Don't have an account? Register here."),
+              child: Text("Sign Up"),
             ),
           ],
         ),

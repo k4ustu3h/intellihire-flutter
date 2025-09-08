@@ -1,17 +1,17 @@
 import "package:flutter/material.dart";
 import "package:intellihire/components/navbar.dart";
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key, required this.title});
+class Home extends StatefulWidget {
+  const Home({super.key, required this.title});
 
   final String title;
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<Home> createState() => _HomeState();
 }
 
-class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 0;
+class _HomeState extends State<Home> {
+  final int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
