@@ -1,5 +1,8 @@
 import "package:flutter/material.dart";
 import "package:intellihire/components/navbar.dart";
+import "package:intellihire/components/profile_avatar.dart";
+import "package:intellihire/components/top_app_bar.dart";
+import "package:intellihire/pages/profile.dart";
 
 class Home extends StatefulWidget {
   const Home({super.key, required this.title});
@@ -16,7 +19,22 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.title), toolbarHeight: 64),
+      appBar: TopAppBar(
+        title: widget.title,
+        actions: [
+          Padding(
+            padding: EdgeInsets.all(4),
+            child: IconButton(
+              icon: ProfileAvatar(radius: 16),
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => const Profile()),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
       bottomNavigationBar: NavBar(selectedIndex: _selectedIndex),
     );
   }
