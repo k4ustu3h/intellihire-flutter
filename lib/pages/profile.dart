@@ -6,6 +6,8 @@ import "package:flutter/material.dart";
 import "package:image_picker/image_picker.dart";
 import "package:intellihire/components/profile_avatar.dart";
 import "package:intellihire/components/top_app_bar.dart";
+import "package:intellihire/pages/login.dart";
+import "package:material_symbols_icons/symbols.dart";
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -17,6 +19,22 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   final user = FirebaseAuth.instance.currentUser;
   bool _isUploading = false;
+
+  final List<Map<String, dynamic>> _menuItems = [
+    {"label": "Settings", "iconName": "settings"},
+    {"label": "Sign Out", "iconName": "logout"},
+  ];
+
+  IconData _getIconData(String iconName) {
+    switch (iconName) {
+      case "settings":
+        return Symbols.settings_rounded;
+      case "logout":
+        return Symbols.logout_rounded;
+      default:
+        return Symbols.error;
+    }
+  }
 
   Future<void> _pickAndUploadImage() async {
     final user = FirebaseAuth.instance.currentUser;
@@ -84,13 +102,11 @@ class _ProfileState extends State<Profile> {
         child: Padding(
           padding: EdgeInsets.all(16),
           child: Column(
+            spacing: 16,
             children: [
               Card.outlined(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 24,
-                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 24),
                   child: Row(
                     children: [
                       if (_isUploading)
@@ -106,7 +122,7 @@ class _ProfileState extends State<Profile> {
                                 style: IconButton.styleFrom(
                                   backgroundColor: theme.surfaceContainer,
                                 ),
-                                icon: Icon(Icons.camera_alt_outlined),
+                                icon: Icon(Symbols.photo_camera_rounded),
                                 onPressed: _pickAndUploadImage,
                               ),
                             ),
@@ -131,39 +147,54 @@ class _ProfileState extends State<Profile> {
                   ),
                 ),
               ),
-              SizedBox(height: 24),
-              InkWell(
-                onTap: () async {
-                  await FirebaseAuth.instance.signOut();
-                },
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  child: Row(
-                    children: [
-                      Card.filled(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(32),
-                        ),
-                        color: theme.primary,
-                        child: Padding(
-                          padding: EdgeInsets.all(8),
-                          child: Icon(
-                            Icons.logout_rounded,
-                            size: 24,
-                            color: theme.onPrimary,
+              ..._menuItems.map((item) {
+                return InkWell(
+                  onTap: () async {
+                    if (item["label"] == "Settings") {
+                    } else if (item["label"] == "Sign Out") {
+                      final navigator = Navigator.of(context);
+                      await FirebaseAuth.instance.signOut();
+
+                      if (!mounted) return;
+
+                      navigator.pushReplacement(
+                        MaterialPageRoute(builder: (context) => Login()),
+                      );
+                    }
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    child: Row(
+                      children: [
+                        Card.filled(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(32),
+                          ),
+                          color: theme.primary,
+                          child: Padding(
+                            padding: EdgeInsets.all(8),
+                            child: Icon(
+                              _getIconData(item["iconName"]),
+                              weight: 400,
+                              size: 24,
+                              color: theme.onPrimary,
+                            ),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16),
-                        child: Expanded(
-                          child: Text("Sign Out", style: textTheme.titleLarge),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16),
+                          child: Expanded(
+                            child: Text(
+                              item["label"],
+                              style: textTheme.titleLarge,
+                            ),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ),
+                );
+              }),
             ],
           ),
         ),

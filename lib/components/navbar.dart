@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:material_symbols_icons/symbols.dart";
 
 class NavBar extends StatelessWidget {
   final int selectedIndex;
@@ -16,19 +17,19 @@ class NavBar extends StatelessWidget {
     return NavigationBar(
       destinations: <Widget>[
         NavigationDestination(
-          icon: Icon(Icons.home_outlined),
+          icon: Icon(Symbols.home_rounded),
           label: "Home",
-          selectedIcon: Icon(Icons.home_rounded),
+          selectedIcon: Icon(Symbols.home_rounded, fill: 1),
         ),
         NavigationDestination(
-          icon: Icon(Icons.work_outline_rounded),
+          icon: Icon(Symbols.work_rounded),
           label: "Jobs",
-          selectedIcon: Icon(Icons.work_rounded),
+          selectedIcon: Icon(Symbols.work_rounded, fill: 1),
         ),
         NavigationDestination(
-          icon: Icon(Icons.settings_outlined),
-          label: "Settings",
-          selectedIcon: Icon(Icons.settings_rounded),
+          icon: Icon(Symbols.checklist_rounded),
+          label: "Tests",
+          selectedIcon: Icon(Symbols.checklist_rounded, fill: 1),
         ),
       ],
       selectedIndex: selectedIndex,
