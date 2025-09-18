@@ -1,6 +1,7 @@
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:intellihire/pages/register.dart";
+import "package:material_symbols_icons/symbols.dart";
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -12,6 +13,38 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+
+  late final List<Map<String, dynamic>> _fields;
+
+  @override
+  void initState() {
+    super.initState();
+    _fields = [
+      {
+        "controller": _emailController,
+        "labelText": "Email",
+        "iconName": "email",
+        "obscureText": false,
+      },
+      {
+        "controller": _passwordController,
+        "labelText": "Password",
+        "iconName": "password",
+        "obscureText": true,
+      },
+    ];
+  }
+
+  IconData _getIconData(String iconName) {
+    switch (iconName) {
+      case "email":
+        return Symbols.email_rounded;
+      case "password":
+        return Symbols.password;
+      default:
+        return Symbols.error;
+    }
+  }
 
   Future<void> signIn() async {
     try {
@@ -43,42 +76,41 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
     return Scaffold(
-      appBar: AppBar(title: Text("Login")),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(MediaQuery.of(context).padding.top),
+        child: SizedBox(height: MediaQuery.of(context).padding.top),
+      ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16),
         child: Column(
+          spacing: 16,
           children: [
-            Padding(
-              padding: EdgeInsets.only(bottom: 16),
-              child: TextField(
-                controller: _emailController,
+            Text("Welcome Back", style: textTheme.displaySmall),
+            Text("Login to your account", style: textTheme.titleMedium),
+            ..._fields.map((field) {
+              return TextField(
+                controller: field["controller"],
                 decoration: InputDecoration(
+                  prefixIcon: Icon(_getIconData(field["iconName"])),
                   border: OutlineInputBorder(),
-                  labelText: "Email",
+                  labelText: field["labelText"],
                 ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(bottom: 16),
-              child: TextField(
-                controller: _passwordController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: "Password",
+                obscureText: field["obscureText"],
+              );
+            }),
+            FilledButton.icon(
+              onPressed: signIn,
+              icon: Icon(Symbols.login_rounded),
+              style: FilledButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                obscureText: true,
+                minimumSize: Size(double.infinity, 48),
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(bottom: 16),
-              child: FilledButton(
-                onPressed: signIn,
-                style: FilledButton.styleFrom(
-                  minimumSize: Size(double.infinity, 48),
-                ),
-                child: Text("Sign In"),
-              ),
+              label: Text("Sign In"),
             ),
             TextButton(
               onPressed: () {
