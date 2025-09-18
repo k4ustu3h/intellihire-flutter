@@ -17,6 +17,7 @@ dependencies:
     sdk: flutter
   image_picker: ^1.2.0
   material_symbols_icons: ^4.2872.2
+  simple_icons: ^14.6.1
 
 dev_dependencies:
   flutter_lints: ^6.0.0
