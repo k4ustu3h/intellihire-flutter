@@ -2,6 +2,7 @@ import "package:flutter/material.dart";
 import "package:intellihire/components/navbar.dart";
 import "package:intellihire/components/profile_avatar.dart";
 import "package:intellihire/components/top_app_bar.dart";
+import "package:intellihire/pages/jobs.dart";
 import "package:intellihire/pages/profile.dart";
 
 class Home extends StatefulWidget {
@@ -14,13 +15,21 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final int _selectedIndex = 0;
+  int _selectedIndex = 0;
+
+  static final List<Widget> _pages = <Widget>[Text(""), Jobs(), Text("")];
+
+  static final List<String> _titles = <String>["Home", "Jobs", "Tests"];
+
+  void _onItemTapped(int index) {
+    setState(() => _selectedIndex = index);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: TopAppBar(
-        title: widget.title,
+        title: _titles[_selectedIndex],
         actions: [
           Padding(
             padding: EdgeInsets.all(4),
@@ -35,7 +44,11 @@ class _HomeState extends State<Home> {
           ),
         ],
       ),
-      bottomNavigationBar: NavBar(selectedIndex: _selectedIndex),
+      body: Center(child: _pages[_selectedIndex]),
+      bottomNavigationBar: NavBar(
+        selectedIndex: _selectedIndex,
+        onDestinationSelected: _onItemTapped,
+      ),
     );
   }
 }

@@ -15,12 +15,16 @@ dependencies:
   firebase_storage: ^13.0.1
   flutter:
     sdk: flutter
+  flutter_dotenv: ^6.0.0
   image_picker: ^1.2.0
   material_symbols_icons: ^4.2872.2
+  mongo_dart: ^0.10.5
   simple_icons: ^14.6.1
 
 dev_dependencies:
   flutter_lints: ^6.0.0
 
 flutter:
+  assets:
+    - .env
   uses-material-design: true
