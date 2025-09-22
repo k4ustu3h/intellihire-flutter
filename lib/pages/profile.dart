@@ -5,7 +5,6 @@ import "package:firebase_storage/firebase_storage.dart";
 import "package:flutter/material.dart";
 import "package:image_picker/image_picker.dart";
 import "package:intellihire/components/profile_avatar.dart";
-import "package:intellihire/components/top_app_bar.dart";
 import "package:intellihire/pages/login.dart";
 import "package:material_symbols_icons/symbols.dart";
 
@@ -97,7 +96,6 @@ class _ProfileState extends State<Profile> {
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
-      appBar: TopAppBar(title: "Profile"),
       body: Center(
         child: Padding(
           padding: EdgeInsets.all(16),

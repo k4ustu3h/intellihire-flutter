@@ -1,15 +1,19 @@
+import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
+import "package:intellihire/components/profile_avatar.dart";
 import "package:material_symbols_icons/symbols.dart";
 
 class NavBar extends StatelessWidget {
   final int selectedIndex;
 
   final Function(int)? onDestinationSelected;
+  final User? user;
 
   const NavBar({
     super.key,
     required this.selectedIndex,
     this.onDestinationSelected,
+    this.user,
   });
 
   @override
@@ -30,6 +34,11 @@ class NavBar extends StatelessWidget {
           icon: Icon(Symbols.checklist_rounded),
           label: "Tests",
           selectedIcon: Icon(Symbols.checklist_rounded, fill: 1),
+        ),
+        NavigationDestination(
+          icon: ProfileAvatar(radius: 12),
+          label: "Profile",
+          selectedIcon: ProfileAvatar(radius: 12),
         ),
       ],
       selectedIndex: selectedIndex,
