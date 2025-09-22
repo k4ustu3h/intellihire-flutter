@@ -5,16 +5,16 @@ import "package:intellihire/components/top_app_bar.dart";
 import "package:intellihire/pages/jobs.dart";
 import "package:intellihire/pages/profile.dart";
 
-class Home extends StatefulWidget {
-  const Home({super.key, required this.title});
+class HomeLayout extends StatefulWidget {
+  const HomeLayout({super.key, required this.title});
 
   final String title;
 
   @override
-  State<Home> createState() => _HomeState();
+  State<HomeLayout> createState() => _HomeLayoutState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeLayoutState extends State<HomeLayout> {
   int _selectedIndex = 0;
 
   static final List<Widget> _pages = <Widget>[Text(""), Jobs(), Text("")];
@@ -36,9 +36,9 @@ class _HomeState extends State<Home> {
             child: IconButton(
               icon: ProfileAvatar(radius: 16),
               onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const Profile()),
-                );
+                Navigator.of(
+                  context,
+                ).push(MaterialPageRoute(builder: (context) => Profile()));
               },
             ),
           ),

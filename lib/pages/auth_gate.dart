@@ -1,6 +1,6 @@
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
-import "package:intellihire/pages/home.dart";
+import "package:intellihire/layout/home_layout.dart";
 import "package:intellihire/pages/login.dart";
 
 class AuthGate extends StatelessWidget {
@@ -15,7 +15,7 @@ class AuthGate extends StatelessWidget {
           return Scaffold(body: Center(child: CircularProgressIndicator()));
         }
         if (snapshot.hasData) {
-          return Home(title: "IntelliHire");
+          return HomeLayout(title: "IntelliHire");
         } else {
           return Login();
         }

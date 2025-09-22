@@ -7,7 +7,7 @@ import "package:intellihire/pages/auth_gate.dart";
 import "package:intellihire/services/mongodb_service.dart";
 import "package:intellihire/util/ui/monet.dart";
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await dotenv.load(fileName: ".env");
@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DynamicColorBuilder(
-      builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
+      builder: (lightDynamic, darkDynamic) {
         return MaterialApp(
           title: "IntelliHire",
           theme: lightTheme(lightDynamic),

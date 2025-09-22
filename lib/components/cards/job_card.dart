@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import "package:material_symbols_icons/material_symbols_icons.dart";
+import "package:material_symbols_icons/symbols.dart";
 
 class JobCard extends StatelessWidget {
   const JobCard({super.key, required this.job});
