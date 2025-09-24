@@ -1,6 +1,8 @@
 import "package:flutter/material.dart";
 import "package:intellihire/components/cards/job_card.dart";
+import "package:intellihire/components/skeletons/job_card_skeleton.dart";
 import "package:intellihire/services/jobs_service.dart";
+import "package:skeletonizer/skeletonizer.dart";
 
 class Jobs extends StatefulWidget {
   const Jobs({super.key});
@@ -24,17 +26,24 @@ class _JobsState extends State<Jobs> {
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: _jobsFuture,
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          }
+          final isLoading = snapshot.connectionState == ConnectionState.waiting;
+          final jobs = snapshot.data ?? [];
           if (snapshot.hasError) {
             return Center(child: Text("Error: ${snapshot.error}"));
           }
-          final jobs = snapshot.data;
-          if (jobs == null || jobs.isEmpty) {
+          if (!isLoading && jobs.isEmpty) {
             return Center(child: Text("No jobs found."));
           }
-
+          if (isLoading) {
+            return Skeletonizer(
+              enabled: true,
+              child: ListView.builder(
+                padding: EdgeInsets.all(16),
+                itemCount: 5,
+                itemBuilder: (context, index) => JobCardSkeleton(),
+              ),
+            );
+          }
           return ListView.builder(
             padding: EdgeInsets.all(16),
             itemCount: jobs.length,
