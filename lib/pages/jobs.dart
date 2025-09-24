@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 import "package:intellihire/components/cards/job_card.dart";
-import "package:intellihire/services/mongodb_service.dart";
+import "package:intellihire/services/jobs_service.dart";
 
 class Jobs extends StatefulWidget {
   const Jobs({super.key});
@@ -15,7 +15,7 @@ class _JobsState extends State<Jobs> {
   @override
   void initState() {
     super.initState();
-    _jobsFuture = MongoDatabase.getJobs();
+    _jobsFuture = JobsService.fetchJobs();
   }
 
   @override
