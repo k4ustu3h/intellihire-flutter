@@ -179,9 +179,9 @@ class _ProfileState extends State<Profile> {
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16),
-                          child: Expanded(
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16),
                             child: Text(
                               item["label"],
                               style: textTheme.titleLarge,
