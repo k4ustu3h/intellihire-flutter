@@ -4,6 +4,7 @@ import "package:intellihire/components/navbar.dart";
 import "package:intellihire/components/top_app_bar.dart";
 import "package:intellihire/pages/jobs.dart";
 import "package:intellihire/pages/profile.dart";
+import "package:intellihire/pages/tests.dart";
 
 class HomeLayout extends StatefulWidget {
   const HomeLayout({super.key, required this.title});
@@ -20,7 +21,7 @@ class _HomeLayoutState extends State<HomeLayout> {
   static final List<Widget> _pages = <Widget>[
     Text(""),
     Jobs(),
-    Text(""),
+    Tests(),
     Profile(),
   ];
 
