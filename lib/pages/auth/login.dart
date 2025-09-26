@@ -1,6 +1,6 @@
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
-import "package:intellihire/pages/register.dart";
+import "package:intellihire/pages/auth/register.dart";
 import "package:material_symbols_icons/symbols.dart";
 
 class Login extends StatefulWidget {

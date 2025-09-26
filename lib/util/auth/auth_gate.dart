@@ -1,7 +1,7 @@
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:intellihire/layout/home_layout.dart";
-import "package:intellihire/pages/login.dart";
+import "package:intellihire/pages/auth/login.dart";
 
 class AuthGate extends StatelessWidget {
   const AuthGate({super.key});

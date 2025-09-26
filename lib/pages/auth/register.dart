@@ -1,6 +1,6 @@
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
-import "package:intellihire/pages/login.dart";
+import "package:intellihire/pages/auth/login.dart";
 import "package:material_symbols_icons/symbols.dart";
 import "package:simple_icons/simple_icons.dart";
 

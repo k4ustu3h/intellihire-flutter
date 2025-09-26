@@ -5,7 +5,7 @@ import "package:firebase_storage/firebase_storage.dart";
 import "package:flutter/material.dart";
 import "package:image_picker/image_picker.dart";
 import "package:intellihire/components/profile_avatar.dart";
-import "package:intellihire/pages/login.dart";
+import "package:intellihire/pages/auth/login.dart";
 import "package:material_symbols_icons/symbols.dart";
 
 class Profile extends StatefulWidget {

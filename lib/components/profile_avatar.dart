@@ -1,5 +1,6 @@
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
+import "package:material_symbols_icons/symbols.dart";
 
 class ProfileAvatar extends StatelessWidget {
   final double radius;
@@ -15,7 +16,9 @@ class ProfileAvatar extends StatelessWidget {
     return CircleAvatar(
       backgroundImage: hasPhoto ? NetworkImage(photoUrl) : null,
       radius: radius,
-      child: !hasPhoto ? Icon(Icons.person, size: radius) : null,
+      child: !hasPhoto
+          ? Icon(Symbols.person_rounded, fill: 1, size: radius)
+          : null,
     );
   }
 }

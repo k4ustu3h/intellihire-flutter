@@ -2,7 +2,7 @@ import "package:dynamic_color/dynamic_color.dart";
 import "package:firebase_core/firebase_core.dart";
 import "package:flutter/material.dart";
 import "package:intellihire/firebase_options.dart";
-import "package:intellihire/pages/auth_gate.dart";
+import "package:intellihire/util/auth/auth_gate.dart";
 import "package:intellihire/util/ui/monet.dart";
 
 Future<void> main() async {
@@ -10,7 +10,7 @@ Future<void> main() async {
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
           theme: lightTheme(lightDynamic),
           darkTheme: darkTheme(darkDynamic),
           themeMode: ThemeMode.system,
-          home: const AuthGate(),
+          home: AuthGate(),
         );
       },
     );
