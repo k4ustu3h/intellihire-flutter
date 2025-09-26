@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:intellihire/components/cards/test_card.dart";
 import "package:intellihire/components/skeletons/test_card_skeleton.dart";
+import "package:intellihire/pages/tests/test_questions.dart";
 import "package:intellihire/services/api_service.dart";
 import "package:skeletonizer/skeletonizer.dart";
 
@@ -51,7 +52,23 @@ class _TestsState extends State<Tests> {
           return ListView.builder(
             padding: EdgeInsets.all(16),
             itemCount: tests.length,
-            itemBuilder: (context, index) => TestCard(test: tests[index]),
+            itemBuilder: (context, index) {
+              final test = tests[index];
+              return TestCard(
+                test: test,
+                onStart: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => TestQuestions(
+                        testId: test["_id"].toString(),
+                        title: test["title"] as String,
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
           );
         },
       ),

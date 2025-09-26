@@ -28,4 +28,18 @@ class ApiService {
       throw Exception("Failed to fetch tests: ${res.statusCode}");
     }
   }
+
+  static Future<List<Map<String, dynamic>>> fetchTestQuestions(
+    String testId,
+  ) async {
+    final uri = Uri.parse("$_baseUrl/api/tests/$testId");
+    final res = await http.get(uri);
+
+    if (res.statusCode == 200) {
+      final data = json.decode(res.body) as List;
+      return data.cast<Map<String, dynamic>>();
+    } else {
+      throw Exception("Failed to fetch test questions: ${res.statusCode}");
+    }
+  }
 }

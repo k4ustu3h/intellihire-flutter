@@ -3,9 +3,10 @@ import "package:flutter_svg/flutter_svg.dart";
 import "package:material_symbols_icons/symbols.dart";
 
 class TestCard extends StatelessWidget {
-  const TestCard({super.key, required this.test});
+  const TestCard({super.key, required this.test, required this.onStart});
 
   final Map<String, dynamic> test;
+  final VoidCallback onStart;
 
   String colorToHex(Color color) {
     return color.toARGB32().toRadixString(16).substring(2).toUpperCase();
@@ -90,7 +91,7 @@ class TestCard extends StatelessWidget {
                   ),
                 ),
                 FilledButton.icon(
-                  onPressed: () {},
+                  onPressed: onStart,
                   icon: Icon(Symbols.play_arrow_rounded),
                   label: Text("Start"),
                 ),
