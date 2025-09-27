@@ -1,20 +1,23 @@
-name: Build & Release APK
+name: Nightly APK Release
 
 on:
   push:
     branches:
       - main
+  pull_request:
 
 env:
   FLUTTER_VERSION: "3.32.8"
 
+permissions:
+  contents: write
+
 jobs:
-  build_and_release:
+  build_apk:
     name: Build APK
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Flutter
@@ -35,33 +38,26 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Get version from pubspec.yaml
-        id: get_version
-        run: |
-          VERSION=$(sed -n 's/^version: \([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p' pubspec.yaml)
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-
       - name: Build APK
         run: flutter build apk --release
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set APK name
+        run: |
+          SHORT_SHA=$(echo $GITHUB_SHA | cut -c1-7)
+          echo "APK_NAME=IntelliHire.${SHORT_SHA}.apk" >> $GITHUB_ENV
+
+      - name: Copy APK to root with new name
+        run: |
+          cp build/app/outputs/flutter-apk/app-release.apk $APK_NAME
+
+      - name: Upload nightly release
+        uses: softprops/action-gh-release@v1
         with:
-          tag_name: "pre-release-${{ github.run_number }}"
-          release_name: "Pre-release ${{ github.run_number }}"
-          body: "Automatically generated pre-release APK for commit ${{ github.sha }}"
+          tag_name: nightly
+          name: "IntelliHire Nightly"
+          body: "Automatically generated nightly APK for commit ${{ github.sha }}"
           draft: false
           prerelease: true
-
-      - name: Upload Release APK
-        uses: actions/upload-release-asset@v1
+          files: ${{ env.APK_NAME }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: app/build/app/outputs/flutter-apk/app-release.apk
-          asset_name: App-pre-release-${{ github.run_number }}-android.apk
-          asset_content_type: application/vnd.android.package-archive
