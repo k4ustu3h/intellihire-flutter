@@ -29,4 +29,3 @@ doc/api/
 android/app/google-services.json
 firebase.json
 firepit-log.txt
-lib/firebase_options.dart
