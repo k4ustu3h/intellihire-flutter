@@ -1,0 +1,42 @@
+name: Build APK and Release
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  FLUTTER_VERSION: "3.32.8"
+
+jobs:
+  build:
+    name: Build APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: "stable"
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build APK
+        run: flutter build apk --release
+
+      - name: Upload Release APK
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: "pre-release-${{ github.run_number }}"
+          name: "Pre-release ${{ github.run_number }}"
+          body: "Automatically generated pre-release APK for commit ${{ github.sha }}"
+          draft: false
+          prerelease: true
+          files: build/app/outputs/flutter-apk/app-release.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
