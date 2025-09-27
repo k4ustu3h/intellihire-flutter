@@ -1,4 +1,4 @@
-name: Build APK and Release
+name: Build & Release APK
 
 on:
   push:
@@ -9,7 +9,7 @@ env:
   FLUTTER_VERSION: "3.32.8"
 
 jobs:
-  build:
+  build_and_release:
     name: Build APK
     runs-on: ubuntu-latest
 
@@ -21,7 +21,6 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
-          channel: "stable"
 
       - name: Create .env file
         run: |
@@ -36,17 +35,33 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      - name: Get version from pubspec.yaml
+        id: get_version
+        run: |
+          VERSION=$(sed -n 's/^version: \([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p' pubspec.yaml)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
       - name: Build APK
         run: flutter build apk --release
 
-      - name: Upload Release APK
-        uses: softprops/action-gh-release@v1
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: "pre-release-${{ github.run_number }}"
-          name: "Pre-release ${{ github.run_number }}"
+          release_name: "Pre-release ${{ github.run_number }}"
           body: "Automatically generated pre-release APK for commit ${{ github.sha }}"
           draft: false
           prerelease: true
-          files: build/app/outputs/flutter-apk/app-release.apk
+
+      - name: Upload Release APK
+        uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: app/build/app/outputs/flutter-apk/app-release.apk
+          asset_name: App-pre-release-${{ github.run_number }}-android.apk
+          asset_content_type: application/vnd.android.package-archive
