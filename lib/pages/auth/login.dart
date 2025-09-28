@@ -1,5 +1,7 @@
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
+import "package:intellihire/components/auth_text_field.dart";
+import "package:intellihire/layout/home_layout.dart";
 import "package:intellihire/pages/auth/register.dart";
 import "package:material_symbols_icons/symbols.dart";
 
@@ -13,6 +15,7 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool _loading = false;
 
   late final List<Map<String, dynamic>> _fields;
 
@@ -25,12 +28,16 @@ class _LoginState extends State<Login> {
         "labelText": "Email",
         "iconName": "email",
         "obscureText": false,
+        "validator": (String? v) =>
+            v == null || v.isEmpty ? "Enter email" : null,
       },
       {
         "controller": _passwordController,
         "labelText": "Password",
         "iconName": "password",
         "obscureText": true,
+        "validator": (String? v) =>
+            v == null || v.isEmpty ? "Enter password" : null,
       },
     ];
   }
@@ -47,23 +54,33 @@ class _LoginState extends State<Login> {
   }
 
   Future<void> signIn() async {
+    setState(() => _loading = true);
+
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
+
+      if (!mounted) return;
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => HomeLayout(title: "IntelliHire"),
+        ),
+      );
     } on FirebaseAuthException catch (e) {
-      if (mounted) {
-        String errorMessage;
-        if (e.code == "user-not-found" || e.code == "wrong-password") {
-          errorMessage = "Invalid email or password.";
-        } else {
-          errorMessage = e.message ?? "An unknown error occurred.";
-        }
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(errorMessage)));
+      if (!mounted) return;
+      String errorMessage;
+      if (e.code == "user-not-found" || e.code == "wrong-password") {
+        errorMessage = "Invalid email or password.";
+      } else {
+        errorMessage = e.message ?? "Login failed.";
       }
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(errorMessage)));
+    } finally {
+      if (mounted) setState(() => _loading = false);
     }
   }
 
@@ -91,26 +108,30 @@ class _LoginState extends State<Login> {
             Text("Welcome Back", style: textTheme.displaySmall),
             Text("Login to your account", style: textTheme.titleMedium),
             ..._fields.map((field) {
-              return TextField(
+              return AuthTextField(
                 controller: field["controller"],
-                decoration: InputDecoration(
-                  prefixIcon: Icon(_getIconData(field["iconName"])),
-                  border: OutlineInputBorder(),
-                  labelText: field["labelText"],
-                ),
-                obscureText: field["obscureText"],
+                label: field["labelText"],
+                icon: _getIconData(field["iconName"]),
+                obscure: field["obscureText"],
+                validator: field["validator"],
               );
             }),
             FilledButton.icon(
-              onPressed: signIn,
+              onPressed: _loading ? null : signIn,
               icon: Icon(Symbols.login_rounded),
+              label: _loading
+                  ? SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : Text("Sign In"),
               style: FilledButton.styleFrom(
+                minimumSize: Size(double.infinity, 48),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
-                minimumSize: Size(double.infinity, 48),
               ),
-              label: Text("Sign In"),
             ),
             TextButton(
               onPressed: () {

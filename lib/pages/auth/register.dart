@@ -1,5 +1,7 @@
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
+import "package:intellihire/components/auth_text_field.dart";
+import "package:intellihire/layout/home_layout.dart";
 import "package:intellihire/pages/auth/login.dart";
 import "package:material_symbols_icons/symbols.dart";
 import "package:simple_icons/simple_icons.dart";
@@ -15,8 +17,10 @@ class _RegisterState extends State<Register> {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool _loading = false;
 
   late final List<Map<String, dynamic>> _fields;
+  late final List<Map<String, dynamic>> _buttons;
 
   @override
   void initState() {
@@ -27,70 +31,84 @@ class _RegisterState extends State<Register> {
         "labelText": "Name",
         "iconName": "name",
         "obscureText": false,
+        "validator": (String? v) =>
+            v == null || v.isEmpty ? "Enter your name" : null,
       },
       {
         "controller": _emailController,
         "labelText": "Email",
         "iconName": "email",
         "obscureText": false,
+        "validator": (String? v) =>
+            v == null || v.isEmpty ? "Enter email" : null,
       },
       {
         "controller": _passwordController,
         "labelText": "Password",
         "iconName": "password",
         "obscureText": true,
+        "validator": (String? v) =>
+            v != null && v.length < 6 ? "Password too short" : null,
       },
+    ];
+
+    _buttons = [
+      {"label": "Continue with Google", "iconName": "google"},
+      {"label": "Continue with Apple", "iconName": "apple"},
     ];
   }
 
-  final List<Map<String, dynamic>> _buttons = [
-    {"label": "Continue with Google", "iconName": "google"},
-    {"label": "Continue with Apple", "iconName": "apple"},
-  ];
-
   IconData _getIconData(String iconName) {
     switch (iconName) {
-      case "apple":
-        return SimpleIcons.apple;
-      case "email":
-        return Symbols.email_rounded;
       case "name":
         return Symbols.person_rounded;
-      case "google":
-        return SimpleIcons.google;
+      case "email":
+        return Symbols.email_rounded;
       case "password":
         return Symbols.password;
+      case "google":
+        return SimpleIcons.google;
+      case "apple":
+        return SimpleIcons.apple;
       default:
         return Symbols.error;
     }
   }
 
   Future<void> signUp() async {
+    setState(() => _loading = true);
+
     try {
       final userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
             email: _emailController.text.trim(),
             password: _passwordController.text.trim(),
           );
-      await userCredential.user?.updateDisplayName(_nameController.text.trim());
 
-      if (mounted) {
-        Navigator.of(context).pop();
-      }
+      await userCredential.user?.updateDisplayName(_nameController.text.trim());
+      await userCredential.user?.reload();
+
+      if (!mounted) return;
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => HomeLayout(title: "IntelliHire"),
+        ),
+      );
     } on FirebaseAuthException catch (e) {
+      if (!mounted) return;
       String errorMessage;
       if (e.code == "weak-password") {
         errorMessage = "The password provided is too weak.";
       } else if (e.code == "email-already-in-use") {
         errorMessage = "An account already exists for that email.";
       } else {
-        errorMessage = e.message ?? "An unknown error occurred.";
+        errorMessage = e.message ?? "Registration failed.";
       }
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(errorMessage)));
-      }
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(errorMessage)));
+    } finally {
+      if (mounted) setState(() => _loading = false);
     }
   }
 
@@ -119,25 +137,30 @@ class _RegisterState extends State<Register> {
             Text("Create an Account", style: textTheme.displaySmall),
             Text("Enter your details", style: textTheme.titleMedium),
             ..._fields.map((field) {
-              return TextField(
+              return AuthTextField(
                 controller: field["controller"],
-                decoration: InputDecoration(
-                  prefixIcon: Icon(_getIconData(field["iconName"])),
-                  border: OutlineInputBorder(),
-                  labelText: field["labelText"],
-                ),
-                obscureText: field["obscureText"],
+                label: field["labelText"],
+                icon: _getIconData(field["iconName"]),
+                obscure: field["obscureText"],
+                validator: field["validator"],
               );
             }),
-            FilledButton(
-              onPressed: signUp,
+            FilledButton.icon(
+              icon: Icon(Symbols.app_registration_rounded),
+              onPressed: _loading ? null : signUp,
               style: FilledButton.styleFrom(
+                minimumSize: Size(double.infinity, 48),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
-                minimumSize: Size(double.infinity, 48),
               ),
-              child: Text("Sign Up"),
+              label: _loading
+                  ? SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : Text("Sign Up"),
             ),
             Row(
               children: [
@@ -154,10 +177,10 @@ class _RegisterState extends State<Register> {
                 onPressed: () {},
                 icon: Icon(_getIconData(button["iconName"])),
                 style: FilledButton.styleFrom(
+                  minimumSize: Size(double.infinity, 48),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  minimumSize: Size(double.infinity, 48),
                 ),
                 label: Text(button["label"]),
               );
