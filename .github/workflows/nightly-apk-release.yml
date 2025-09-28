@@ -18,10 +18,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Flutter
-        uses: subosito/flutter-action@v2
+        uses: subosito/flutter-action@v2.21.0
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
 
@@ -50,14 +50,9 @@ jobs:
         run: |
           cp build/app/outputs/flutter-apk/app-release.apk $APK_NAME
 
-      - name: Upload nightly release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: nightly
-          name: "IntelliHire Nightly"
-          body: "Automatically generated nightly APK for commit ${{ github.sha }}"
-          draft: false
-          prerelease: true
-          files: ${{ env.APK_NAME }}
+      - name: Delete release if exist then create release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release view "nightly" && gh release delete "nightly" -y --cleanup-tag
+          gh release create "nightly" "$APK_NAME" -p -t "IntelliHire Nightly" --notes "Automatically generated nightly APK for commit $GITHUB_SHA"
