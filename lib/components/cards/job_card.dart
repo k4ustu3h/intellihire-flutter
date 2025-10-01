@@ -71,7 +71,7 @@ class JobCard extends StatelessWidget {
               children: [
                 Chip(
                   backgroundColor: theme.colorScheme.secondaryContainer,
-                  side: BorderSide(width: 0),
+                  side: BorderSide.none,
                   iconTheme: IconThemeData(
                     color: theme.colorScheme.onSecondaryContainer,
                   ),

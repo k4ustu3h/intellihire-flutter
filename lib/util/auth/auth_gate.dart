@@ -1,3 +1,4 @@
+import "package:expressive_loading_indicator/expressive_loading_indicator.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:intellihire/layout/home_layout.dart";
@@ -12,7 +13,7 @@ class AuthGate extends StatelessWidget {
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Scaffold(body: Center(child: CircularProgressIndicator()));
+          return Scaffold(body: Center(child: ExpressiveLoadingIndicator()));
         }
         if (snapshot.hasData) {
           return HomeLayout(title: "IntelliHire");

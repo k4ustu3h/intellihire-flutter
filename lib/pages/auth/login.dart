@@ -1,3 +1,4 @@
+import "package:expressive_loading_indicator/expressive_loading_indicator.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:intellihire/components/auth_text_field.dart";
@@ -123,7 +124,7 @@ class _LoginState extends State<Login> {
                   ? SizedBox(
                       height: 20,
                       width: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2),
+                      child: ExpressiveLoadingIndicator(),
                     )
                   : Text("Sign In"),
               style: FilledButton.styleFrom(

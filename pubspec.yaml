@@ -10,6 +10,7 @@ environment:
 
 dependencies:
   dynamic_color: ^1.8.1
+  expressive_loading_indicator: ^0.0.1
   firebase_auth: ^6.1.0
   firebase_core: ^4.1.1
   firebase_storage: ^13.0.2

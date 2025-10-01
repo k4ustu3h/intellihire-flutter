@@ -1,5 +1,6 @@
 import "dart:io";
 
+import "package:expressive_loading_indicator/expressive_loading_indicator.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:firebase_storage/firebase_storage.dart";
 import "package:flutter/material.dart";
@@ -108,7 +109,7 @@ class _ProfileState extends State<Profile> {
                   child: Row(
                     children: [
                       if (_isUploading)
-                        CircularProgressIndicator()
+                        ExpressiveLoadingIndicator()
                       else
                         Stack(
                           children: [
@@ -146,7 +147,18 @@ class _ProfileState extends State<Profile> {
                 ),
               ),
               ..._menuItems.map((item) {
-                return InkWell(
+                return ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: theme.primary,
+                    child: Icon(
+                      _getIconData(item["iconName"]),
+                      color: theme.onPrimary,
+                    ),
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  title: Text(item["label"], style: textTheme.titleLarge),
                   onTap: () async {
                     if (item["label"] == "Settings") {
                     } else if (item["label"] == "Sign Out") {
@@ -160,37 +172,6 @@ class _ProfileState extends State<Profile> {
                       );
                     }
                   },
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    child: Row(
-                      children: [
-                        Card.filled(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(32),
-                          ),
-                          color: theme.primary,
-                          child: Padding(
-                            padding: EdgeInsets.all(8),
-                            child: Icon(
-                              _getIconData(item["iconName"]),
-                              weight: 400,
-                              size: 24,
-                              color: theme.onPrimary,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16),
-                            child: Text(
-                              item["label"],
-                              style: textTheme.titleLarge,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
                 );
               }),
             ],
