@@ -5,11 +5,17 @@ import "package:intellihire/components/top_app_bar.dart";
 import "package:intellihire/pages/jobs.dart";
 import "package:intellihire/pages/profile.dart";
 import "package:intellihire/pages/tests/tests.dart";
+import "package:intellihire/util/ui/theme_controller.dart";
 
 class HomeLayout extends StatefulWidget {
-  const HomeLayout({super.key, required this.title});
-
   final String title;
+  final ThemeController themeController;
+
+  const HomeLayout({
+    super.key,
+    required this.title,
+    required this.themeController,
+  });
 
   @override
   State<HomeLayout> createState() => _HomeLayoutState();
@@ -18,19 +24,20 @@ class HomeLayout extends StatefulWidget {
 class _HomeLayoutState extends State<HomeLayout> {
   int _selectedIndex = 0;
 
-  static final List<Widget> _pages = <Widget>[
-    Text(""),
-    Jobs(),
-    Tests(),
-    Profile(),
-  ];
+  final List<String> _titles = ["Home", "Jobs", "Tests", "Profile"];
 
-  static final List<String> _titles = <String>[
-    "Home",
-    "Jobs",
-    "Tests",
-    "Profile",
-  ];
+  late final List<Widget> _pages;
+
+  @override
+  void initState() {
+    super.initState();
+    _pages = [
+      Text(""),
+      Jobs(),
+      Tests(),
+      Profile(themeController: widget.themeController),
+    ];
+  }
 
   void _onItemTapped(int index) {
     setState(() => _selectedIndex = index);

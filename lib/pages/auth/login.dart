@@ -4,10 +4,13 @@ import "package:flutter/material.dart";
 import "package:intellihire/components/auth_text_field.dart";
 import "package:intellihire/layout/home_layout.dart";
 import "package:intellihire/pages/auth/register.dart";
+import "package:intellihire/util/ui/theme_controller.dart";
 import "package:material_symbols_icons/symbols.dart";
 
 class Login extends StatefulWidget {
-  const Login({super.key});
+  final ThemeController themeController;
+
+  const Login({super.key, required this.themeController});
 
   @override
   State<Login> createState() => _LoginState();
@@ -66,17 +69,18 @@ class _LoginState extends State<Login> {
       if (!mounted) return;
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => HomeLayout(title: "IntelliHire"),
+          builder: (context) => HomeLayout(
+            title: "IntelliHire",
+            themeController: widget.themeController,
+          ),
         ),
       );
     } on FirebaseAuthException catch (e) {
       if (!mounted) return;
-      String errorMessage;
-      if (e.code == "user-not-found" || e.code == "wrong-password") {
-        errorMessage = "Invalid email or password.";
-      } else {
-        errorMessage = e.message ?? "Login failed.";
-      }
+      final errorMessage =
+          (e.code == "user-not-found" || e.code == "wrong-password")
+          ? "Invalid email or password."
+          : e.message ?? "Login failed.";
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text(errorMessage)));
@@ -136,9 +140,12 @@ class _LoginState extends State<Login> {
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(
-                  context,
-                ).push(MaterialPageRoute(builder: (context) => Register()));
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        Register(themeController: widget.themeController),
+                  ),
+                );
               },
               child: Text("Don't have an account? Register here."),
             ),

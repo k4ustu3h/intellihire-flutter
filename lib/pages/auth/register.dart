@@ -4,11 +4,14 @@ import "package:flutter/material.dart";
 import "package:intellihire/components/auth_text_field.dart";
 import "package:intellihire/layout/home_layout.dart";
 import "package:intellihire/pages/auth/login.dart";
+import "package:intellihire/util/ui/theme_controller.dart";
 import "package:material_symbols_icons/symbols.dart";
 import "package:simple_icons/simple_icons.dart";
 
 class Register extends StatefulWidget {
-  const Register({super.key});
+  final ThemeController themeController;
+
+  const Register({super.key, required this.themeController});
 
   @override
   State<Register> createState() => _RegisterState();
@@ -92,19 +95,19 @@ class _RegisterState extends State<Register> {
       if (!mounted) return;
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => HomeLayout(title: "IntelliHire"),
+          builder: (context) => HomeLayout(
+            title: "IntelliHire",
+            themeController: widget.themeController,
+          ),
         ),
       );
     } on FirebaseAuthException catch (e) {
       if (!mounted) return;
-      String errorMessage;
-      if (e.code == "weak-password") {
-        errorMessage = "The password provided is too weak.";
-      } else if (e.code == "email-already-in-use") {
-        errorMessage = "An account already exists for that email.";
-      } else {
-        errorMessage = e.message ?? "Registration failed.";
-      }
+      final errorMessage = switch (e.code) {
+        "weak-password" => "The password provided is too weak.",
+        "email-already-in-use" => "An account already exists for that email.",
+        _ => e.message ?? "Registration failed.",
+      };
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text(errorMessage)));
@@ -147,14 +150,8 @@ class _RegisterState extends State<Register> {
               );
             }),
             FilledButton.icon(
-              icon: Icon(Symbols.app_registration_rounded),
               onPressed: _loading ? null : signUp,
-              style: FilledButton.styleFrom(
-                minimumSize: Size(double.infinity, 48),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
+              icon: Icon(Symbols.app_registration_rounded),
               label: _loading
                   ? SizedBox(
                       height: 20,
@@ -162,6 +159,12 @@ class _RegisterState extends State<Register> {
                       child: ExpressiveLoadingIndicator(),
                     )
                   : Text("Sign Up"),
+              style: FilledButton.styleFrom(
+                minimumSize: Size(double.infinity, 48),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
             ),
             Row(
               children: [
@@ -177,20 +180,23 @@ class _RegisterState extends State<Register> {
               return FilledButton.icon(
                 onPressed: () {},
                 icon: Icon(_getIconData(button["iconName"])),
+                label: Text(button["label"]),
                 style: FilledButton.styleFrom(
                   minimumSize: Size(double.infinity, 48),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                label: Text(button["label"]),
               );
             }),
             TextButton(
               onPressed: () {
-                Navigator.of(
-                  context,
-                ).push(MaterialPageRoute(builder: (context) => Login()));
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        Login(themeController: widget.themeController),
+                  ),
+                );
               },
               child: Text("Already have an account? Login here."),
             ),

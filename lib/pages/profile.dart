@@ -7,10 +7,14 @@ import "package:flutter/material.dart";
 import "package:image_picker/image_picker.dart";
 import "package:intellihire/components/profile_avatar.dart";
 import "package:intellihire/pages/auth/login.dart";
+import "package:intellihire/pages/settings.dart";
+import "package:intellihire/util/ui/theme_controller.dart";
 import "package:material_symbols_icons/symbols.dart";
 
 class Profile extends StatefulWidget {
-  const Profile({super.key});
+  final ThemeController themeController;
+
+  const Profile({super.key, required this.themeController});
 
   @override
   State<Profile> createState() => _ProfileState();
@@ -54,9 +58,7 @@ class _ProfileState extends State<Profile> {
 
     if (pickedFile == null) return;
 
-    setState(() {
-      _isUploading = true;
-    });
+    setState(() => _isUploading = true);
 
     try {
       final storageRef = FirebaseStorage.instance
@@ -83,11 +85,7 @@ class _ProfileState extends State<Profile> {
         );
       }
     } finally {
-      if (mounted) {
-        setState(() {
-          _isUploading = false;
-        });
-      }
+      if (mounted) setState(() => _isUploading = false);
     }
   }
 
@@ -161,6 +159,14 @@ class _ProfileState extends State<Profile> {
                   title: Text(item["label"], style: textTheme.titleLarge),
                   onTap: () async {
                     if (item["label"] == "Settings") {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SettingsPage(
+                            themeController: widget.themeController,
+                          ),
+                        ),
+                      );
                     } else if (item["label"] == "Sign Out") {
                       final navigator = Navigator.of(context);
                       await FirebaseAuth.instance.signOut();
@@ -168,7 +174,10 @@ class _ProfileState extends State<Profile> {
                       if (!mounted) return;
 
                       navigator.pushReplacement(
-                        MaterialPageRoute(builder: (context) => Login()),
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              Login(themeController: widget.themeController),
+                        ),
                       );
                     }
                   },

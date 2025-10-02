@@ -5,6 +5,7 @@ import "package:flutter_dotenv/flutter_dotenv.dart";
 import "package:intellihire/firebase_options.dart";
 import "package:intellihire/util/auth/auth_gate.dart";
 import "package:intellihire/util/ui/monet.dart";
+import "package:intellihire/util/ui/theme_controller.dart";
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,22 +14,31 @@ Future<void> main() async {
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  runApp(MyApp());
+  final themeController = await ThemeController.load();
+
+  runApp(MyApp(themeController: themeController));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final ThemeController themeController;
+
+  const MyApp({super.key, required this.themeController});
 
   @override
   Widget build(BuildContext context) {
-    return DynamicColorBuilder(
-      builder: (lightDynamic, darkDynamic) {
-        return MaterialApp(
-          title: "IntelliHire",
-          theme: lightTheme(lightDynamic),
-          darkTheme: darkTheme(darkDynamic),
-          themeMode: ThemeMode.system,
-          home: AuthGate(),
+    return ValueListenableBuilder<bool>(
+      valueListenable: themeController,
+      builder: (context, useDynamicTheme, _) {
+        return DynamicColorBuilder(
+          builder: (lightDynamic, darkDynamic) {
+            return MaterialApp(
+              title: "IntelliHire",
+              theme: lightTheme(useDynamicTheme ? lightDynamic : null),
+              darkTheme: darkTheme(useDynamicTheme ? darkDynamic : null),
+              themeMode: ThemeMode.system,
+              home: AuthGate(themeController: themeController),
+            );
+          },
         );
       },
     );

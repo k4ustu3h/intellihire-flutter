@@ -3,9 +3,12 @@ import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:intellihire/layout/home_layout.dart";
 import "package:intellihire/pages/auth/login.dart";
+import "package:intellihire/util/ui/theme_controller.dart";
 
 class AuthGate extends StatelessWidget {
-  const AuthGate({super.key});
+  final ThemeController themeController;
+
+  const AuthGate({super.key, required this.themeController});
 
   @override
   Widget build(BuildContext context) {
@@ -13,12 +16,18 @@ class AuthGate extends StatelessWidget {
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Scaffold(body: Center(child: ExpressiveLoadingIndicator()));
+          return const Scaffold(
+            body: Center(child: ExpressiveLoadingIndicator()),
+          );
         }
+
         if (snapshot.hasData) {
-          return HomeLayout(title: "IntelliHire");
+          return HomeLayout(
+            title: "IntelliHire",
+            themeController: themeController,
+          );
         } else {
-          return Login();
+          return Login(themeController: themeController);
         }
       },
     );
