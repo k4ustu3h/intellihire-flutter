@@ -5,6 +5,7 @@ import "package:firebase_auth/firebase_auth.dart";
 import "package:firebase_storage/firebase_storage.dart";
 import "package:flutter/material.dart";
 import "package:image_picker/image_picker.dart";
+import "package:intellihire/components/core/list_row.dart";
 import "package:intellihire/components/profile_avatar.dart";
 import "package:intellihire/pages/auth/login.dart";
 import "package:intellihire/pages/settings.dart";
@@ -25,8 +26,8 @@ class _ProfileState extends State<Profile> {
   bool _isUploading = false;
 
   final List<Map<String, dynamic>> _menuItems = [
-    {"label": "Settings", "iconName": "settings"},
-    {"label": "Sign Out", "iconName": "logout"},
+    {"label": "Settings", "iconName": "settings", "first": true, "last": false},
+    {"label": "Sign Out", "iconName": "logout", "first": false, "last": true},
   ];
 
   IconData _getIconData(String iconName) {
@@ -38,6 +39,14 @@ class _ProfileState extends State<Profile> {
       default:
         return Symbols.error;
     }
+  }
+
+  Widget _buildStartIcon(String iconName) {
+    final theme = Theme.of(context).colorScheme;
+    return CircleAvatar(
+      backgroundColor: theme.primary,
+      child: Icon(_getIconData(iconName), color: theme.onPrimary),
+    );
   }
 
   Future<void> _pickAndUploadImage() async {
@@ -89,6 +98,29 @@ class _ProfileState extends State<Profile> {
     }
   }
 
+  void _handleMenuItemTap(Map<String, dynamic> item) async {
+    if (item["label"] == "Settings") {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              SettingsPage(themeController: widget.themeController),
+        ),
+      );
+    } else if (item["label"] == "Sign Out") {
+      final navigator = Navigator.of(context);
+      await FirebaseAuth.instance.signOut();
+
+      if (!mounted) return;
+
+      navigator.pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => Login(themeController: widget.themeController),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context).colorScheme;
@@ -96,12 +128,12 @@ class _ProfileState extends State<Profile> {
 
     return Scaffold(
       body: Center(
-        child: Padding(
-          padding: EdgeInsets.all(16),
-          child: Column(
-            spacing: 16,
-            children: [
-              Card.outlined(
+        child: Column(
+          spacing: 12,
+          children: [
+            Padding(
+              padding: EdgeInsets.all(12),
+              child: Card.outlined(
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 24),
                   child: Row(
@@ -144,47 +176,23 @@ class _ProfileState extends State<Profile> {
                   ),
                 ),
               ),
-              ..._menuItems.map((item) {
-                return ListTile(
-                  leading: CircleAvatar(
-                    backgroundColor: theme.primary,
-                    child: Icon(
-                      _getIconData(item["iconName"]),
-                      color: theme.onPrimary,
-                    ),
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  title: Text(item["label"], style: textTheme.titleLarge),
-                  onTap: () async {
-                    if (item["label"] == "Settings") {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SettingsPage(
-                            themeController: widget.themeController,
-                          ),
-                        ),
-                      );
-                    } else if (item["label"] == "Sign Out") {
-                      final navigator = Navigator.of(context);
-                      await FirebaseAuth.instance.signOut();
-
-                      if (!mounted) return;
-
-                      navigator.pushReplacement(
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              Login(themeController: widget.themeController),
-                        ),
-                      );
-                    }
-                  },
-                );
-              }),
-            ],
-          ),
+            ),
+            Column(
+              spacing: 2,
+              children: [
+                ..._menuItems.map((item) {
+                  return ListRow(
+                    label: Text(item["label"], style: textTheme.titleMedium),
+                    startIcon: _buildStartIcon(item["iconName"]),
+                    endIcon: Icon(Symbols.navigate_next_rounded),
+                    first: item["first"],
+                    last: item["last"],
+                    onClick: () => _handleMenuItemTap(item),
+                  );
+                }),
+              ],
+            ),
+          ],
         ),
       ),
     );

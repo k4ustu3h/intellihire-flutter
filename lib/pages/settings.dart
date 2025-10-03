@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:intellihire/components/core/list_row.dart";
 import "package:intellihire/util/ui/theme_controller.dart";
 import "package:material_symbols_icons/symbols.dart";
 
@@ -12,22 +13,47 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  Widget _buildLeadingIcon(IconData icon) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Container(
+      padding: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: colorScheme.primary,
+        shape: BoxShape.circle,
+      ),
+      child: Icon(icon, color: colorScheme.onPrimary, size: 24),
+    );
+  }
+
+  void _toggleDynamicTheme([bool? newValue]) {
+    final value = newValue ?? !widget.themeController.value;
+    setState(() {
+      widget.themeController.setUseDynamicTheme(value);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Settings")),
       body: ListView(
-        padding: EdgeInsets.all(16),
         children: [
-          SwitchListTile(
-            secondary: Icon(Symbols.palette_rounded),
-            title: Text("Use Dynamic Theming"),
-            value: widget.themeController.value,
-            onChanged: (val) {
-              setState(() {
-                widget.themeController.setUseDynamicTheme(val);
-              });
-            },
+          Column(
+            spacing: ListRow.basePadding,
+            children: [
+              ListRow(
+                startIcon: _buildLeadingIcon(Symbols.palette_rounded),
+                label: Text("Use Dynamic Theming"),
+                description: Text("Uses system wallpaper colors"),
+                endIcon: Switch(
+                  value: widget.themeController.value,
+                  onChanged: _toggleDynamicTheme,
+                ),
+                first: true,
+                last: true,
+                onClick: _toggleDynamicTheme,
+              ),
+            ],
           ),
         ],
       ),
