@@ -25,17 +25,32 @@ class _ProfileState extends State<Profile> {
   final user = FirebaseAuth.instance.currentUser;
   bool _isUploading = false;
 
-  final List<Map<String, dynamic>> _menuItems = [
-    {"label": "Settings", "iconName": "settings", "first": true, "last": false},
-    {"label": "Sign Out", "iconName": "logout", "first": false, "last": true},
+  final List<Map<String, dynamic>> _accountItems = [
+    {"label": "Settings", "iconName": "settings"},
+    {"label": "My Scores", "iconName": "analytics"},
+    {"label": "Change Password", "iconName": "lock"},
+  ];
+
+  final List<Map<String, dynamic>> _supportItems = [
+    {"label": "Help Center", "iconName": "help"},
+    {"label": "About", "iconName": "info"},
+    {"label": "Sign Out", "iconName": "logout"},
   ];
 
   IconData _getIconData(String iconName) {
     switch (iconName) {
       case "settings":
         return Symbols.settings_rounded;
+      case "help":
+        return Symbols.help_center_rounded;
+      case "info":
+        return Symbols.info_rounded;
       case "logout":
         return Symbols.logout_rounded;
+      case "analytics":
+        return Symbols.analytics_rounded;
+      case "lock":
+        return Symbols.lock_rounded;
       default:
         return Symbols.error;
     }
@@ -99,7 +114,9 @@ class _ProfileState extends State<Profile> {
   }
 
   void _handleMenuItemTap(Map<String, dynamic> item) async {
-    if (item["label"] == "Settings") {
+    final label = item["label"];
+
+    if (label == "Settings") {
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -107,7 +124,37 @@ class _ProfileState extends State<Profile> {
               SettingsPage(themeController: widget.themeController),
         ),
       );
-    } else if (item["label"] == "Sign Out") {
+    } else if (label == "My Scores") {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Navigating to My Scores (Analytics Page)...")),
+      );
+    } else if (label == "Change Password") {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Opening Change Password dialog...")),
+      );
+    } else if (label == "About") {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text("About IntelliHire"),
+          content: Text(
+            "IntelliHire: Smart Recruitment & Skill Assessment System. Version 1.0",
+          ),
+          actions: [CloseButton()],
+        ),
+      );
+    } else if (label == "Help Center") {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text("Help Center"),
+          content: Text(
+            "Contact support at support@intellihire.com or visit our FAQ.",
+          ),
+          actions: [CloseButton()],
+        ),
+      );
+    } else if (label == "Sign Out") {
       final navigator = Navigator.of(context);
       await FirebaseAuth.instance.signOut();
 
@@ -119,6 +166,28 @@ class _ProfileState extends State<Profile> {
         ),
       );
     }
+  }
+
+  Widget _buildListGroup(List<Map<String, dynamic>> items) {
+    return Column(
+      spacing: 2,
+      children: List.generate(items.length, (index) {
+        final item = items[index];
+        return ListRow(
+          label: Text(
+            item["label"] as String,
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          startIcon: _buildStartIcon(item["iconName"] as String),
+          endIcon: Icon(Symbols.navigate_next_rounded),
+
+          first: index == 0,
+          last: index == items.length - 1,
+
+          onClick: () => _handleMenuItemTap(item),
+        );
+      }),
+    );
   }
 
   @override
@@ -177,21 +246,9 @@ class _ProfileState extends State<Profile> {
                 ),
               ),
             ),
-            Column(
-              spacing: 2,
-              children: [
-                ..._menuItems.map((item) {
-                  return ListRow(
-                    label: Text(item["label"], style: textTheme.titleMedium),
-                    startIcon: _buildStartIcon(item["iconName"]),
-                    endIcon: Icon(Symbols.navigate_next_rounded),
-                    first: item["first"],
-                    last: item["last"],
-                    onClick: () => _handleMenuItemTap(item),
-                  );
-                }),
-              ],
-            ),
+
+            _buildListGroup(_accountItems),
+            _buildListGroup(_supportItems),
           ],
         ),
       ),
