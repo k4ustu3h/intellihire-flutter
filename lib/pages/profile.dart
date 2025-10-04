@@ -1,12 +1,7 @@
-import "dart:io";
-
-import "package:expressive_loading_indicator/expressive_loading_indicator.dart";
 import "package:firebase_auth/firebase_auth.dart";
-import "package:firebase_storage/firebase_storage.dart";
 import "package:flutter/material.dart";
-import "package:image_picker/image_picker.dart";
+import "package:intellihire/components/cards/profile_card.dart";
 import "package:intellihire/components/core/list_row.dart";
-import "package:intellihire/components/profile_avatar.dart";
 import "package:intellihire/pages/auth/login.dart";
 import "package:intellihire/pages/settings.dart";
 import "package:intellihire/util/ui/theme_controller.dart";
@@ -23,7 +18,6 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   final user = FirebaseAuth.instance.currentUser;
-  bool _isUploading = false;
 
   final List<Map<String, dynamic>> _accountItems = [
     {"label": "Settings", "iconName": "settings"},
@@ -64,55 +58,6 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  Future<void> _pickAndUploadImage() async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("User is not authenticated. Please log in again."),
-          ),
-        );
-      }
-      return;
-    }
-
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
-    if (pickedFile == null) return;
-
-    setState(() => _isUploading = true);
-
-    try {
-      final storageRef = FirebaseStorage.instance
-          .ref()
-          .child("user_profile_photos")
-          .child(user.uid)
-          .child("profile.jpg");
-
-      final file = File(pickedFile.path);
-      await storageRef.putFile(file);
-
-      final downloadUrl = await storageRef.getDownloadURL();
-      await user.updatePhotoURL(downloadUrl);
-
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Profile photo updated successfully!")),
-        );
-      }
-    } on FirebaseException catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Failed to update photo: ${e.message}")),
-        );
-      }
-    } finally {
-      if (mounted) setState(() => _isUploading = false);
-    }
-  }
-
   void _handleMenuItemTap(Map<String, dynamic> item) async {
     final label = item["label"];
 
@@ -124,14 +69,10 @@ class _ProfileState extends State<Profile> {
               SettingsPage(themeController: widget.themeController),
         ),
       );
-    } else if (label == "My Scores") {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Navigating to My Scores (Analytics Page)...")),
-      );
-    } else if (label == "Change Password") {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Opening Change Password dialog...")),
-      );
+    } else if (label == "My Scores" || label == "Change Password") {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Navigating to $label...")));
     } else if (label == "About") {
       showDialog(
         context: context,
@@ -192,9 +133,6 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
-
     return Scaffold(
       body: Center(
         child: Column(
@@ -202,49 +140,9 @@ class _ProfileState extends State<Profile> {
           children: [
             Padding(
               padding: EdgeInsets.all(12),
-              child: Card.outlined(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-                  child: Row(
-                    children: [
-                      if (_isUploading)
-                        ExpressiveLoadingIndicator()
-                      else
-                        Stack(
-                          children: [
-                            ProfileAvatar(radius: 48),
-                            Positioned(
-                              bottom: 0,
-                              right: 0,
-                              child: IconButton(
-                                style: IconButton.styleFrom(
-                                  backgroundColor: theme.surfaceContainer,
-                                ),
-                                icon: Icon(Symbols.photo_camera_rounded),
-                                onPressed: _pickAndUploadImage,
-                              ),
-                            ),
-                          ],
-                        ),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              user?.displayName ?? "Not available",
-                              style: textTheme.titleLarge,
-                            ),
-                            Text(
-                              user?.email ?? "Not available",
-                              style: textTheme.labelMedium,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              child: ProfileCard(
+                  user: user,
+                  onEditPressed: () {}),
             ),
 
             _buildListGroup(_accountItems),
