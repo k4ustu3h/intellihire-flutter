@@ -1,3 +1,4 @@
+import "package:expressive_loading_indicator/expressive_loading_indicator.dart";
 import "package:flutter/material.dart";
 import "package:intellihire/components/top_app_bar.dart";
 import "package:intellihire/services/api_service.dart";
@@ -24,6 +25,54 @@ class _TestQuestionsState extends State<TestQuestions> {
     _questionsFuture = ApiService.fetchTestQuestions(widget.testId);
   }
 
+  Widget _buildStyledText(
+    BuildContext context,
+    String text, {
+    TextStyle? baseStyle,
+  }) {
+    final theme = Theme.of(context);
+    final List<TextSpan> spans = [];
+
+    final RegExp codeRegex = RegExp(r"`([^`]+)`");
+    int lastMatchEnd = 0;
+
+    final TextStyle codeStyle = theme.textTheme.labelLarge!.copyWith(
+      fontFamily: "monospace",
+      fontWeight: FontWeight.w600,
+      backgroundColor: theme.colorScheme.surfaceVariant,
+      color: theme.colorScheme.onSurfaceVariant,
+    );
+
+    final TextStyle normalStyle =
+        baseStyle ??
+        theme.textTheme.titleMedium!.copyWith(fontWeight: FontWeight.w600);
+
+    for (final match in codeRegex.allMatches(text)) {
+      if (match.start > lastMatchEnd) {
+        spans.add(
+          TextSpan(
+            text: text.substring(lastMatchEnd, match.start),
+            style: normalStyle,
+          ),
+        );
+      }
+
+      spans.add(TextSpan(text: match.group(1), style: codeStyle));
+
+      lastMatchEnd = match.end;
+    }
+
+    if (lastMatchEnd < text.length) {
+      spans.add(
+        TextSpan(text: text.substring(lastMatchEnd), style: normalStyle),
+      );
+    }
+
+    return RichText(
+      text: TextSpan(style: normalStyle, children: spans),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -34,7 +83,7 @@ class _TestQuestionsState extends State<TestQuestions> {
         future: _questionsFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: ExpressiveLoadingIndicator());
           }
           if (snapshot.hasError) {
             return Center(child: Text("Error: ${snapshot.error}"));
@@ -73,18 +122,15 @@ class _TestQuestionsState extends State<TestQuestions> {
                                     color: theme.colorScheme.primary,
                                   ),
                                 ),
-                                Text(
-                                  q["question"],
-                                  style: theme.textTheme.titleMedium?.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
+                                _buildStyledText(context, q["question"]),
                               ],
                             ),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               spacing: 8,
                               children: options.map((opt) {
+                                final optionStyle = theme.textTheme.bodyMedium;
+
                                 return RadioListTile<String>(
                                   activeColor: theme.colorScheme.primary,
                                   groupValue: _selectedAnswers[index],
@@ -96,7 +142,11 @@ class _TestQuestionsState extends State<TestQuestions> {
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12),
                                   ),
-                                  title: Text(opt),
+                                  title: _buildStyledText(
+                                    context,
+                                    opt,
+                                    baseStyle: optionStyle,
+                                  ),
                                   value: opt,
                                 );
                               }).toList(),
