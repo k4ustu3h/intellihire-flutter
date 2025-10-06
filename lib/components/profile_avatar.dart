@@ -5,18 +5,25 @@ import "package:material_symbols_icons/symbols.dart";
 class ProfileAvatar extends StatelessWidget {
   final double radius;
 
-  const ProfileAvatar({super.key, required this.radius});
+  final ImageProvider? backgroundImage;
+
+  const ProfileAvatar({super.key, required this.radius, this.backgroundImage});
 
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
     final photoUrl = user?.photoURL;
-    final hasPhoto = photoUrl != null && photoUrl.isNotEmpty;
+    final hasAuthPhoto = photoUrl != null && photoUrl.isNotEmpty;
+
+    final ImageProvider? finalImageProvider =
+        backgroundImage ?? (hasAuthPhoto ? NetworkImage(photoUrl) : null);
+
+    final bool hasFinalImage = finalImageProvider != null;
 
     return CircleAvatar(
-      backgroundImage: hasPhoto ? NetworkImage(photoUrl) : null,
+      backgroundImage: finalImageProvider,
       radius: radius,
-      child: !hasPhoto
+      child: !hasFinalImage
           ? Icon(Symbols.person_rounded, fill: 1, size: radius)
           : null,
     );

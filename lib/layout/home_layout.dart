@@ -3,7 +3,7 @@ import "package:flutter/material.dart";
 import "package:intellihire/components/navbar.dart";
 import "package:intellihire/components/top_app_bar.dart";
 import "package:intellihire/pages/jobs.dart";
-import "package:intellihire/pages/profile.dart";
+import "package:intellihire/pages/profile/profile.dart";
 import "package:intellihire/pages/tests/tests.dart";
 import "package:intellihire/util/ui/theme_controller.dart";
 

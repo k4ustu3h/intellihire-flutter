@@ -3,7 +3,8 @@ import "package:flutter/material.dart";
 import "package:intellihire/components/cards/profile_card.dart";
 import "package:intellihire/components/core/list_row.dart";
 import "package:intellihire/pages/auth/login.dart";
-import "package:intellihire/pages/settings.dart";
+import "package:intellihire/pages/profile/edit_profile_page.dart";
+import "package:intellihire/pages/profile/settings.dart";
 import "package:intellihire/util/ui/theme_controller.dart";
 import "package:material_symbols_icons/symbols.dart";
 
@@ -141,8 +142,14 @@ class _ProfileState extends State<Profile> {
             Padding(
               padding: EdgeInsets.all(12),
               child: ProfileCard(
-                  user: user,
-                  onEditPressed: () {}),
+                user: user,
+                onEditPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => EditProfilePage()),
+                  );
+                },
+              ),
             ),
 
             _buildListGroup(_accountItems),
