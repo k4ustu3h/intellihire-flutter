@@ -1,7 +1,7 @@
 import "package:expressive_loading_indicator/expressive_loading_indicator.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
-import "package:intellihire/components/auth_text_field.dart";
+import "package:intellihire/components/textfields/auth_text_field.dart";
 import "package:intellihire/layout/home_layout.dart";
 import "package:intellihire/pages/auth/login.dart";
 import "package:intellihire/util/ui/theme_controller.dart";

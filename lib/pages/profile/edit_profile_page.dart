@@ -5,7 +5,10 @@ import "package:firebase_auth/firebase_auth.dart";
 import "package:firebase_storage/firebase_storage.dart";
 import "package:flutter/material.dart";
 import "package:image_picker/image_picker.dart";
+import "package:intellihire/components/menus/city_dropdown.dart";
+import "package:intellihire/components/menus/state_dropdown.dart";
 import "package:intellihire/components/profile_avatar.dart";
+import "package:intellihire/components/textfields/profile_field.dart";
 import "package:intellihire/models/user_profile.dart";
 import "package:intellihire/services/user_service.dart";
 import "package:material_symbols_icons/symbols.dart";
@@ -28,6 +31,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
   final _stateController = TextEditingController();
   final _phoneNumberController = TextEditingController();
   final _emailController = TextEditingController();
+
+  String? _selectedState;
+  String? _selectedCity;
 
   bool _isLoading = true;
   bool _isSaving = false;
@@ -60,6 +66,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
           ? names.sublist(1).join(" ")
           : "";
     }
+
+    _selectedState = _stateController.text.isNotEmpty
+        ? _stateController.text
+        : null;
+    _selectedCity = _cityController.text.isNotEmpty
+        ? _cityController.text
+        : null;
 
     if (mounted) setState(() => _isLoading = false);
   }
@@ -107,14 +120,22 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   Future<void> _saveProfile() async {
     if (!_formKey.currentState!.validate()) return;
+
+    if (_selectedState == null || _selectedCity == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Please select both State and City.")),
+      );
+      return;
+    }
+
     setState(() => _isSaving = true);
 
     final updatedProfile = UserProfile(
       uid: _user.uid,
       firstName: _firstNameController.text.trim(),
       lastName: _lastNameController.text.trim(),
-      city: _cityController.text.trim(),
-      state: _stateController.text.trim(),
+      city: _selectedCity!,
+      state: _selectedState!,
       phoneNumber: _phoneNumberController.text.trim(),
     );
 
@@ -143,33 +164,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
     } finally {
       if (mounted) setState(() => _isSaving = false);
     }
-  }
-
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String label,
-    IconData? icon,
-    bool enabled = true,
-    bool requiredField = true,
-  }) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8),
-      child: TextFormField(
-        controller: controller,
-        decoration: InputDecoration(
-          labelText: label,
-          prefixIcon: icon != null ? Icon(icon) : null,
-          border: OutlineInputBorder(),
-          enabled: enabled,
-        ),
-        validator: (value) {
-          if (requiredField && enabled && (value == null || value.isEmpty)) {
-            return "$label cannot be empty";
-          }
-          return null;
-        },
-      ),
-    );
   }
 
   @override
@@ -244,33 +238,53 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   ),
                 ),
               ),
-              _buildTextField(
+
+              ProfileField(
                 controller: _firstNameController,
                 label: "First Name",
                 icon: Symbols.person_rounded,
+                enabled: !isBusy,
               ),
-              _buildTextField(
+              ProfileField(
                 controller: _lastNameController,
                 label: "Last Name",
                 icon: Symbols.person_rounded,
+                enabled: !isBusy,
               ),
-              _buildTextField(
-                controller: _cityController,
-                label: "City",
-                icon: Symbols.location_city_rounded,
+
+              StateDropdown(
+                selectedState: _selectedState,
+                onChanged: (value) {
+                  setState(() {
+                    _selectedState = value;
+                    _stateController.text = value ?? "";
+                    _selectedCity = null;
+                    _cityController.text = "";
+                  });
+                },
+                enabled: !isBusy,
               ),
-              _buildTextField(
-                controller: _stateController,
-                label: "State/Region",
-                icon: Symbols.location_on_rounded,
+
+              CityDropdown(
+                selectedState: _selectedState,
+                selectedCity: _selectedCity,
+                onChanged: (value) {
+                  setState(() {
+                    _selectedCity = value;
+                    _cityController.text = value ?? "";
+                  });
+                },
+                enabled: _selectedState != null && !isBusy,
               ),
               Divider(height: 32),
-              _buildTextField(
+              ProfileField(
                 controller: _phoneNumberController,
                 label: "Phone Number",
                 icon: Symbols.phone_rounded,
+                keyboardType: TextInputType.phone,
+                enabled: !isBusy,
               ),
-              _buildTextField(
+              ProfileField(
                 controller: _emailController,
                 label: "Email (Read-Only)",
                 icon: Symbols.email_rounded,
