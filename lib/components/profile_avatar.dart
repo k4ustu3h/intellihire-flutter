@@ -1,3 +1,4 @@
+import "package:cached_network_image/cached_network_image.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:material_symbols_icons/symbols.dart";
@@ -16,7 +17,8 @@ class ProfileAvatar extends StatelessWidget {
     final hasAuthPhoto = photoUrl != null && photoUrl.isNotEmpty;
 
     final ImageProvider? finalImageProvider =
-        backgroundImage ?? (hasAuthPhoto ? NetworkImage(photoUrl) : null);
+        backgroundImage ??
+        (hasAuthPhoto ? CachedNetworkImageProvider(photoUrl) : null);
 
     final bool hasFinalImage = finalImageProvider != null;
 

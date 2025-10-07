@@ -57,22 +57,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
     _phoneNumberController.text = _user.phoneNumber ?? "";
     _emailController.text = _user.email ?? "";
 
-    if (_user.displayName != null &&
-        _user.displayName!.isNotEmpty &&
-        profile.firstName.isEmpty) {
+    if (_user.displayName?.isNotEmpty == true && profile.firstName.isEmpty) {
       final names = _user.displayName!.split(" ");
-      _firstNameController.text = names.isNotEmpty ? names.first : "";
-      _lastNameController.text = names.length > 1
-          ? names.sublist(1).join(" ")
-          : "";
+      _firstNameController.text = names.first;
+      _lastNameController.text = names.skip(1).join(" ");
     }
 
-    _selectedState = _stateController.text.isNotEmpty
-        ? _stateController.text
-        : null;
-    _selectedCity = _cityController.text.isNotEmpty
-        ? _cityController.text
-        : null;
+    _selectedState = profile.state.isNotEmpty ? profile.state : null;
+    _selectedCity = profile.city.isNotEmpty ? profile.city : null;
 
     if (mounted) setState(() => _isLoading = false);
   }
@@ -92,7 +84,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
       final ref = FirebaseStorage.instance.ref(
         "user_profile_photos/${_user.uid}/profile.jpg",
       );
-
       await ref.putFile(_newImageFile!);
       final downloadUrl = await ref.getDownloadURL();
       await _user.updatePhotoURL(downloadUrl);
@@ -139,12 +130,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
       phoneNumber: _phoneNumberController.text.trim(),
     );
 
-    final newDisplayName =
-        "${updatedProfile.firstName} ${updatedProfile.lastName}".trim();
+    final displayName = "${updatedProfile.firstName} ${updatedProfile.lastName}"
+        .trim();
 
     try {
-      if (_user.displayName != newDisplayName) {
-        await _user.updateDisplayName(newDisplayName);
+      if (_user.displayName != displayName) {
+        await _user.updateDisplayName(displayName);
       }
 
       await _userService.updateProfile(updatedProfile);
@@ -166,6 +157,69 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
   }
 
+  Widget _buildFormSection(bool isBusy) {
+    if (_isLoading) return Center(child: ExpressiveLoadingIndicator());
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        ProfileField(
+          controller: _firstNameController,
+          label: "First Name",
+          icon: Symbols.person_rounded,
+          enabled: !isBusy,
+        ),
+        ProfileField(
+          controller: _lastNameController,
+          label: "Last Name",
+          icon: Symbols.person_rounded,
+          enabled: !isBusy,
+        ),
+
+        StateDropdown(
+          selectedState: _selectedState,
+          onChanged: (value) {
+            setState(() {
+              _selectedState = value;
+              _stateController.text = value ?? "";
+              _selectedCity = null;
+              _cityController.text = "";
+            });
+          },
+          enabled: !isBusy,
+        ),
+        CityDropdown(
+          selectedState: _selectedState,
+          selectedCity: _selectedCity,
+          onChanged: (value) {
+            setState(() {
+              _selectedCity = value;
+              _cityController.text = value ?? "";
+            });
+          },
+          enabled: _selectedState != null && !isBusy,
+        ),
+
+        Divider(height: 32),
+
+        ProfileField(
+          controller: _phoneNumberController,
+          label: "Phone Number",
+          icon: Symbols.phone_rounded,
+          keyboardType: TextInputType.phone,
+          enabled: !isBusy,
+        ),
+        ProfileField(
+          controller: _emailController,
+          label: "Email (Read-Only)",
+          icon: Symbols.email_rounded,
+          enabled: false,
+          requiredField: false,
+        ),
+      ],
+    );
+  }
+
   @override
   void dispose() {
     _firstNameController.dispose();
@@ -181,13 +235,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    if (_isLoading) {
-      return Scaffold(
-        appBar: AppBar(title: Text("Edit Profile")),
-        body: Center(child: ExpressiveLoadingIndicator()),
-      );
-    }
-
     final isBusy = _isSaving || _isPhotoUploading;
 
     return Scaffold(
@@ -199,9 +246,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
             child: FilledButton.icon(
               icon: Icon(Symbols.save_rounded),
               label: Text("Save Profile"),
-              onPressed: isBusy ? null : _saveProfile,
+              onPressed: isBusy || _isLoading ? null : _saveProfile,
               style: FilledButton.styleFrom(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                padding: EdgeInsets.symmetric(horizontal: 16),
               ),
             ),
           ),
@@ -227,7 +274,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             ? ExpressiveLoadingIndicator()
                             : IconButton(
                                 icon: Icon(Symbols.photo_camera_rounded),
-                                onPressed: _pickAndUploadImage,
+                                onPressed: isBusy ? null : _pickAndUploadImage,
                                 style: IconButton.styleFrom(
                                   backgroundColor:
                                       theme.colorScheme.surfaceVariant,
@@ -238,59 +285,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   ),
                 ),
               ),
-
-              ProfileField(
-                controller: _firstNameController,
-                label: "First Name",
-                icon: Symbols.person_rounded,
-                enabled: !isBusy,
-              ),
-              ProfileField(
-                controller: _lastNameController,
-                label: "Last Name",
-                icon: Symbols.person_rounded,
-                enabled: !isBusy,
-              ),
-
-              StateDropdown(
-                selectedState: _selectedState,
-                onChanged: (value) {
-                  setState(() {
-                    _selectedState = value;
-                    _stateController.text = value ?? "";
-                    _selectedCity = null;
-                    _cityController.text = "";
-                  });
-                },
-                enabled: !isBusy,
-              ),
-
-              CityDropdown(
-                selectedState: _selectedState,
-                selectedCity: _selectedCity,
-                onChanged: (value) {
-                  setState(() {
-                    _selectedCity = value;
-                    _cityController.text = value ?? "";
-                  });
-                },
-                enabled: _selectedState != null && !isBusy,
-              ),
-              Divider(height: 32),
-              ProfileField(
-                controller: _phoneNumberController,
-                label: "Phone Number",
-                icon: Symbols.phone_rounded,
-                keyboardType: TextInputType.phone,
-                enabled: !isBusy,
-              ),
-              ProfileField(
-                controller: _emailController,
-                label: "Email (Read-Only)",
-                icon: Symbols.email_rounded,
-                enabled: false,
-                requiredField: false,
-              ),
+              _buildFormSection(isBusy),
             ],
           ),
         ),
