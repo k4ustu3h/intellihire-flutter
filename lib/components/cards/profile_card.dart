@@ -1,5 +1,6 @@
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
+import "package:heroine/heroine.dart";
 import "package:intellihire/components/profile_avatar.dart";
 import "package:material_symbols_icons/symbols.dart";
 
@@ -25,7 +26,11 @@ class ProfileCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           spacing: 16,
           children: [
-            ProfileAvatar(radius: 32),
+            Heroine(
+              tag: "profile-avatar-hero",
+              child: ProfileAvatar(radius: 32),
+            ),
+
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

@@ -4,6 +4,7 @@ import "package:expressive_loading_indicator/expressive_loading_indicator.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:firebase_storage/firebase_storage.dart";
 import "package:flutter/material.dart";
+import "package:heroine/heroine.dart";
 import "package:image_picker/image_picker.dart";
 import "package:intellihire/components/menus/city_dropdown.dart";
 import "package:intellihire/components/menus/state_dropdown.dart";
@@ -266,7 +267,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   padding: EdgeInsets.only(bottom: 24),
                   child: Stack(
                     children: [
-                      ProfileAvatar(radius: 60),
+                      Heroine(
+                        tag: "profile-avatar-hero",
+                        child: ProfileAvatar(radius: 60),
+                      ),
                       Positioned(
                         bottom: 0,
                         right: 0,
