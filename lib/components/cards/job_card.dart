@@ -1,3 +1,4 @@
+import "package:cached_network_image/cached_network_image.dart";
 import "package:flutter/material.dart";
 import "package:material_symbols_icons/symbols.dart";
 
@@ -11,6 +12,8 @@ class JobCard extends StatelessWidget {
     final theme = Theme.of(context);
     final logoUrl = job["companyLogo"] as String?;
     final hasLogo = logoUrl != null && logoUrl.isNotEmpty;
+
+    final locationText = "${job["city"] as String}, ${job["state"] as String}";
 
     return Card.outlined(
       margin: EdgeInsets.only(bottom: 16),
@@ -26,11 +29,26 @@ class JobCard extends StatelessWidget {
                 hasLogo
                     ? ClipRRect(
                         borderRadius: BorderRadius.circular(8),
-                        child: Image.network(
-                          logoUrl,
+                        child: CachedNetworkImage(
+                          imageUrl: logoUrl,
                           width: 48,
                           height: 48,
                           fit: BoxFit.cover,
+                          placeholder: (context, url) => Container(
+                            color: theme.colorScheme.secondaryContainer,
+                          ),
+                          errorWidget: (context, url, error) => Container(
+                            width: 48,
+                            height: 48,
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.secondaryContainer,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Icon(
+                              Symbols.business_center_rounded,
+                              color: theme.colorScheme.onSecondaryContainer,
+                            ),
+                          ),
                         ),
                       )
                     : Container(
@@ -45,18 +63,28 @@ class JobCard extends StatelessWidget {
                           color: theme.colorScheme.onSecondaryContainer,
                         ),
                       ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      job["jobTitle"] as String,
-                      style: theme.textTheme.titleLarge,
+
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          job["jobTitle"] as String,
+                          style: theme.textTheme.titleLarge,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(
+                          job["companyName"] as String,
+                          style: theme.textTheme.bodyMedium,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
                     ),
-                    Text(
-                      job["companyName"] as String,
-                      style: theme.textTheme.bodyMedium,
-                    ),
-                  ],
+                  ),
                 ),
               ],
             ),
@@ -77,8 +105,10 @@ class JobCard extends StatelessWidget {
                   ),
                   avatar: Icon(Symbols.location_on_rounded, size: 18),
                   label: Text(
-                    job["location"] as String,
-                    style: theme.textTheme.labelSmall,
+                    locationText,
+                    style: theme.textTheme.labelSmall!.copyWith(
+                      color: theme.colorScheme.onSecondaryContainer,
+                    ),
                   ),
                 ),
                 FilledButton.icon(
