@@ -19,8 +19,25 @@ class IntelliHire extends StatelessWidget {
           builder: (lightDynamic, darkDynamic) {
             return MaterialApp(
               title: "IntelliHire",
-              theme: lightTheme(useDynamicTheme ? lightDynamic : null),
-              darkTheme: darkTheme(useDynamicTheme ? darkDynamic : null),
+              theme: lightTheme(useDynamicTheme ? lightDynamic : null).copyWith(
+                pageTransitionsTheme: PageTransitionsTheme(
+                  builders: <TargetPlatform, PageTransitionsBuilder>{
+                    TargetPlatform.android:
+                        PredictiveBackPageTransitionsBuilder(),
+                    TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+                  },
+                ),
+              ),
+              darkTheme: darkTheme(useDynamicTheme ? darkDynamic : null)
+                  .copyWith(
+                    pageTransitionsTheme: PageTransitionsTheme(
+                      builders: <TargetPlatform, PageTransitionsBuilder>{
+                        TargetPlatform.android:
+                            PredictiveBackPageTransitionsBuilder(),
+                        TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+                      },
+                    ),
+                  ),
               themeMode: ThemeMode.system,
               navigatorObservers: [HeroineController()],
               home: AuthGate(themeController: themeController),
