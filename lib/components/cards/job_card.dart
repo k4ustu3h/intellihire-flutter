@@ -1,5 +1,6 @@
-import "package:cached_network_image/cached_network_image.dart";
+import "package:expressive_loading_indicator/expressive_loading_indicator.dart";
 import "package:flutter/material.dart";
+import "package:flutter_svg/flutter_svg.dart";
 import "package:material_symbols_icons/symbols.dart";
 
 class JobCard extends StatelessWidget {
@@ -7,11 +8,19 @@ class JobCard extends StatelessWidget {
 
   final Map<String, dynamic> job;
 
+  String colorToHex(Color color) {
+    return color.toARGB32().toRadixString(16).substring(2).toUpperCase();
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final logoUrl = job["companyLogo"] as String?;
-    final hasLogo = logoUrl != null && logoUrl.isNotEmpty;
+
+    final defaultColor = colorToHex(theme.colorScheme.onSecondaryContainer);
+
+    final iconSlug = job["iconSlug"] as String?;
+    final iconColor = job["iconColor"] as String?;
+    final hasIconData = iconSlug != null && iconSlug.isNotEmpty;
 
     final jobType = job["jobType"] as String?;
     final isRemote = jobType == "Remote";
@@ -24,6 +33,41 @@ class JobCard extends StatelessWidget {
         ? Symbols.public_rounded
         : Symbols.location_on_rounded;
 
+    final String svgUrl = hasIconData
+        ? "https://cdn.simpleicons.org/$iconSlug/${iconColor ?? defaultColor}"
+        : "";
+
+    final Widget loadingIndicator = Container(
+      width: 48,
+      height: 48,
+      decoration: BoxDecoration(
+        color: theme.colorScheme.secondaryContainer,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Center(
+        child: SizedBox(
+          width: 24,
+          height: 24,
+          child: ExpressiveLoadingIndicator(
+            color: theme.colorScheme.onSecondaryContainer,
+          ),
+        ),
+      ),
+    );
+
+    final Widget errorIconPlaceholder = Container(
+      width: 48,
+      height: 48,
+      decoration: BoxDecoration(
+        color: theme.colorScheme.secondaryContainer,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Icon(
+        Symbols.business_center_rounded,
+        color: theme.colorScheme.onSecondaryContainer,
+      ),
+    );
+
     return Card.outlined(
       margin: EdgeInsets.only(bottom: 16),
       child: Padding(
@@ -35,43 +79,26 @@ class JobCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                hasLogo
+                hasIconData
                     ? ClipRRect(
                         borderRadius: BorderRadius.circular(8),
-                        child: CachedNetworkImage(
-                          imageUrl: logoUrl,
+                        child: Container(
                           width: 48,
                           height: 48,
-                          fit: BoxFit.cover,
-                          placeholder: (context, url) => Container(
-                            color: theme.colorScheme.secondaryContainer,
-                          ),
-                          errorWidget: (context, url, error) => Container(
-                            width: 48,
-                            height: 48,
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.secondaryContainer,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Icon(
-                              Symbols.business_center_rounded,
-                              color: theme.colorScheme.onSecondaryContainer,
+                          color: theme.colorScheme.secondaryContainer,
+                          child: Padding(
+                            padding: EdgeInsets.all(8),
+                            child: SvgPicture.network(
+                              svgUrl,
+                              fit: BoxFit.contain,
+                              placeholderBuilder: (context) => loadingIndicator,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  errorIconPlaceholder,
                             ),
                           ),
                         ),
                       )
-                    : Container(
-                        width: 48,
-                        height: 48,
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.secondaryContainer,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Icon(
-                          Symbols.business_center_rounded,
-                          color: theme.colorScheme.onSecondaryContainer,
-                        ),
-                      ),
+                    : errorIconPlaceholder,
 
                 Expanded(
                   child: Padding(
