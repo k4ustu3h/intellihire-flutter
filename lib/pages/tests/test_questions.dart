@@ -2,6 +2,7 @@ import "package:expressive_loading_indicator/expressive_loading_indicator.dart";
 import "package:flutter/material.dart";
 import "package:intellihire/components/top_app_bar.dart";
 import "package:intellihire/services/api_service.dart";
+import "package:intellihire/services/test_service.dart";
 import "package:material_symbols_icons/material_symbols_icons.dart";
 
 class TestQuestions extends StatefulWidget {
@@ -18,6 +19,7 @@ class _TestQuestionsState extends State<TestQuestions> {
   late final Future<List<Map<String, dynamic>>> _questionsFuture;
 
   final Map<int, String> _selectedAnswers = {};
+  bool _isSubmitting = false;
 
   @override
   void initState() {
@@ -73,6 +75,22 @@ class _TestQuestionsState extends State<TestQuestions> {
     );
   }
 
+  void _handleSubmission(List<Map<String, dynamic>> questions) async {
+    setState(() => _isSubmitting = true);
+
+    await TestService.submitTestAndSaveScore(
+      context: context,
+      testId: widget.testId,
+      title: widget.title,
+      questions: questions,
+      selectedAnswers: _selectedAnswers,
+    );
+
+    if (mounted) {
+      setState(() => _isSubmitting = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -93,6 +111,9 @@ class _TestQuestionsState extends State<TestQuestions> {
           if (questions.isEmpty) {
             return Center(child: Text("No questions found."));
           }
+
+          final isComplete = _selectedAnswers.length == questions.length;
+          final isButtonDisabled = !isComplete || _isSubmitting;
 
           return Column(
             children: [
@@ -161,13 +182,17 @@ class _TestQuestionsState extends State<TestQuestions> {
               Padding(
                 padding: EdgeInsets.all(16),
                 child: FilledButton.icon(
-                  icon: Icon(Symbols.check_rounded),
-                  label: Text("Submit"),
-                  onPressed: _selectedAnswers.length == questions.length
-                      ? () {
-                          debugPrint("Submitted answers: $_selectedAnswers");
-                        }
-                      : null,
+                  icon: _isSubmitting
+                      ? SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: ExpressiveLoadingIndicator(),
+                        )
+                      : Icon(Symbols.check_rounded),
+                  label: Text(_isSubmitting ? "Submitting..." : "Submit"),
+                  onPressed: isButtonDisabled
+                      ? null
+                      : () => _handleSubmission(questions),
                   style: FilledButton.styleFrom(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
