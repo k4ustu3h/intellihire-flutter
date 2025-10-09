@@ -4,6 +4,7 @@ import "package:intellihire/components/cards/job_card.dart";
 import "package:intellihire/components/chips/filter_chip_button.dart";
 import "package:intellihire/components/skeletons/jobs_skeleton.dart";
 import "package:intellihire/services/api_service.dart";
+import "package:intellihire/util/skill_labeler.dart";
 import "package:material_symbols_icons/symbols.dart";
 
 class Jobs extends StatefulWidget {
@@ -32,10 +33,11 @@ class _JobsState extends State<Jobs> {
 
   Future<List<Map<String, dynamic>>> _fetchAndProcessJobs() async {
     final jobs = await ApiService.fetchJobs();
-    if (jobs.isEmpty) return jobs;
-
-    final states = <String>{};
-    final skills = <String>{};
+    if (jobs.isEmpty) {
+      return jobs;
+    }
+    final Set<String> states = {};
+    final Set<String> skills = {};
 
     for (var job in jobs) {
       states.add(job["state"] as String);
@@ -62,15 +64,16 @@ class _JobsState extends State<Jobs> {
     }
 
     return _allJobs.where((job) {
-      final matchesState =
+      bool matchesState =
           _selectedState == null || job["state"] == _selectedState;
-      final matchesCity =
+      bool matchesCity =
           _selectedCity == null ||
           (job["city"] == _selectedCity && job["state"] == _selectedState);
-      final matchesSkill = _selectedSkill == null
-          ? true
-          : List<String>.from(job["skills"]).contains(_selectedSkill);
-
+      bool matchesSkill = true;
+      if (_selectedSkill != null) {
+        final jobSkills = List<String>.from(job["skills"]);
+        matchesSkill = jobSkills.contains(_selectedSkill);
+      }
       return matchesState && matchesCity && matchesSkill;
     }).toList();
   }
@@ -93,14 +96,30 @@ class _JobsState extends State<Jobs> {
     required String? selectedValue,
     required ValueChanged<String?> onSelected,
   }) {
+    final bool isSkillFilter = title.contains("Skill");
+
+    final List<String> sheetOptions = isSkillFilter
+        ? options.map(getSkillDisplayLabel).toList()
+        : options;
+
+    final String? sheetSelectedValue = isSkillFilter
+        ? (selectedValue != null ? getSkillDisplayLabel(selectedValue) : null)
+        : selectedValue;
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       builder: (context) => FilterBottomSheet(
         title: title,
-        options: options,
-        selectedValue: selectedValue,
-        onSelected: onSelected,
+        options: sheetOptions,
+        selectedValue: sheetSelectedValue,
+        onSelected: (label) {
+          final String? finalValue = isSkillFilter && label != null
+              ? getSkillCodeFromLabel(label)
+              : label;
+
+          onSelected(finalValue);
+        },
       ),
     );
   }
@@ -176,13 +195,15 @@ class _JobsState extends State<Jobs> {
                     FilterChipButton(
                       label: "Skill",
                       icon: Symbols.code,
-                      selectedValue: _selectedSkill,
+                      selectedValue: _selectedSkill != null
+                          ? getSkillDisplayLabel(_selectedSkill!)
+                          : null,
                       onTap: () => _openFilterSheet(
                         title: "Filter by Skill",
                         options: _availableSkills,
                         selectedValue: _selectedSkill,
-                        onSelected: (val) =>
-                            setState(() => _selectedSkill = val),
+                        onSelected: (code) =>
+                            setState(() => _selectedSkill = code),
                       ),
                     ),
                   ],

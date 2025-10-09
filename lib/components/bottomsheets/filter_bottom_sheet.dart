@@ -71,12 +71,9 @@ class FilterBottomSheet extends StatelessWidget {
 
     return ListTile(
       contentPadding: EdgeInsets.symmetric(horizontal: 16),
-      leading: SizedBox(
-        width: 24,
-        child: isSelected
-            ? Icon(Symbols.check_rounded, color: theme.colorScheme.primary)
-            : SizedBox.shrink(),
-      ),
+      leading: isSelected
+          ? Icon(Symbols.check_rounded, color: theme.colorScheme.primary)
+          : SizedBox(width: 24),
       title: Text(title),
       onTap: onTap,
       dense: true,
