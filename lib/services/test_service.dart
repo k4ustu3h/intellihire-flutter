@@ -6,6 +6,22 @@ import "package:material_symbols_icons/symbols.dart";
 class TestService {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  static Stream<List<Map<String, dynamic>>> getUserTestHistory() {
+    final User? currentUser = FirebaseAuth.instance.currentUser;
+
+    if (currentUser == null) {
+      return const Stream.empty();
+    }
+
+    return _firestore
+        .collection("test_results")
+        .doc(currentUser.uid)
+        .collection("attempts")
+        .orderBy("timestamp", descending: true)
+        .snapshots()
+        .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
+  }
+
   static Future<void> submitTestAndSaveScore({
     required BuildContext context,
     required String testId,

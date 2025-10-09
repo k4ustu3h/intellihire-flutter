@@ -4,6 +4,7 @@ import "package:intellihire/components/cards/profile_card.dart";
 import "package:intellihire/components/core/list_row.dart";
 import "package:intellihire/pages/auth/login.dart";
 import "package:intellihire/pages/profile/edit_profile_page.dart";
+import "package:intellihire/pages/profile/my_scores.dart";
 import "package:intellihire/pages/profile/settings.dart";
 import "package:intellihire/util/ui/theme_controller.dart";
 import "package:material_symbols_icons/symbols.dart";
@@ -70,10 +71,14 @@ class _ProfileState extends State<Profile> {
               SettingsPage(themeController: widget.themeController),
         ),
       );
-    } else if (label == "My Scores" || label == "Change Password") {
-      ScaffoldMessenger.of(
+    } else if (label == "My Scores") {
+      Navigator.push(
         context,
-      ).showSnackBar(SnackBar(content: Text("Navigating to $label...")));
+        MaterialPageRoute(
+          builder: (context) =>
+              MyScores()
+        ),
+      );
     } else if (label == "About") {
       showDialog(
         context: context,
