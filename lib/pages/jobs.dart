@@ -2,10 +2,9 @@ import "package:flutter/material.dart";
 import "package:intellihire/components/bottomsheets/filter_bottom_sheet.dart";
 import "package:intellihire/components/cards/job_card.dart";
 import "package:intellihire/components/chips/filter_chip_button.dart";
-import "package:intellihire/components/skeletons/job_card_skeleton.dart";
+import "package:intellihire/components/skeletons/jobs_skeleton.dart";
 import "package:intellihire/services/api_service.dart";
 import "package:material_symbols_icons/symbols.dart";
-import "package:skeletonizer/skeletonizer.dart";
 
 class Jobs extends StatefulWidget {
   const Jobs({super.key});
@@ -79,12 +78,13 @@ class _JobsState extends State<Jobs> {
   List<String> _getAvailableCities() {
     if (_selectedState == null) return [];
 
-    return _allJobs
+    List<String> cityList = _allJobs
         .where((job) => job["state"] == _selectedState)
         .map((job) => job["city"] as String)
         .toSet()
-        .toList()
-      ..sort();
+        .toList();
+    cityList.sort();
+    return cityList;
   }
 
   void _openFilterSheet({
@@ -122,14 +122,7 @@ class _JobsState extends State<Jobs> {
             return Center(child: Text("No jobs found."));
           }
           if (isLoading) {
-            return Skeletonizer(
-              enabled: true,
-              child: ListView.builder(
-                padding: EdgeInsets.all(16),
-                itemCount: 5,
-                itemBuilder: (context, index) => JobCardSkeleton(),
-              ),
-            );
+            return JobsSkeleton();
           }
 
           final filteredJobs = _getFilteredJobs();
@@ -140,7 +133,7 @@ class _JobsState extends State<Jobs> {
             children: [
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: EdgeInsets.symmetric(horizontal: 16),
                 child: Row(
                   spacing: 8,
                   children: [
