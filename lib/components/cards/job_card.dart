@@ -13,7 +13,16 @@ class JobCard extends StatelessWidget {
     final logoUrl = job["companyLogo"] as String?;
     final hasLogo = logoUrl != null && logoUrl.isNotEmpty;
 
-    final locationText = "${job["city"] as String}, ${job["state"] as String}";
+    final jobType = job["jobType"] as String?;
+    final isRemote = jobType == "Remote";
+
+    final locationText = isRemote
+        ? "Remote"
+        : "${job["city"] as String}, ${job["state"] as String}";
+
+    final locationIcon = isRemote
+        ? Symbols.public_rounded
+        : Symbols.location_on_rounded;
 
     return Card.outlined(
       margin: EdgeInsets.only(bottom: 16),
@@ -103,7 +112,7 @@ class JobCard extends StatelessWidget {
                   iconTheme: IconThemeData(
                     color: theme.colorScheme.onSecondaryContainer,
                   ),
-                  avatar: Icon(Symbols.location_on_rounded, size: 18),
+                  avatar: Icon(locationIcon, size: 18),
                   label: Text(
                     locationText,
                     style: theme.textTheme.labelSmall!.copyWith(
