@@ -14,10 +14,25 @@ class TestAttemptHistory extends StatelessWidget {
     required this.attempts,
   });
 
-  Widget _buildStartIcon(IconData icon, Color color) {
-    return CircleAvatar(
-      backgroundColor: color.withValues(alpha: 0.15),
-      child: Icon(icon, color: color),
+  Widget _buildStartIcon(IconData icon, Color color, double percentage) {
+    const double size = 48;
+    const double iconRadius = 24;
+
+    return SizedBox(
+      width: size,
+      height: size,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          CircularProgressIndicator(
+            backgroundColor: color.withValues(alpha: 0.15),
+            color: color,
+            strokeCap: StrokeCap.round,
+            value: percentage / 100,
+          ),
+          Icon(icon, color: color, size: iconRadius),
+        ],
+      ),
     );
   }
 
@@ -67,7 +82,7 @@ class TestAttemptHistory extends StatelessWidget {
             return ListRow(
               label: Text("Attempt $attemptNumber | Score: $score/$total"),
               description: Text("$status • ${percentage.toStringAsFixed(1)}%"),
-              startIcon: _buildStartIcon(statusIcon, statusColor),
+              startIcon: _buildStartIcon(statusIcon, statusColor, percentage),
               endIcon: Text(
                 formattedTime,
                 style: theme.textTheme.labelSmall?.copyWith(

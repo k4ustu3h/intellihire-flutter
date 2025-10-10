@@ -22,7 +22,7 @@ class TestAverageChart extends StatelessWidget {
 
     final totalWidth = titles.length * 60.0;
 
-    final double screenWidth = MediaQuery.of(context).size.width - 32;
+    final double screenWidth = MediaQuery.of(context).size.width - 72;
 
     return Card.outlined(
       child: Padding(
