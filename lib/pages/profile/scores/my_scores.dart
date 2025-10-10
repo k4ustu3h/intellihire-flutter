@@ -39,7 +39,7 @@ class MyScores extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: TopAppBar(title: "My Test History"),
+      appBar: TopAppBar(title: "My Scores"),
       body: StreamBuilder<List<Map<String, dynamic>>>(
         stream: TestService.getUserTestHistory(),
         builder: (context, snapshot) {
@@ -86,7 +86,9 @@ class MyScores extends StatelessWidget {
                       ? Colors.greenAccent.shade700
                       : theme.colorScheme.error;
 
-                  return ListRow(
+                  final attempts = groupedScores[title] ?? [];
+
+                  return ListRow.navigate(
                     startIcon: Icon(
                       isPassed
                           ? Symbols.check_circle_rounded
@@ -106,21 +108,13 @@ class MyScores extends StatelessWidget {
                         ),
                       ],
                     ),
-                    endIcon: Icon(Symbols.navigate_next_rounded),
                     first: index == 0,
                     last: index == keys.length - 1,
-                    onClick: () {
-                      final attempts = groupedScores[title] ?? [];
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => TestAttemptHistory(
-                            title: title,
-                            attempts: attempts,
-                          ),
-                        ),
-                      );
-                    },
                     title: Text("Tests Attempted"),
+                    navigateTo: TestAttemptHistory(
+                      title: title,
+                      attempts: attempts,
+                    ),
                   );
                 }),
               ),

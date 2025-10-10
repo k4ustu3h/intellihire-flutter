@@ -63,56 +63,28 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  void _handleMenuItemTap(Map<String, dynamic> item) async {
-    final label = item["label"];
+  Future<void> _handleSignOut() async {
+    final navigator = Navigator.of(context);
+    await FirebaseAuth.instance.signOut();
 
-    if (label == "Settings") {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) =>
-              SettingsPage(themeController: widget.themeController),
-        ),
-      );
-    } else if (label == "My Scores") {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => MyScores()),
-      );
-    } else if (label == "About") {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text("About IntelliHire"),
-          content: Text(
-            "IntelliHire: Smart Recruitment & Skill Assessment System. Version 1.0",
-          ),
-          actions: [CloseButton()],
-        ),
-      );
-    } else if (label == "Help Center") {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text("Help Center"),
-          content: Text(
-            "Contact support at support@intellihire.com or visit our FAQ.",
-          ),
-          actions: [CloseButton()],
-        ),
-      );
-    } else if (label == "Sign Out") {
-      final navigator = Navigator.of(context);
-      await FirebaseAuth.instance.signOut();
+    if (!mounted) return;
 
-      if (!mounted) return;
+    navigator.pushReplacement(
+      MaterialPageRoute(
+        builder: (context) => Login(themeController: widget.themeController),
+      ),
+    );
+  }
 
-      navigator.pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => Login(themeController: widget.themeController),
-        ),
-      );
-    }
+  void _showDialog(String title, String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(title),
+        content: Text(message),
+        actions: [CloseButton()],
+      ),
+    );
   }
 
   Widget _buildListGroup(String title, List<Map<String, dynamic>> items) {
@@ -120,17 +92,79 @@ class _ProfileState extends State<Profile> {
       spacing: 2,
       children: List.generate(items.length, (index) {
         final item = items[index];
-        return ListRow(
-          title: index == 0 ? Text(title) : null,
-          label: Text(item["label"] as String),
-          startIcon: _buildStartIcon(item["iconName"] as String),
-          endIcon: Icon(Symbols.navigate_next_rounded),
+        final label = item["label"] as String;
+        final iconName = item["iconName"] as String;
 
-          first: index == 0,
-          last: index == items.length - 1,
+        switch (label) {
+          case "My Scores":
+            return ListRow.navigate(
+              title: index == 0 ? Text(title) : null,
+              startIcon: _buildStartIcon(iconName),
+              label: Text(label),
+              navigateTo: MyScores(),
+              first: index == 0,
+              last: index == items.length - 1,
+            );
 
-          onClick: () => _handleMenuItemTap(item),
-        );
+          case "Settings":
+            return ListRow.navigate(
+              title: index == 0 ? Text(title) : null,
+              startIcon: _buildStartIcon(iconName),
+              label: Text(label),
+              navigateTo: SettingsPage(themeController: widget.themeController),
+              first: index == 0,
+              last: index == items.length - 1,
+            );
+
+          case "Change Password":
+            return ListRow(
+              title: index == 0 ? Text(title) : null,
+              startIcon: _buildStartIcon(iconName),
+              label: Text(label),
+              onClick: () {},
+              first: index == 0,
+              last: index == items.length - 1,
+            );
+
+          case "Help Center":
+            return ListRow(
+              title: index == 0 ? Text(title) : null,
+              startIcon: _buildStartIcon(iconName),
+              label: Text(label),
+              onClick: () => _showDialog(
+                "Help Center",
+                "Contact support at support@intellihire.com or visit our FAQ.",
+              ),
+              first: index == 0,
+              last: index == items.length - 1,
+            );
+
+          case "About":
+            return ListRow(
+              title: index == 0 ? Text(title) : null,
+              startIcon: _buildStartIcon(iconName),
+              label: Text(label),
+              onClick: () => _showDialog(
+                "About IntelliHire",
+                "IntelliHire: Smart Recruitment & Skill Assessment System.\nVersion 1.0",
+              ),
+              first: index == 0,
+              last: index == items.length - 1,
+            );
+
+          case "Sign Out":
+            return ListRow(
+              title: index == 0 ? Text(title) : null,
+              startIcon: _buildStartIcon(iconName),
+              label: Text(label),
+              onClick: _handleSignOut,
+              first: index == 0,
+              last: index == items.length - 1,
+            );
+
+          default:
+            return SizedBox.shrink();
+        }
       }),
     );
   }

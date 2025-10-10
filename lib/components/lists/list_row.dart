@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:material_symbols_icons/symbols.dart";
 
 class ListRow extends StatelessWidget {
   final Widget label;
@@ -10,6 +11,7 @@ class ListRow extends StatelessWidget {
   final bool last;
   final VoidCallback? onClick;
   final Widget? title;
+  final Widget? navigateTo;
 
   static const double basePadding = 16;
   static const double rowHeight = 72;
@@ -24,9 +26,22 @@ class ListRow extends StatelessWidget {
     this.background = true,
     this.first = false,
     this.last = false,
-    this.onClick,
     this.title,
-  });
+    required this.onClick,
+  }) : navigateTo = null;
+
+  const ListRow.navigate({
+    super.key,
+    required this.label,
+    this.description,
+    this.startIcon,
+    this.background = true,
+    this.first = false,
+    this.last = false,
+    this.title,
+    required this.navigateTo,
+  }) : endIcon = null,
+       onClick = null;
 
   TextStyle _labelStyle(BuildContext context) => Theme.of(
     context,
@@ -65,6 +80,19 @@ class ListRow extends StatelessWidget {
             child: description!,
           );
 
+    final onTapAction = navigateTo != null
+        ? () => Navigator.of(
+            context,
+          ).push(MaterialPageRoute(builder: (context) => navigateTo!))
+        : onClick;
+
+    final effectiveEndIcon = navigateTo != null
+        ? Icon(
+            Symbols.navigate_next_rounded,
+            color: theme.colorScheme.onSurfaceVariant,
+          )
+        : endIcon;
+
     return Container(
       margin: background ? EdgeInsets.symmetric(horizontal: basePadding) : null,
       child: Column(
@@ -90,7 +118,7 @@ class ListRow extends StatelessWidget {
                   ? theme.colorScheme.surfaceVariant
                   : Colors.transparent,
               child: InkWell(
-                onTap: onClick,
+                onTap: onTapAction,
                 child: Container(
                   height: rowHeight,
                   padding: EdgeInsets.symmetric(horizontal: basePadding),
@@ -112,9 +140,9 @@ class ListRow extends StatelessWidget {
                           ],
                         ),
                       ),
-                      if (endIcon != null) ...[
+                      if (effectiveEndIcon != null) ...[
                         SizedBox(width: basePadding),
-                        endIcon!,
+                        effectiveEndIcon,
                       ],
                     ],
                   ),
