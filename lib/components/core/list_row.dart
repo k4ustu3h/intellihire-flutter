@@ -9,6 +9,7 @@ class ListRow extends StatelessWidget {
   final bool first;
   final bool last;
   final VoidCallback? onClick;
+  final Widget? title;
 
   static const double basePadding = 16;
   static const double rowHeight = 72;
@@ -24,6 +25,7 @@ class ListRow extends StatelessWidget {
     this.first = false,
     this.last = false,
     this.onClick,
+    this.title,
   });
 
   TextStyle _labelStyle(BuildContext context) => Theme.of(
@@ -34,6 +36,12 @@ class ListRow extends StatelessWidget {
       Theme.of(context).textTheme.bodySmall!.copyWith(
         color: Theme.of(context).colorScheme.onSurfaceVariant,
         fontSize: 13,
+      );
+
+  TextStyle _titleStyle(BuildContext context) =>
+      Theme.of(context).textTheme.titleSmall!.copyWith(
+        fontWeight: FontWeight.w600,
+        color: Theme.of(context).colorScheme.onSurfaceVariant,
       );
 
   @override
@@ -59,44 +67,62 @@ class ListRow extends StatelessWidget {
 
     return Container(
       margin: background ? EdgeInsets.symmetric(horizontal: basePadding) : null,
-      child: ClipRRect(
-        borderRadius: borderRadius,
-        child: Material(
-          color: background
-              ? theme.colorScheme.surfaceVariant
-              : Colors.transparent,
-          child: InkWell(
-            onTap: onClick,
-            child: Container(
-              height: rowHeight,
-              padding: EdgeInsets.symmetric(horizontal: basePadding),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  if (startIcon != null) ...[
-                    startIcon!,
-                    SizedBox(width: basePadding),
-                  ],
-                  Expanded(
-                    child: Column(
-                      spacing: verticalTextSpacing,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        styledLabel,
-                        if (styledDescription != null) styledDescription,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 8,
+        children: [
+          if (first && title != null)
+            Padding(
+              padding: EdgeInsets.only(
+                bottom: 4,
+                left: basePadding,
+                right: basePadding,
+              ),
+              child: DefaultTextStyle.merge(
+                style: _titleStyle(context),
+                child: title!,
+              ),
+            ),
+          ClipRRect(
+            borderRadius: borderRadius,
+            child: Material(
+              color: background
+                  ? theme.colorScheme.surfaceVariant
+                  : Colors.transparent,
+              child: InkWell(
+                onTap: onClick,
+                child: Container(
+                  height: rowHeight,
+                  padding: EdgeInsets.symmetric(horizontal: basePadding),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      if (startIcon != null) ...[
+                        startIcon!,
+                        SizedBox(width: basePadding),
                       ],
-                    ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          spacing: verticalTextSpacing,
+                          children: [
+                            styledLabel,
+                            if (styledDescription != null) styledDescription,
+                          ],
+                        ),
+                      ),
+                      if (endIcon != null) ...[
+                        SizedBox(width: basePadding),
+                        endIcon!,
+                      ],
+                    ],
                   ),
-                  if (endIcon != null) ...[
-                    SizedBox(width: basePadding),
-                    endIcon!,
-                  ],
-                ],
+                ),
               ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }

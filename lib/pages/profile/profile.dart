@@ -22,9 +22,12 @@ class _ProfileState extends State<Profile> {
   final user = FirebaseAuth.instance.currentUser;
 
   final List<Map<String, dynamic>> _accountItems = [
-    {"label": "Settings", "iconName": "settings"},
     {"label": "My Scores", "iconName": "analytics"},
     {"label": "Change Password", "iconName": "lock"},
+  ];
+
+  final List<Map<String, dynamic>> _settingsItems = [
+    {"label": "Settings", "iconName": "settings"},
   ];
 
   final List<Map<String, dynamic>> _supportItems = [
@@ -55,8 +58,8 @@ class _ProfileState extends State<Profile> {
   Widget _buildStartIcon(String iconName) {
     final theme = Theme.of(context).colorScheme;
     return CircleAvatar(
-      backgroundColor: theme.primary,
-      child: Icon(_getIconData(iconName), color: theme.onPrimary),
+      backgroundColor: theme.primary.withValues(alpha: 0.15),
+      child: Icon(_getIconData(iconName), color: theme.primary),
     );
   }
 
@@ -74,10 +77,7 @@ class _ProfileState extends State<Profile> {
     } else if (label == "My Scores") {
       Navigator.push(
         context,
-        MaterialPageRoute(
-          builder: (context) =>
-              MyScores()
-        ),
+        MaterialPageRoute(builder: (context) => MyScores()),
       );
     } else if (label == "About") {
       showDialog(
@@ -115,16 +115,14 @@ class _ProfileState extends State<Profile> {
     }
   }
 
-  Widget _buildListGroup(List<Map<String, dynamic>> items) {
+  Widget _buildListGroup(String title, List<Map<String, dynamic>> items) {
     return Column(
       spacing: 2,
       children: List.generate(items.length, (index) {
         final item = items[index];
         return ListRow(
-          label: Text(
-            item["label"] as String,
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
+          title: index == 0 ? Text(title) : null,
+          label: Text(item["label"] as String),
           startIcon: _buildStartIcon(item["iconName"] as String),
           endIcon: Icon(Symbols.navigate_next_rounded),
 
@@ -140,7 +138,8 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+      body: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(vertical: 16),
         child: Column(
           spacing: 12,
           children: [
@@ -157,8 +156,9 @@ class _ProfileState extends State<Profile> {
               ),
             ),
 
-            _buildListGroup(_accountItems),
-            _buildListGroup(_supportItems),
+            _buildListGroup("Account", _accountItems),
+            _buildListGroup("Settings", _settingsItems),
+            _buildListGroup("Support", _supportItems),
           ],
         ),
       ),

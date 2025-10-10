@@ -76,14 +76,6 @@ class MyScores extends StatelessWidget {
                 ),
               ),
 
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: Text(
-                  "Tests Attempted",
-                  style: theme.textTheme.titleMedium,
-                ),
-              ),
-
               Column(
                 spacing: 2,
                 children: List.generate(keys.length, (index) {
@@ -101,14 +93,20 @@ class MyScores extends StatelessWidget {
                           : Symbols.cancel_rounded,
                       color: color,
                     ),
-                    label: Text(title),
-                    endIcon: Text(
-                      "${average.toStringAsFixed(1)}%",
-                      style: theme.textTheme.titleMedium!.copyWith(
-                        color: color,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    label: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(title),
+                        Text(
+                          "${average.toStringAsFixed(1)}%",
+                          style: theme.textTheme.titleMedium!.copyWith(
+                            color: color,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
+                    endIcon: Icon(Symbols.navigate_next_rounded),
                     first: index == 0,
                     last: index == keys.length - 1,
                     onClick: () {
@@ -122,8 +120,9 @@ class MyScores extends StatelessWidget {
                         ),
                       );
                     },
+                    title: Text("Tests Attempted"),
                   );
-                }).toList(),
+                }),
               ),
             ],
           );
