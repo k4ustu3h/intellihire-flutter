@@ -1,7 +1,7 @@
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
-import "package:intellihire/components/core/list_row.dart";
-import "package:intellihire/components/top_app_bar.dart";
+import "package:intellihire/components/appbars/top_app_bar.dart";
+import "package:intellihire/components/lists/list_row.dart";
 import "package:material_symbols_icons/symbols.dart";
 
 class TestAttemptHistory extends StatelessWidget {

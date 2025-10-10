@@ -6,6 +6,7 @@ import "package:firebase_storage/firebase_storage.dart";
 import "package:flutter/material.dart";
 import "package:heroine/heroine.dart";
 import "package:image_picker/image_picker.dart";
+import "package:intellihire/components/appbars/top_app_bar.dart";
 import "package:intellihire/components/menus/city_dropdown.dart";
 import "package:intellihire/components/menus/state_dropdown.dart";
 import "package:intellihire/components/profile_avatar.dart";
@@ -239,8 +240,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
     final isBusy = _isSaving || _isPhotoUploading;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Edit Profile"),
+      appBar: TopAppBar(
+        title: "Edit Profile",
         actions: [
           Padding(
             padding: EdgeInsets.only(right: 16),

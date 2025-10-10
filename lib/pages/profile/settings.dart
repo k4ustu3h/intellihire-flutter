@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
-import "package:intellihire/components/core/list_row.dart";
+import "package:intellihire/components/appbars/top_app_bar.dart";
+import "package:intellihire/components/lists/list_row.dart";
 import "package:intellihire/util/ui/theme_controller.dart";
 import "package:material_symbols_icons/symbols.dart";
 
@@ -35,7 +36,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Settings")),
+      appBar: TopAppBar(title: "Settings"),
       body: ListView(
         children: [
           Column(

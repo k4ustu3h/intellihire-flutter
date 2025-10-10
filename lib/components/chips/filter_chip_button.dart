@@ -5,7 +5,7 @@ class FilterChipButton extends StatelessWidget {
   final String label;
   final String? selectedValue;
   final IconData icon;
-  final VoidCallback ?onTap;
+  final VoidCallback? onTap;
   final bool showTrailingIcon;
 
   const FilterChipButton({
