@@ -1,6 +1,7 @@
 import "package:expressive_loading_indicator/expressive_loading_indicator.dart";
 import "package:flutter/material.dart";
 import "package:intellihire/components/charts/test_average_chart.dart";
+import "package:intellihire/components/core/list_row.dart";
 import "package:intellihire/components/top_app_bar.dart";
 import "package:intellihire/pages/profile/scores/test_attempt_history.dart";
 import "package:intellihire/services/test_service.dart";
@@ -63,12 +64,12 @@ class MyScores extends StatelessWidget {
           final averageScores = _getAverageScores(scores);
           final groupedScores = _groupScoresByTest(scores);
           final theme = Theme.of(context);
+          final keys = averageScores.keys.toList();
 
           return ListView(
-            padding: EdgeInsets.all(16),
             children: [
               Padding(
-                padding: EdgeInsets.only(bottom: 16),
+                padding: EdgeInsets.all(16),
                 child: TestAverageChart(
                   scores: averageScores,
                   groupedScores: groupedScores,
@@ -76,52 +77,53 @@ class MyScores extends StatelessWidget {
               ),
 
               Padding(
-                padding: EdgeInsets.only(top: 8, bottom: 8),
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: Text(
                   "Tests Attempted",
                   style: theme.textTheme.titleMedium,
                 ),
               ),
 
-              Card.outlined(
-                child: Column(
-                  children: averageScores.entries.map((entry) {
-                    final title = entry.key;
-                    final average = entry.value;
-                    final isPassed = average >= 80.0;
-                    final color = isPassed
-                        ? Colors.greenAccent.shade700
-                        : theme.colorScheme.error;
+              Column(
+                spacing: 2,
+                children: List.generate(keys.length, (index) {
+                  final title = keys[index];
+                  final average = averageScores[title]!;
+                  final isPassed = average >= 80.0;
+                  final color = isPassed
+                      ? Colors.greenAccent.shade700
+                      : theme.colorScheme.error;
 
-                    return ListTile(
-                      leading: Icon(
-                        isPassed
-                            ? Symbols.check_circle_rounded
-                            : Symbols.cancel_rounded,
+                  return ListRow(
+                    startIcon: Icon(
+                      isPassed
+                          ? Symbols.check_circle_rounded
+                          : Symbols.cancel_rounded,
+                      color: color,
+                    ),
+                    label: Text(title),
+                    endIcon: Text(
+                      "${average.toStringAsFixed(1)}%",
+                      style: theme.textTheme.titleMedium!.copyWith(
                         color: color,
+                        fontWeight: FontWeight.bold,
                       ),
-                      title: Text(title),
-                      trailing: Text(
-                        "${average.toStringAsFixed(1)}%",
-                        style: theme.textTheme.titleMedium!.copyWith(
-                          color: color,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      onTap: () {
-                        final attempts = groupedScores[title] ?? [];
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => TestAttemptHistory(
-                              title: title,
-                              attempts: attempts,
-                            ),
+                    ),
+                    first: index == 0,
+                    last: index == keys.length - 1,
+                    onClick: () {
+                      final attempts = groupedScores[title] ?? [];
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => TestAttemptHistory(
+                            title: title,
+                            attempts: attempts,
                           ),
-                        );
-                      },
-                    );
-                  }).toList(),
-                ),
+                        ),
+                      );
+                    },
+                  );
+                }).toList(),
               ),
             ],
           );
