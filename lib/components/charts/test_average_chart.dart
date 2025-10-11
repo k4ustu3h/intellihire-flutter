@@ -118,9 +118,9 @@ class TestAverageChart extends StatelessWidget {
                           tooltipPadding: EdgeInsets.all(8),
                           tooltipBorderRadius: BorderRadius.circular(8),
                           getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                            final testTitle = titles[group.x];
+                            final testId = titles[group.x];
                             return BarTooltipItem(
-                              "$testTitle\n${rod.toY.toStringAsFixed(1)}%",
+                              "$testId\n${rod.toY.toStringAsFixed(1)}%",
                               TextStyle(
                                 color: theme.colorScheme.onSurface,
                                 fontWeight: FontWeight.bold,
@@ -134,13 +134,13 @@ class TestAverageChart extends StatelessWidget {
                           if (response != null && response.spot != null) {
                             final index = response.spot!.touchedBarGroupIndex;
                             if (index >= 0 && index < titles.length) {
-                              final testTitle = titles[index];
+                              final testId = titles[index];
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (_) => TestAttemptHistory(
-                                    title: testTitle,
-                                    attempts: groupedScores[testTitle] ?? [],
+                                    title: testId,
+                                    attempts: groupedScores[testId] ?? [],
                                   ),
                                 ),
                               );

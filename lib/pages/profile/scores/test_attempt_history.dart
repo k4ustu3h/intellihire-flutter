@@ -57,37 +57,56 @@ class TestAttemptHistory extends StatelessWidget {
           spacing: 2,
           children: List.generate(attemptsCount, (index) {
             final attempt = sortedAttempts[index];
-            final score = attempt["score"] as int? ?? 0;
-            final total = attempt["totalQuestions"] as int? ?? 20;
-            final percentage =
-                (attempt["percentage"] as num?)?.toDouble() ?? 0.0;
-            final status = (attempt["status"] as String?) ?? "Pending";
+
+            final score = (attempt["score"] as num?)?.toInt() ?? 0;
+            final total = (attempt["totalQuestions"] as num?)?.toInt() ?? 20;
+            final passed = attempt["passed"] as bool? ?? false;
+
+            final double percentage = ((score / total) * 100).clamp(0, 100);
             final timestamp =
                 (attempt["timestamp"] as Timestamp?)?.toDate() ??
                 DateTime.now();
 
-            final isPassed = status.toLowerCase() == "passed";
-            final statusColor = isPassed
+            final color = passed
                 ? Colors.greenAccent.shade700
                 : theme.colorScheme.error;
-            final statusIcon = isPassed
+            final icon = passed
                 ? Symbols.check_circle_rounded
                 : Symbols.cancel_rounded;
 
-            final formattedTime =
-                "${timestamp.day}/${timestamp.month}/${timestamp.year} ${timestamp.hour}:${timestamp.minute.toString().padLeft(2, "0")}";
+            final dateStr =
+                "${timestamp.day.toString().padLeft(2, '0')}/"
+                "${timestamp.month.toString().padLeft(2, '0')}/"
+                "${timestamp.year}";
+            final timeStr =
+                "${timestamp.hour.toString().padLeft(2, '0')}:"
+                "${timestamp.minute.toString().padLeft(2, '0')}";
 
             final attemptNumber = attemptsCount - index;
 
             return ListRow(
               label: Text("Attempt $attemptNumber | Score: $score/$total"),
-              description: Text("$status • ${percentage.toStringAsFixed(1)}%"),
-              startIcon: _buildStartIcon(statusIcon, statusColor, percentage),
-              endIcon: Text(
-                formattedTime,
-                style: theme.textTheme.labelSmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
+              description: Text(
+                "${passed ? 'Passed' : 'Failed'} • ${percentage.toStringAsFixed(1)}%",
+              ),
+              startIcon: _buildStartIcon(icon, color, percentage),
+              endIcon: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    dateStr,
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                  Text(
+                    timeStr,
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
               ),
               first: index == 0,
               last: index == attemptsCount - 1,

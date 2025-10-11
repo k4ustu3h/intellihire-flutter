@@ -13,14 +13,20 @@ class MyScores extends StatelessWidget {
   Map<String, double> _getAverageScores(List<Map<String, dynamic>> scores) {
     final Map<String, List<double>> scoreMap = {};
     for (var score in scores) {
-      final title = score["testTitle"] as String? ?? "Unknown Test";
-      final percentage = (score["percentage"] as num?)?.toDouble() ?? 0.0;
+      final title = score["testId"] as String;
+
+      final totalQuestions =
+          (score["totalQuestions"] as num?)?.toDouble() ?? 1.0;
+      final correct = (score["score"] as num?)?.toDouble() ?? 0.0;
+
+      final percentage = (correct / totalQuestions) * 100.0;
+
       scoreMap.putIfAbsent(title, () => []).add(percentage);
     }
     final Map<String, double> averageScores = {};
-    scoreMap.forEach((title, percentages) {
-      final average = percentages.reduce((a, b) => a + b) / percentages.length;
-      averageScores[title] = double.parse(average.toStringAsFixed(1));
+    scoreMap.forEach((testId, values) {
+      final average = values.reduce((a, b) => a + b) / values.length;
+      averageScores[testId] = double.parse(average.toStringAsFixed(1));
     });
     return averageScores;
   }
@@ -30,7 +36,7 @@ class MyScores extends StatelessWidget {
   ) {
     final Map<String, List<Map<String, dynamic>>> map = {};
     for (var score in scores) {
-      final title = score["testTitle"] as String? ?? "Unknown Test";
+      final title = score["testId"] as String;
       map.putIfAbsent(title, () => []).add(score);
     }
     return map;
@@ -98,7 +104,9 @@ class MyScores extends StatelessWidget {
                     label: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(title),
+                        Expanded(
+                          child: Text(title, overflow: TextOverflow.ellipsis),
+                        ),
                         Text(
                           "${average.toStringAsFixed(1)}%",
                           style: theme.textTheme.titleMedium!.copyWith(

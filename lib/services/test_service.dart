@@ -33,7 +33,6 @@ class TestService {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
 
     const int totalQuestions = 20;
-    const double passingThreshold = 80.0;
     int correctAnswers = 0;
 
     for (int i = 0; i < questions.length; i++) {
@@ -46,33 +45,27 @@ class TestService {
       }
     }
 
-    final double scorePercentage = (correctAnswers / totalQuestions) * 100.0;
-    final String status = scorePercentage >= passingThreshold
-        ? "Passed"
-        : "Failed";
+    final double percentage = (correctAnswers / totalQuestions) * 100.0;
+    final bool passed = percentage >= 80.0;
 
-    final bool isPassed = status == "Passed";
-
-    final Color backgroundColor = isPassed
+    final Color backgroundColor = passed
         ? Colors.greenAccent.shade700
         : colorScheme.error;
 
-    final Color foregroundColor = isPassed
+    final Color foregroundColor = passed
         ? colorScheme.onPrimary
         : colorScheme.onError;
 
-    final IconData statusIcon = isPassed
+    final IconData statusIcon = passed
         ? Symbols.check_circle_rounded
         : Symbols.cancel_rounded;
 
     final Map<String, dynamic> scoreData = {
       "userId": currentUser.uid,
       "testId": testId,
-      "testTitle": title,
       "score": correctAnswers,
-      "percentage": scorePercentage,
       "totalQuestions": totalQuestions,
-      "status": status,
+      "passed": passed,
       "timestamp": FieldValue.serverTimestamp(),
     };
 
@@ -91,7 +84,7 @@ class TestService {
               children: [
                 Icon(statusIcon, color: foregroundColor),
                 Text(
-                  "Test Submitted! Status: $status (${scorePercentage.toStringAsFixed(1)}%)",
+                  "Test Submitted! ${passed ? "Passed" : "Failed"} (${percentage.toStringAsFixed(1)}%)",
                   style: TextStyle(color: foregroundColor),
                 ),
               ],
@@ -125,16 +118,13 @@ class TestService {
           .collection("test_results")
           .doc(currentUser.uid)
           .collection("attempts")
-          .where("status", isEqualTo: "Passed")
+          .where("passed", isEqualTo: true)
           .get();
 
       final Set<String> passedSkills = {};
       for (var doc in snapshot.docs) {
-        final testTitle = doc.data()["testTitle"] as String?;
-        if (testTitle != null) {
-          final skillCode = testTitle.toLowerCase().split(" ")[0];
-          passedSkills.add(skillCode);
-        }
+        final testId = doc.data()["testId"] as String?;
+        if (testId != null) passedSkills.add(testId);
       }
       return passedSkills;
     } catch (e) {
