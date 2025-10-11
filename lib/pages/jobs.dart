@@ -4,6 +4,7 @@ import "package:intellihire/components/cards/job_card.dart";
 import "package:intellihire/components/chips/filter_chip_button.dart";
 import "package:intellihire/components/skeletons/jobs_skeleton.dart";
 import "package:intellihire/services/api_service.dart";
+import "package:intellihire/services/test_service.dart";
 import "package:intellihire/util/skill_labeler.dart";
 import "package:material_symbols_icons/symbols.dart";
 
@@ -21,11 +22,13 @@ class _JobsState extends State<Jobs> {
   String? _selectedCity;
   String? _selectedSkill;
   String? _selectedJobType;
+  bool _isMatchingSkillsActive = false;
 
   List<Map<String, dynamic>> _allJobs = [];
   List<String> _availableStates = [];
   List<String> _availableSkills = [];
   List<String> _availableJobTypes = [];
+  Set<String> _userPassedSkills = {};
 
   @override
   void initState() {
@@ -34,7 +37,14 @@ class _JobsState extends State<Jobs> {
   }
 
   Future<List<Map<String, dynamic>>> _fetchAndProcessJobs() async {
-    final jobs = await ApiService.fetchJobs();
+    final results = await Future.wait([
+      ApiService.fetchJobs(),
+      TestService.getPassedSkills(),
+    ]);
+
+    final fetchedSkills = results[1] as Set<String>;
+    final jobs = results[0] as List<Map<String, dynamic>>;
+
     if (jobs.isEmpty) return jobs;
 
     final states = <String>{};
@@ -55,6 +65,7 @@ class _JobsState extends State<Jobs> {
         _availableStates = states.toList()..sort();
         _availableSkills = skills.toList()..sort();
         _availableJobTypes = jobTypes.toList()..sort();
+        _userPassedSkills = fetchedSkills;
       });
     }
     return jobs;
@@ -64,7 +75,8 @@ class _JobsState extends State<Jobs> {
     if (_selectedState == null &&
         _selectedCity == null &&
         _selectedSkill == null &&
-        _selectedJobType == null) {
+        _selectedJobType == null &&
+        !_isMatchingSkillsActive) {
       return _allJobs;
     }
 
@@ -80,7 +92,18 @@ class _JobsState extends State<Jobs> {
       bool matchesJobType =
           _selectedJobType == null || job["jobType"] == _selectedJobType;
 
-      return matchesState && matchesCity && matchesSkill && matchesJobType;
+      bool matchesPersonalSkills = true;
+      if (_isMatchingSkillsActive) {
+        final jobSkills = List<String>.from(job["skills"]);
+
+        matchesPersonalSkills = jobSkills.any(_userPassedSkills.contains);
+      }
+
+      return matchesState &&
+          matchesCity &&
+          matchesSkill &&
+          matchesJobType &&
+          matchesPersonalSkills;
     }).toList();
   }
 
@@ -165,6 +188,16 @@ class _JobsState extends State<Jobs> {
                 child: Row(
                   spacing: 8,
                   children: [
+                    FilterChip(
+                      label: Text("Match my Skills"),
+                      selected: _isMatchingSkillsActive,
+                      onSelected: (bool newState) {
+                        setState(() {
+                          _isMatchingSkillsActive = newState;
+                        });
+                      },
+                    ),
+
                     FilterChipButton(
                       label: "Job Type",
                       icon: Symbols.work_rounded,

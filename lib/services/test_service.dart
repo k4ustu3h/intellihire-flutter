@@ -115,4 +115,30 @@ class TestService {
       }
     }
   }
+
+  static Future<Set<String>> getPassedSkills() async {
+    final User? currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser == null) return {};
+
+    try {
+      final snapshot = await _firestore
+          .collection("test_results")
+          .doc(currentUser.uid)
+          .collection("attempts")
+          .where("status", isEqualTo: "Passed")
+          .get();
+
+      final Set<String> passedSkills = {};
+      for (var doc in snapshot.docs) {
+        final testTitle = doc.data()["testTitle"] as String?;
+        if (testTitle != null) {
+          final skillCode = testTitle.toLowerCase().split(" ")[0];
+          passedSkills.add(skillCode);
+        }
+      }
+      return passedSkills;
+    } catch (e) {
+      return {};
+    }
+  }
 }
