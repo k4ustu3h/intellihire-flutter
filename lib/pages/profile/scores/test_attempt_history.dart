@@ -21,17 +21,25 @@ class TestAttemptHistory extends StatelessWidget {
     return SizedBox(
       width: size,
       height: size,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          CircularProgressIndicator(
-            backgroundColor: color.withValues(alpha: 0.15),
-            color: color,
-            strokeCap: StrokeCap.round,
-            value: percentage / 100,
-          ),
-          Icon(icon, color: color, size: iconRadius),
-        ],
+      child: TweenAnimationBuilder<double>(
+        tween: Tween<double>(begin: 0, end: percentage / 100),
+        duration: Duration(seconds: 1),
+        curve: Curves.easeOutCubic,
+        builder: (context, value, child) {
+          return Stack(
+            alignment: Alignment.center,
+            children: [
+              CircularProgressIndicator(
+                backgroundColor: color.withValues(alpha: 0.15),
+                color: color,
+                strokeWidth: 4,
+                strokeCap: StrokeCap.round,
+                value: value,
+              ),
+              Icon(icon, color: color, size: iconRadius),
+            ],
+          );
+        },
       ),
     );
   }

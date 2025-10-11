@@ -5,7 +5,7 @@ import "package:intellihire/components/chips/filter_chip_button.dart";
 import "package:intellihire/components/skeletons/jobs_skeleton.dart";
 import "package:intellihire/services/api_service.dart";
 import "package:intellihire/services/test_service.dart";
-import "package:intellihire/util/skill_labeler.dart";
+import "package:intellihire/util/code_labeler.dart";
 import "package:material_symbols_icons/symbols.dart";
 
 class Jobs extends StatefulWidget {
@@ -128,11 +128,11 @@ class _JobsState extends State<Jobs> {
     final bool isSkillFilter = title.contains("Skill");
 
     final List<String> sheetOptions = isSkillFilter
-        ? options.map(getSkillDisplayLabel).toList()
+        ? options.map(labelForCode).toList()
         : options;
 
     final String? sheetSelectedValue = isSkillFilter
-        ? (selectedValue != null ? getSkillDisplayLabel(selectedValue) : null)
+        ? (selectedValue != null ? labelForCode(selectedValue) : null)
         : selectedValue;
 
     showModalBottomSheet(
@@ -144,7 +144,7 @@ class _JobsState extends State<Jobs> {
         selectedValue: sheetSelectedValue,
         onSelected: (label) {
           final String? finalValue = isSkillFilter && label != null
-              ? getSkillCodeFromLabel(label)
+              ? codeForLabel(label)
               : label;
 
           onSelected(finalValue);
@@ -263,7 +263,7 @@ class _JobsState extends State<Jobs> {
                       label: "Skill",
                       icon: Symbols.code,
                       selectedValue: _selectedSkill != null
-                          ? getSkillDisplayLabel(_selectedSkill!)
+                          ? labelForCode(_selectedSkill!)
                           : null,
                       onTap: () => _openFilterSheet(
                         title: "Filter by Skill",

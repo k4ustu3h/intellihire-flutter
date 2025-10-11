@@ -1,6 +1,7 @@
 import "package:fl_chart/fl_chart.dart";
 import "package:flutter/material.dart";
 import "package:intellihire/pages/profile/scores/test_attempt_history.dart";
+import "package:intellihire/util/code_labeler.dart";
 
 class TestAverageChart extends StatelessWidget {
   final Map<String, double> scores;
@@ -90,7 +91,8 @@ class TestAverageChart extends StatelessWidget {
                               if (index < 0 || index >= titles.length) {
                                 return SizedBox.shrink();
                               }
-                              final label = titles[index];
+                              final rawTestId = titles[index];
+                              final label = labelForCode(rawTestId);
                               return Padding(
                                 padding: EdgeInsets.only(top: 8),
                                 child: SizedBox(
@@ -118,9 +120,10 @@ class TestAverageChart extends StatelessWidget {
                           tooltipPadding: EdgeInsets.all(8),
                           tooltipBorderRadius: BorderRadius.circular(8),
                           getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                            final testId = titles[group.x];
+                            final rawTestId = titles[group.x];
+                            final label = labelForCode(rawTestId);
                             return BarTooltipItem(
-                              "$testId\n${rod.toY.toStringAsFixed(1)}%",
+                              "$label\n${rod.toY.toStringAsFixed(1)}%",
                               TextStyle(
                                 color: theme.colorScheme.onSurface,
                                 fontWeight: FontWeight.bold,
@@ -134,13 +137,13 @@ class TestAverageChart extends StatelessWidget {
                           if (response != null && response.spot != null) {
                             final index = response.spot!.touchedBarGroupIndex;
                             if (index >= 0 && index < titles.length) {
-                              final testId = titles[index];
+                              final rawTestId = titles[index];
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (_) => TestAttemptHistory(
-                                    title: testId,
-                                    attempts: groupedScores[testId] ?? [],
+                                    title: labelForCode(rawTestId),
+                                    attempts: groupedScores[rawTestId] ?? [],
                                   ),
                                 ),
                               );

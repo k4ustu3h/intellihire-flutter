@@ -5,6 +5,7 @@ import "package:intellihire/components/charts/test_average_chart.dart";
 import "package:intellihire/components/lists/list_row.dart";
 import "package:intellihire/pages/profile/scores/test_attempt_history.dart";
 import "package:intellihire/services/test_service.dart";
+import "package:intellihire/util/code_labeler.dart";
 import "package:material_symbols_icons/symbols.dart";
 
 class MyScores extends StatelessWidget {
@@ -85,14 +86,16 @@ class MyScores extends StatelessWidget {
               Column(
                 spacing: 2,
                 children: List.generate(keys.length, (index) {
-                  final title = keys[index];
-                  final average = averageScores[title]!;
+                  final rawTitle = keys[index];
+                  final title = labelForCode(rawTitle);
+                  final average =
+                      averageScores[rawTitle]!;
                   final isPassed = average >= 80.0;
                   final color = isPassed
                       ? Colors.greenAccent.shade700
                       : theme.colorScheme.error;
 
-                  final attempts = groupedScores[title] ?? [];
+                  final attempts = groupedScores[rawTitle] ?? [];
 
                   return ListRow.navigate(
                     startIcon: Icon(
