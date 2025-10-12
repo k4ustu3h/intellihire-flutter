@@ -25,6 +25,7 @@ dependencies:
   http: ^1.5.0
   image_picker: ^1.2.0
   material_symbols_icons: ^4.2874.0
+  motor: ^1.0.1
   shared_preferences: ^2.5.3
   simple_icons: ^14.6.1
   skeletonizer: ^2.1.0+1
