@@ -2,6 +2,7 @@ import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:intellihire/components/appbars/top_app_bar.dart";
 import "package:intellihire/components/navigation/navbar.dart";
+import "package:intellihire/pages/home.dart";
 import "package:intellihire/pages/jobs.dart";
 import "package:intellihire/pages/profile/profile.dart";
 import "package:intellihire/pages/tests/tests.dart";
@@ -32,7 +33,7 @@ class _HomeLayoutState extends State<HomeLayout> {
   void initState() {
     super.initState();
     _pages = [
-      Text(""),
+      Home(),
       Jobs(),
       Tests(),
       Profile(themeController: widget.themeController),
