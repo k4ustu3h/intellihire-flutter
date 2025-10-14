@@ -9,14 +9,19 @@ final _darkColorScheme = ColorScheme.fromSeed(
   brightness: Brightness.dark,
 );
 
-ThemeData lightTheme(ColorScheme? dynamicColorScheme) {
+ThemeData _buildTheme(ColorScheme baseScheme) {
+  final scheme = baseScheme.harmonized();
+
   return ThemeData(
-    colorScheme: (dynamicColorScheme ?? _lightColorScheme).harmonized(),
+    colorScheme: scheme,
+    bottomSheetTheme: BottomSheetThemeData(showDragHandle: true),
   );
 }
 
+ThemeData lightTheme(ColorScheme? dynamicColorScheme) {
+  return _buildTheme(dynamicColorScheme ?? _lightColorScheme);
+}
+
 ThemeData darkTheme(ColorScheme? dynamicColorScheme) {
-  return ThemeData(
-    colorScheme: (dynamicColorScheme ?? _darkColorScheme).harmonized(),
-  );
+  return _buildTheme(dynamicColorScheme ?? _darkColorScheme);
 }

@@ -1,6 +1,5 @@
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
-import "package:intellihire/components/appbars/top_app_bar.dart";
 import "package:intellihire/components/lists/list_row.dart";
 import "package:material_symbols_icons/symbols.dart";
 
@@ -58,7 +57,7 @@ class TestAttemptHistory extends StatelessWidget {
     final attemptsCount = sortedAttempts.length;
 
     return Scaffold(
-      appBar: TopAppBar(title: title),
+      appBar: AppBar(title: Text(title)),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(vertical: ListRow.basePadding),
         child: Column(

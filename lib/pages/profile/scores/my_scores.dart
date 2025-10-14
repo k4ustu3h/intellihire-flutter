@@ -1,6 +1,5 @@
 import "package:expressive_loading_indicator/expressive_loading_indicator.dart";
 import "package:flutter/material.dart";
-import "package:intellihire/components/appbars/top_app_bar.dart";
 import "package:intellihire/components/charts/test_average_chart.dart";
 import "package:intellihire/components/lists/list_row.dart";
 import "package:intellihire/pages/profile/scores/test_attempt_history.dart";
@@ -46,7 +45,7 @@ class MyScores extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: TopAppBar(title: "My Scores"),
+      appBar: AppBar(title: Text("My Scores")),
       body: StreamBuilder<List<Map<String, dynamic>>>(
         stream: TestService.getUserTestHistory(),
         builder: (context, snapshot) {
@@ -88,8 +87,7 @@ class MyScores extends StatelessWidget {
                 children: List.generate(keys.length, (index) {
                   final rawTitle = keys[index];
                   final title = labelForCode(rawTitle);
-                  final average =
-                      averageScores[rawTitle]!;
+                  final average = averageScores[rawTitle]!;
                   final isPassed = average >= 80.0;
                   final color = isPassed
                       ? Colors.greenAccent.shade700

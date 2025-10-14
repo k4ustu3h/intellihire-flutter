@@ -6,7 +6,6 @@ import "package:firebase_storage/firebase_storage.dart";
 import "package:flutter/material.dart";
 import "package:heroine/heroine.dart";
 import "package:image_picker/image_picker.dart";
-import "package:intellihire/components/appbars/top_app_bar.dart";
 import "package:intellihire/components/menus/city_dropdown.dart";
 import "package:intellihire/components/menus/state_dropdown.dart";
 import "package:intellihire/components/profile_avatar.dart";
@@ -15,14 +14,14 @@ import "package:intellihire/models/user_profile.dart";
 import "package:intellihire/services/user_service.dart";
 import "package:material_symbols_icons/symbols.dart";
 
-class EditProfilePage extends StatefulWidget {
-  const EditProfilePage({super.key});
+class EditProfile extends StatefulWidget {
+  const EditProfile({super.key});
 
   @override
-  State<EditProfilePage> createState() => _EditProfilePageState();
+  State<EditProfile> createState() => _EditProfileState();
 }
 
-class _EditProfilePageState extends State<EditProfilePage> {
+class _EditProfileState extends State<EditProfile> {
   final _formKey = GlobalKey<FormState>();
   final _user = FirebaseAuth.instance.currentUser!;
   final _userService = UserService();
@@ -240,8 +239,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     final isBusy = _isSaving || _isPhotoUploading;
 
     return Scaffold(
-      appBar: TopAppBar(
-        title: "Edit Profile",
+      appBar: AppBar(
         actions: [
           Padding(
             padding: EdgeInsets.only(right: 16),
@@ -255,6 +253,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             ),
           ),
         ],
+        title: Text("Edit Profile"),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16),

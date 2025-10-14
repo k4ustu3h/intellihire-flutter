@@ -1,6 +1,5 @@
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
-import "package:intellihire/components/appbars/top_app_bar.dart";
 import "package:intellihire/components/navigation/navbar.dart";
 import "package:intellihire/pages/home.dart";
 import "package:intellihire/pages/jobs.dart";
@@ -49,7 +48,7 @@ class _HomeLayoutState extends State<HomeLayout> {
     final user = FirebaseAuth.instance.currentUser;
 
     return Scaffold(
-      appBar: TopAppBar(title: _titles[_selectedIndex]),
+      appBar: AppBar(title: Text(_titles[_selectedIndex])),
       body: Center(child: _pages[_selectedIndex]),
       bottomNavigationBar: NavBar(
         selectedIndex: _selectedIndex,

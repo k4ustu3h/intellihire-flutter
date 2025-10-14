@@ -3,7 +3,7 @@ import "package:flutter/material.dart";
 import "package:intellihire/components/cards/profile_card.dart";
 import "package:intellihire/components/lists/list_row.dart";
 import "package:intellihire/pages/auth/login.dart";
-import "package:intellihire/pages/profile/edit_profile_page.dart";
+import "package:intellihire/pages/profile/edit_profile.dart";
 import "package:intellihire/pages/profile/scores/my_scores.dart";
 import "package:intellihire/pages/profile/settings.dart";
 import "package:intellihire/util/ui/theme_controller.dart";
@@ -111,7 +111,7 @@ class _ProfileState extends State<Profile> {
               title: index == 0 ? Text(title) : null,
               startIcon: _buildStartIcon(iconName),
               label: Text(label),
-              navigateTo: SettingsPage(themeController: widget.themeController),
+              navigateTo: Settings(themeController: widget.themeController),
               first: index == 0,
               last: index == items.length - 1,
             );
@@ -184,7 +184,7 @@ class _ProfileState extends State<Profile> {
                 onEditPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => EditProfilePage()),
+                    MaterialPageRoute(builder: (context) => EditProfile()),
                   );
                 },
               ),

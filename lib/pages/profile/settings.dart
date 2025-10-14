@@ -1,19 +1,18 @@
 import "package:flutter/material.dart";
-import "package:intellihire/components/appbars/top_app_bar.dart";
 import "package:intellihire/components/lists/list_row.dart";
 import "package:intellihire/util/ui/theme_controller.dart";
 import "package:material_symbols_icons/symbols.dart";
 
-class SettingsPage extends StatefulWidget {
+class Settings extends StatefulWidget {
   final ThemeController themeController;
 
-  const SettingsPage({super.key, required this.themeController});
+  const Settings({super.key, required this.themeController});
 
   @override
-  State<SettingsPage> createState() => _SettingsPageState();
+  State<Settings> createState() => _SettingsState();
 }
 
-class _SettingsPageState extends State<SettingsPage> {
+class _SettingsState extends State<Settings> {
   Widget _buildLeadingIcon(IconData icon) {
     final colorScheme = Theme.of(context).colorScheme;
     return Container(
@@ -36,7 +35,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: TopAppBar(title: "Settings"),
+      appBar: AppBar(title: Text("Settings")),
       body: ListView(
         children: [
           Column(

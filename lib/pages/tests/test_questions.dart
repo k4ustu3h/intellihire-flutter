@@ -1,6 +1,5 @@
 import "package:expressive_loading_indicator/expressive_loading_indicator.dart";
 import "package:flutter/material.dart";
-import "package:intellihire/components/appbars/top_app_bar.dart";
 import "package:intellihire/services/api_service.dart";
 import "package:intellihire/services/test_service.dart";
 import "package:material_symbols_icons/material_symbols_icons.dart";
@@ -96,7 +95,7 @@ class _TestQuestionsState extends State<TestQuestions> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: TopAppBar(title: widget.title),
+      appBar: AppBar(title: Text(widget.title)),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: _questionsFuture,
         builder: (context, snapshot) {
