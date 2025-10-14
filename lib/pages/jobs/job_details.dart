@@ -1,5 +1,7 @@
 import "package:flutter/material.dart";
+import "package:flutter_svg/flutter_svg.dart";
 import "package:intellihire/components/icons/company_logo.dart";
+import "package:intellihire/util/code_labeler.dart";
 import "package:material_symbols_icons/symbols.dart";
 
 class JobDetails extends StatelessWidget {
@@ -15,16 +17,8 @@ class JobDetails extends StatelessWidget {
     );
   }
 
-  Widget _infoRow(IconData icon, String text, BuildContext context) {
-    final theme = Theme.of(context);
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 8,
-      children: [
-        Icon(icon, size: 20, color: theme.colorScheme.primary),
-        Expanded(child: Text(text, style: theme.textTheme.bodyMedium)),
-      ],
-    );
+  String colorToHex(Color color) {
+    return color.toARGB32().toRadixString(16).substring(2).toUpperCase();
   }
 
   @override
@@ -34,14 +28,12 @@ class JobDetails extends StatelessWidget {
     final jobType = job["jobType"] as String?;
     final isRemote = jobType == "Remote";
     final locationText = isRemote
-        ? "Remote"
+        ? ""
         : "${job["city"] ?? "Unknown"}, ${job["state"] ?? ""}";
-    final locationIcon = isRemote
-        ? Symbols.public_rounded
-        : Symbols.location_on_rounded;
 
     final skills = List<String>.from(job["skills"] ?? []);
-    final requirements = List<String>.from(job["requirements"] ?? []);
+
+    final defaultColor = colorToHex(theme.colorScheme.onSecondaryContainer);
 
     return Scaffold(
       appBar: AppBar(
@@ -149,44 +141,32 @@ class JobDetails extends StatelessWidget {
                     children: [
                       _sectionTitle(context, "Skills Required"),
                       Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        children: skills
-                            .map(
-                              (s) => Chip(
-                                backgroundColor:
-                                    theme.colorScheme.secondaryContainer,
-                                side: BorderSide.none,
-                                label: Text(
-                                  s,
-                                  style: theme.textTheme.labelMedium?.copyWith(
-                                    color:
-                                        theme.colorScheme.onSecondaryContainer,
-                                  ),
-                                ),
+                        spacing: 16,
+                        children: skills.map((skill) {
+                          final label = labelForCode(skill);
+                          final iconSlug = skill;
+                          return Chip(
+                            backgroundColor:
+                                theme.colorScheme.secondaryContainer,
+                            side: BorderSide.none,
+                            avatar: SvgPicture.network(
+                              "https://cdn.simpleicons.org/$iconSlug/$defaultColor",
+                              width: 18,
+                              height: 18,
+                              placeholderBuilder: (context) => Icon(
+                                Symbols.code_rounded,
+                                size: 18,
+                                color: theme.colorScheme.onSecondaryContainer,
                               ),
-                            )
-                            .toList(),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            if (requirements.isNotEmpty)
-              Card.outlined(
-                child: Padding(
-                  padding: EdgeInsets.all(20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: 12,
-                    children: [
-                      _sectionTitle(context, "Requirements"),
-                      ...requirements.map(
-                        (r) => _infoRow(
-                          Symbols.check_circle_outline_rounded,
-                          r,
-                          context,
-                        ),
+                            ),
+                            label: Text(
+                              label,
+                              style: theme.textTheme.labelMedium?.copyWith(
+                                color: theme.colorScheme.onSecondaryContainer,
+                              ),
+                            ),
+                          );
+                        }).toList(),
                       ),
                     ],
                   ),
@@ -209,8 +189,11 @@ class JobDetails extends StatelessWidget {
                             children: [
                               Text(
                                 "Job Type",
-                                style: theme.textTheme.labelMedium?.copyWith(
-                                  color: theme.colorScheme.onSurfaceVariant,
+                                style: theme.textTheme.titleSmall!.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurfaceVariant,
                                 ),
                               ),
                               Text(
@@ -222,42 +205,45 @@ class JobDetails extends StatelessWidget {
                             ],
                           ),
                         ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            spacing: 4,
-                            children: [
-                              Text(
-                                "Location",
-                                style: theme.textTheme.labelMedium?.copyWith(
-                                  color: theme.colorScheme.onSurfaceVariant,
+                        if (!isRemote)
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              spacing: 4,
+                              children: [
+                                Text(
+                                  "Location",
+                                  style: theme.textTheme.titleSmall!.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onSurfaceVariant,
+                                  ),
                                 ),
-                              ),
-                              Row(
-                                spacing: 4,
-                                children: [
-                                  Icon(
-                                    locationIcon,
-                                    size: 16,
-                                    color: theme.colorScheme.onSurface,
-                                  ),
-                                  Expanded(
-                                    child: Text(
-                                      locationText,
-                                      style: theme.textTheme.titleSmall!
-                                          .copyWith(
-                                            fontWeight: FontWeight.w600,
-                                            color: theme
-                                                .colorScheme
-                                                .onSurfaceVariant,
-                                          ),
+                                Row(
+                                  spacing: 4,
+                                  children: [
+                                    Icon(
+                                      Symbols.location_on_rounded,
+                                      size: 16,
+                                      color: theme.colorScheme.onSurface,
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                                    Expanded(
+                                      child: Text(
+                                        locationText,
+                                        style: theme.textTheme.titleSmall!
+                                            .copyWith(
+                                              fontWeight: FontWeight.w600,
+                                              color:
+                                                  theme.colorScheme.onSurface,
+                                            ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
                       ],
                     ),
                   ],
