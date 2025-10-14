@@ -2,7 +2,7 @@ import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:intellihire/components/navigation/navbar.dart";
 import "package:intellihire/pages/home.dart";
-import "package:intellihire/pages/jobs.dart";
+import "package:intellihire/pages/jobs/jobs.dart";
 import "package:intellihire/pages/profile/profile.dart";
 import "package:intellihire/pages/tests/tests.dart";
 import "package:intellihire/util/ui/theme_controller.dart";

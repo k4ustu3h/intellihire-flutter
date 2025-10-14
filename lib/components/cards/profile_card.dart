@@ -1,7 +1,7 @@
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:heroine/heroine.dart";
-import "package:intellihire/components/profile_avatar.dart";
+import "package:intellihire/components/icons/profile_avatar.dart";
 import "package:material_symbols_icons/symbols.dart";
 
 class ProfileCard extends StatelessWidget {
