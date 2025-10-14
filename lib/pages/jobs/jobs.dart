@@ -288,8 +288,9 @@ class _JobsState extends State<Jobs> {
               Expanded(
                 child: filteredJobs.isEmpty
                     ? Center(child: Text("No jobs match your criteria."))
-                    : ListView.builder(
+                    : ListView.separated(
                         padding: EdgeInsets.symmetric(horizontal: 16),
+                        separatorBuilder: (_, _) => SizedBox(height: 16),
                         itemCount: filteredJobs.length,
                         itemBuilder: (context, index) =>
                             JobCard(job: filteredJobs[index]),
