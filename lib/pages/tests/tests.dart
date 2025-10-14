@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 import "package:intellihire/components/cards/test_card.dart";
-import "package:intellihire/components/skeletons/test_card_skeleton.dart";
+import "package:intellihire/components/skeletons/cards/test_card_skeleton.dart";
 import "package:intellihire/pages/tests/test_questions.dart";
 import "package:intellihire/services/api_service.dart";
 import "package:skeletonizer/skeletonizer.dart";

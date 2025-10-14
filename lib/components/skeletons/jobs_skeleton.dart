@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
-import "package:intellihire/components/skeletons/filter_chip_skeleton.dart";
-import "package:intellihire/components/skeletons/job_card_skeleton.dart";
+import "package:intellihire/components/skeletons/cards/job_card_skeleton.dart";
+import "package:intellihire/components/skeletons/chips/filter_chip_skeleton.dart";
 import "package:skeletonizer/skeletonizer.dart";
 
 class JobsSkeleton extends StatelessWidget {

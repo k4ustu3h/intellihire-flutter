@@ -1,7 +1,7 @@
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:intellihire/components/cards/job_card.dart";
-import "package:intellihire/components/skeletons/jobs_skeleton.dart";
+import "package:intellihire/components/skeletons/cards/suggested_jobs_skeleton.dart";
 import "package:intellihire/models/user_profile.dart";
 import "package:intellihire/services/api_service.dart";
 import "package:intellihire/services/test_service.dart";
@@ -98,42 +98,58 @@ class _HomeState extends State<Home> {
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 8,
           children: [
             _buildGreeting(context),
-            Expanded(
-              child: isLoading
-                  ? JobsSkeleton()
-                  : jobs.isEmpty
-                  ? Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(24),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          spacing: 16,
-                          children: [
-                            Icon(
-                              Symbols.lightbulb_rounded,
-                              size: 48,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                            Text(
-                              _userPassedSkills.isEmpty
-                                  ? "Complete your first assessment to unlock personalized jobs!"
-                                  : "No jobs matching your passed skills found.",
-                              textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.titleMedium,
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
-                  : ListView.builder(
-                      padding: EdgeInsets.all(16),
-                      itemCount: jobs.length,
-                      itemBuilder: (context, index) =>
-                          JobCard(job: jobs[index]),
-                    ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 24),
+              child: Text(
+                "Jobs suggested for you",
+                style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+              ),
             ),
+            isLoading
+                ? SuggestedJobsSkeleton()
+                : jobs.isEmpty
+                ? Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(24),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        spacing: 16,
+                        children: [
+                          Icon(
+                            Symbols.lightbulb_rounded,
+                            size: 48,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                          Text(
+                            _userPassedSkills.isEmpty
+                                ? "Complete your first assessment to unlock personalized jobs!"
+                                : "No jobs matching your passed skills found.",
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                : SizedBox(
+                    height: 210,
+                    child: ListView.separated(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: jobs.length,
+                      separatorBuilder: (_, _) => SizedBox(width: 12),
+                      itemBuilder: (context, index) => SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: JobCard(job: jobs[index]),
+                      ),
+                    ),
+                  ),
           ],
         );
       },
