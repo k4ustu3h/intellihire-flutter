@@ -1,11 +1,11 @@
 import "dart:io";
 
-import "package:expressive_loading_indicator/expressive_loading_indicator.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:firebase_storage/firebase_storage.dart";
 import "package:flutter/material.dart";
 import "package:heroine/heroine.dart";
 import "package:image_picker/image_picker.dart";
+import "package:intellihire/components/loading/loading_indicator.dart";
 import "package:intellihire/components/menus/city_dropdown.dart";
 import "package:intellihire/components/menus/state_dropdown.dart";
 import "package:intellihire/components/profile_avatar.dart";
@@ -159,7 +159,7 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   Widget _buildFormSection(bool isBusy) {
-    if (_isLoading) return Center(child: ExpressiveLoadingIndicator());
+    if (_isLoading) return Center(child: LoadingIndicator());
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -275,7 +275,7 @@ class _EditProfileState extends State<EditProfile> {
                         bottom: 0,
                         right: 0,
                         child: _isPhotoUploading
-                            ? ExpressiveLoadingIndicator()
+                            ? LoadingIndicator()
                             : IconButton(
                                 icon: Icon(Symbols.photo_camera_rounded),
                                 onPressed: isBusy ? null : _pickAndUploadImage,

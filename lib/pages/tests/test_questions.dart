@@ -1,5 +1,6 @@
 import "package:expressive_loading_indicator/expressive_loading_indicator.dart";
 import "package:flutter/material.dart";
+import "package:intellihire/components/loading/loading_indicator.dart";
 import "package:intellihire/services/api_service.dart";
 import "package:intellihire/services/test_service.dart";
 import "package:material_symbols_icons/material_symbols_icons.dart";
@@ -100,7 +101,7 @@ class _TestQuestionsState extends State<TestQuestions> {
         future: _questionsFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: ExpressiveLoadingIndicator());
+            return Center(child: LoadingIndicator());
           }
           if (snapshot.hasError) {
             return Center(child: Text("Error: ${snapshot.error}"));

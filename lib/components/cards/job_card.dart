@@ -1,6 +1,6 @@
-import "package:expressive_loading_indicator/expressive_loading_indicator.dart";
 import "package:flutter/material.dart";
 import "package:flutter_svg/flutter_svg.dart";
+import "package:intellihire/components/loading/loading_indicator.dart";
 import "package:material_symbols_icons/symbols.dart";
 
 class JobCard extends StatelessWidget {
@@ -48,7 +48,8 @@ class JobCard extends StatelessWidget {
         child: SizedBox(
           width: 24,
           height: 24,
-          child: ExpressiveLoadingIndicator(
+          child: LoadingIndicator(
+            backgroundColor: theme.colorScheme.secondaryContainer,
             color: theme.colorScheme.onSecondaryContainer,
           ),
         ),

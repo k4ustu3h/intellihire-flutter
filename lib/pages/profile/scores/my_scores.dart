@@ -1,7 +1,7 @@
-import "package:expressive_loading_indicator/expressive_loading_indicator.dart";
 import "package:flutter/material.dart";
 import "package:intellihire/components/charts/test_average_chart.dart";
 import "package:intellihire/components/lists/list_row.dart";
+import "package:intellihire/components/loading/loading_indicator.dart";
 import "package:intellihire/pages/profile/scores/test_attempt_history.dart";
 import "package:intellihire/services/test_service.dart";
 import "package:intellihire/util/code_labeler.dart";
@@ -50,7 +50,7 @@ class MyScores extends StatelessWidget {
         stream: TestService.getUserTestHistory(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: ExpressiveLoadingIndicator());
+            return Center(child: LoadingIndicator());
           }
           if (snapshot.hasError) {
             return Center(child: Text("Error: ${snapshot.error}"));
