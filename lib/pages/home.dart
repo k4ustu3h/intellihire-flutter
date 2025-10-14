@@ -2,8 +2,11 @@ import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:intellihire/components/cards/job_card.dart";
 import "package:intellihire/components/skeletons/jobs_skeleton.dart";
+import "package:intellihire/models/user_profile.dart";
 import "package:intellihire/services/api_service.dart";
 import "package:intellihire/services/test_service.dart";
+import "package:intellihire/services/user_service.dart";
+import "package:intellihire/util/job_suggester.dart";
 import "package:material_symbols_icons/symbols.dart";
 
 class Home extends StatefulWidget {
@@ -18,40 +21,44 @@ class _HomeState extends State<Home> {
 
   Set<String> _userPassedSkills = {};
   final User? _user = FirebaseAuth.instance.currentUser;
+  final UserService _userService = UserService();
 
   @override
   void initState() {
     super.initState();
-    _jobsFuture = _fetchAndFilterJobs();
+    _jobsFuture = _loadSuggestedJobs();
   }
 
-  Future<List<Map<String, dynamic>>> _fetchAndFilterJobs() async {
+  Future<List<Map<String, dynamic>>> _loadSuggestedJobs() async {
+    final uid = _user?.uid;
     final results = await Future.wait([
       ApiService.fetchJobs(),
       TestService.getPassedSkills(),
+      if (uid != null) _userService.getUserProfile(uid) else Future.value(null),
     ]);
 
     final fetchedJobs = results[0] as List<Map<String, dynamic>>;
     final fetchedSkills = results[1] as Set<String>;
-
-    if (fetchedJobs.isEmpty) return fetchedJobs;
-
-    final relevantJobs = fetchedJobs.where((job) {
-      if (fetchedSkills.isEmpty) {
-        return false;
-      }
-
-      final jobSkills = List<String>.from(job["skills"]);
-
-      return jobSkills.any(fetchedSkills.contains);
-    }).toList();
+    final UserProfile? userProfile = results.length > 2
+        ? results[2] as UserProfile?
+        : null;
 
     if (mounted) {
       setState(() {
         _userPassedSkills = fetchedSkills;
       });
     }
-    return relevantJobs;
+
+    if (fetchedJobs.isEmpty) return fetchedJobs;
+
+    final suggested = JobSuggester.suggest(
+      jobs: fetchedJobs,
+      userSkills: fetchedSkills,
+      userCity: userProfile?.city ?? "",
+      userState: userProfile?.state ?? "",
+    );
+
+    return suggested;
   }
 
   Widget _buildGreeting(BuildContext context) {
