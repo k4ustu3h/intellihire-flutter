@@ -1,4 +1,3 @@
-import "package:dynamic_color/dynamic_color.dart";
 import "package:flutter/material.dart";
 import "package:heroine/heroine.dart";
 import "package:intellihire/util/auth/auth_gate.dart";
@@ -15,12 +14,13 @@ class IntelliHire extends StatelessWidget {
     return ValueListenableBuilder<bool>(
       valueListenable: themeController,
       builder: (context, useDynamicTheme, _) {
-        return DynamicColorBuilder(
+        return monet(
+          useDynamicTheme: useDynamicTheme,
           builder: (lightDynamic, darkDynamic) {
             return MaterialApp(
               title: "IntelliHire",
-              theme: lightTheme(useDynamicTheme ? lightDynamic : null),
-              darkTheme: darkTheme(useDynamicTheme ? darkDynamic : null),
+              theme: lightTheme(lightDynamic),
+              darkTheme: darkTheme(darkDynamic),
               themeMode: ThemeMode.system,
               navigatorObservers: [HeroineController()],
               home: AuthGate(themeController: themeController),

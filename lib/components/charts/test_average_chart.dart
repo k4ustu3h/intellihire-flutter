@@ -131,7 +131,7 @@ class _TestAverageChartState extends State<TestAverageChart> {
                             handleBuiltInTouches: true,
                             touchTooltipData: BarTouchTooltipData(
                               getTooltipColor: (_) =>
-                                  theme.colorScheme.surfaceVariant,
+                                  theme.colorScheme.surfaceContainerHighest,
                               tooltipPadding: EdgeInsets.all(8),
                               tooltipBorderRadius: BorderRadius.circular(8),
                               getTooltipItem:

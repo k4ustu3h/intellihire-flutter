@@ -115,7 +115,7 @@ class ListRow extends StatelessWidget {
             borderRadius: borderRadius,
             child: Material(
               color: background
-                  ? theme.colorScheme.surfaceVariant
+                  ? theme.colorScheme.surfaceContainer
                   : Colors.transparent,
               child: InkWell(
                 onTap: onTapAction,

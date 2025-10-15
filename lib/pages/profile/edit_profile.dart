@@ -277,11 +277,12 @@ class _EditProfileState extends State<EditProfile> {
                         child: _isPhotoUploading
                             ? LoadingIndicator()
                             : IconButton(
+                                color: theme.colorScheme.onSurfaceVariant,
                                 icon: Icon(Symbols.photo_camera_rounded),
                                 onPressed: isBusy ? null : _pickAndUploadImage,
                                 style: IconButton.styleFrom(
                                   backgroundColor:
-                                      theme.colorScheme.surfaceVariant,
+                                      theme.colorScheme.surfaceContainerHighest,
                                 ),
                               ),
                       ),

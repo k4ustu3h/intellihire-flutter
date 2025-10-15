@@ -10,6 +10,42 @@ final _darkColorScheme = ColorScheme.fromSeed(
   brightness: Brightness.dark,
 );
 
+Widget monet({
+  required bool useDynamicTheme,
+  required Widget Function(ColorScheme? light, ColorScheme? dark) builder,
+}) {
+  return DynamicColorBuilder(
+    builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
+      ColorScheme? lightScheme;
+      ColorScheme? darkScheme;
+
+      if (lightDynamic != null && darkDynamic != null) {
+        lightScheme = ColorScheme.fromSeed(
+          seedColor: Color(lightDynamic.primary.toARGB32()),
+          brightness: Brightness.light,
+        ).harmonized();
+
+        darkScheme = ColorScheme.fromSeed(
+          seedColor: Color(darkDynamic.primary.toARGB32()),
+          brightness: Brightness.dark,
+        ).harmonized();
+      }
+      return builder(
+        useDynamicTheme ? lightScheme : null,
+        useDynamicTheme ? darkScheme : null,
+      );
+    },
+  );
+}
+
+ThemeData lightTheme(ColorScheme? dynamicColorScheme) {
+  return _buildTheme(dynamicColorScheme ?? _lightColorScheme);
+}
+
+ThemeData darkTheme(ColorScheme? dynamicColorScheme) {
+  return _buildTheme(dynamicColorScheme ?? _darkColorScheme);
+}
+
 ThemeData _buildTheme(ColorScheme baseScheme) {
   final scheme = baseScheme.harmonized();
 
@@ -45,12 +81,4 @@ ThemeData _buildTheme(ColorScheme baseScheme) {
       style: ButtonStyle(shape: buttonShape),
     ),
   );
-}
-
-ThemeData lightTheme(ColorScheme? dynamicColorScheme) {
-  return _buildTheme(dynamicColorScheme ?? _lightColorScheme);
-}
-
-ThemeData darkTheme(ColorScheme? dynamicColorScheme) {
-  return _buildTheme(dynamicColorScheme ?? _darkColorScheme);
 }

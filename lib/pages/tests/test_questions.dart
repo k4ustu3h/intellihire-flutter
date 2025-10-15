@@ -41,7 +41,7 @@ class _TestQuestionsState extends State<TestQuestions> {
     final TextStyle codeStyle = theme.textTheme.labelLarge!.copyWith(
       fontFamily: "monospace",
       fontWeight: FontWeight.w600,
-      backgroundColor: theme.colorScheme.surfaceVariant,
+      backgroundColor: theme.colorScheme.surfaceContainer,
       color: theme.colorScheme.onSurfaceVariant,
     );
 
