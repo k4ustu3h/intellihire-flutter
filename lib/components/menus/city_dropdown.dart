@@ -23,12 +23,12 @@ class CityDropdown extends StatelessWidget {
         : <String>[];
 
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: DropdownButtonFormField<String>(
         isExpanded: true,
         menuMaxHeight: 300,
         value: selectedCity,
-        decoration: InputDecoration(
+        decoration: const InputDecoration(
           labelText: "City",
           prefixIcon: Icon(Symbols.location_city_rounded),
           border: OutlineInputBorder(),

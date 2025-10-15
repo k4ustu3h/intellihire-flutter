@@ -6,10 +6,13 @@ class TestCardSkeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final secondaryColor = theme.colorScheme.secondaryContainer;
+    final primaryColor = theme.colorScheme.primary;
+
     return Card.outlined(
-      margin: EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.only(bottom: 16),
       child: Padding(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -22,7 +25,7 @@ class TestCardSkeleton extends StatelessWidget {
                   width: 48,
                   height: 48,
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.secondaryContainer,
+                    color: secondaryColor,
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
@@ -31,11 +34,7 @@ class TestCardSkeleton extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   spacing: 6,
                   children: [
-                    Container(
-                      width: 180,
-                      height: 24,
-                      color: theme.colorScheme.secondaryContainer,
-                    ),
+                    Container(width: 180, height: 24, color: secondaryColor),
                   ],
                 ),
               ],
@@ -49,12 +48,12 @@ class TestCardSkeleton extends StatelessWidget {
                 (_) => Container(
                   width: double.infinity,
                   height: 12,
-                  color: theme.colorScheme.secondaryContainer,
+                  color: secondaryColor,
                 ),
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(bottom: 4, top: 8),
+              padding: const EdgeInsets.only(bottom: 4, top: 8),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -62,7 +61,7 @@ class TestCardSkeleton extends StatelessWidget {
                     width: 60,
                     height: 32,
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.secondaryContainer,
+                      color: secondaryColor,
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
@@ -70,7 +69,7 @@ class TestCardSkeleton extends StatelessWidget {
                     width: 102,
                     height: 40,
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.primary,
+                      color: primaryColor,
                       borderRadius: BorderRadius.circular(20),
                     ),
                   ),

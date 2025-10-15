@@ -6,7 +6,7 @@ class UserProfile {
   final String state;
   final String phoneNumber;
 
-  UserProfile({
+  const UserProfile({
     required this.uid,
     this.firstName = "",
     this.lastName = "",
@@ -15,24 +15,22 @@ class UserProfile {
     this.phoneNumber = "",
   });
 
-  Map<String, dynamic> toMap() {
-    return {
-      "firstName": firstName,
-      "lastName": lastName,
-      "city": city,
-      "state": state,
-      "phoneNumber": phoneNumber,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+    "firstName": firstName,
+    "lastName": lastName,
+    "city": city,
+    "state": state,
+    "phoneNumber": phoneNumber,
+  };
 
   factory UserProfile.fromMap(Map<String, dynamic> data, String uid) {
     return UserProfile(
       uid: uid,
-      firstName: data["firstName"] ?? "",
-      lastName: data["lastName"] ?? "",
-      city: data["city"] ?? "",
-      state: data["state"] ?? "",
-      phoneNumber: data["phoneNumber"] ?? "",
+      firstName: data["firstName"] as String? ?? "",
+      lastName: data["lastName"] as String? ?? "",
+      city: data["city"] as String? ?? "",
+      state: data["state"] as String? ?? "",
+      phoneNumber: data["phoneNumber"] as String? ?? "",
     );
   }
 }

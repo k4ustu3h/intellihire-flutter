@@ -16,7 +16,7 @@ class AuthGate extends StatelessWidget {
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Scaffold(body: Center(child: LoadingIndicator()));
+          return const Scaffold(body: Center(child: LoadingIndicator()));
         }
 
         if (snapshot.hasData) {
@@ -24,9 +24,8 @@ class AuthGate extends StatelessWidget {
             title: "IntelliHire",
             themeController: themeController,
           );
-        } else {
-          return Login(themeController: themeController);
         }
+        return Login(themeController: themeController);
       },
     );
   }

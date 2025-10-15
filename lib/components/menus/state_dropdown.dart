@@ -16,25 +16,28 @@ class StateDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final List<String> states = List<String>.from(indiaStatesCities.keys)
+      ..sort();
+
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: DropdownButtonFormField<String>(
         isExpanded: true,
         menuMaxHeight: 300,
         value: selectedState,
-        decoration: InputDecoration(
+        decoration: const InputDecoration(
           labelText: "State/Region",
           prefixIcon: Icon(Symbols.location_on_rounded),
           border: OutlineInputBorder(),
         ),
-        items: (indiaStatesCities.keys.toList()..sort())
+        items: states
             .map(
               (state) => DropdownMenuItem<String>(
                 value: state,
                 child: Text(state, overflow: TextOverflow.ellipsis),
               ),
             )
-            .toList(),
+            .toList(growable: false),
         onChanged: enabled ? onChanged : null,
         validator: (value) =>
             value == null || value.isEmpty ? "State cannot be empty" : null,

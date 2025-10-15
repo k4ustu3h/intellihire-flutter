@@ -92,7 +92,7 @@ class _EditProfileState extends State<EditProfile> {
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text("Profile photo updated.")));
+        ).showSnackBar(const SnackBar(content: Text("Profile photo updated.")));
       }
     } on FirebaseException catch (e) {
       if (mounted) {
@@ -115,7 +115,7 @@ class _EditProfileState extends State<EditProfile> {
 
     if (_selectedState == null || _selectedCity == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Please select both State and City.")),
+        const SnackBar(content: Text("Please select both State and City.")),
       );
       return;
     }
@@ -142,9 +142,9 @@ class _EditProfileState extends State<EditProfile> {
       await _userService.updateProfile(updatedProfile);
 
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text("Profile saved successfully!")));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Profile saved successfully!")),
+        );
         Navigator.pop(context);
       }
     } on FirebaseException catch (e) {
@@ -159,7 +159,7 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   Widget _buildFormSection(bool isBusy) {
-    if (_isLoading) return Center(child: LoadingIndicator());
+    if (_isLoading) return const Center(child: LoadingIndicator());
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -200,9 +200,7 @@ class _EditProfileState extends State<EditProfile> {
           },
           enabled: _selectedState != null && !isBusy,
         ),
-
-        Divider(height: 32),
-
+        const Divider(height: 32),
         ProfileField(
           controller: _phoneNumberController,
           label: "Phone Number",
@@ -235,28 +233,31 @@ class _EditProfileState extends State<EditProfile> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
+    final colorScheme = theme.colorScheme;
+    final onSurfaceVariant = colorScheme.onSurfaceVariant;
     final isBusy = _isSaving || _isPhotoUploading;
 
     return Scaffold(
       appBar: AppBar(
         actions: [
           Padding(
-            padding: EdgeInsets.only(right: 16),
+            padding: const EdgeInsets.only(right: 16),
             child: FilledButton.icon(
-              icon: Icon(Symbols.save_rounded),
-              label: Text("Save Profile"),
+              icon: const Icon(Symbols.save_rounded),
+              label: const Text("Save Profile"),
               onPressed: isBusy || _isLoading ? null : _saveProfile,
-              style: FilledButton.styleFrom(
-                padding: EdgeInsets.symmetric(horizontal: 16),
+              style: const ButtonStyle(
+                padding: WidgetStatePropertyAll(
+                  EdgeInsets.symmetric(horizontal: 16),
+                ),
               ),
             ),
           ),
         ],
-        title: Text("Edit Profile"),
+        title: const Text("Edit Profile"),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Form(
           key: _formKey,
           child: Column(
@@ -264,25 +265,25 @@ class _EditProfileState extends State<EditProfile> {
             children: [
               Center(
                 child: Padding(
-                  padding: EdgeInsets.only(bottom: 24),
+                  padding: const EdgeInsets.only(bottom: 24),
                   child: Stack(
                     children: [
                       Heroine(
                         tag: "profile-avatar-hero",
-                        child: ProfileAvatar(radius: 60),
+                        child: const ProfileAvatar(radius: 60),
                       ),
                       Positioned(
                         bottom: 0,
                         right: 0,
                         child: _isPhotoUploading
-                            ? LoadingIndicator()
+                            ? const LoadingIndicator()
                             : IconButton(
-                                color: theme.colorScheme.onSurfaceVariant,
-                                icon: Icon(Symbols.photo_camera_rounded),
+                                color: onSurfaceVariant,
+                                icon: const Icon(Symbols.photo_camera_rounded),
                                 onPressed: isBusy ? null : _pickAndUploadImage,
                                 style: IconButton.styleFrom(
                                   backgroundColor:
-                                      theme.colorScheme.surfaceContainerHighest,
+                                      colorScheme.surfaceContainerHighest,
                                 ),
                               ),
                       ),

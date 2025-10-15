@@ -25,14 +25,14 @@ class _TestAverageChartState extends State<TestAverageChart> {
     final titles = widget.scores.keys.toList();
     final values = widget.scores.values.toList();
 
-    if (titles.isEmpty) return SizedBox.shrink();
+    if (titles.isEmpty) return const SizedBox.shrink();
 
     final double screenWidth = MediaQuery.of(context).size.width - 72;
     final double totalWidth = titles.length * 60.0;
 
     return Card.outlined(
       child: Padding(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           spacing: 16,
@@ -48,7 +48,7 @@ class _TestAverageChartState extends State<TestAverageChart> {
                 width: totalWidth < screenWidth ? screenWidth : totalWidth,
                 height: 300,
                 child: Padding(
-                  padding: EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(16),
                   child: MotionBuilder<List<double>>(
                     motion: MaterialSpringMotion.expressiveEffectsDefault(),
                     value: values,
@@ -78,11 +78,11 @@ class _TestAverageChartState extends State<TestAverageChart> {
                                   borderRadius: BorderRadius.circular(6),
                                 ),
                               ],
-                              showingTooltipIndicators: [0],
+                              showingTooltipIndicators: const [0],
                             );
                           }),
                           maxY: 100,
-                          gridData: FlGridData(show: true),
+                          gridData: const FlGridData(show: true),
                           borderData: FlBorderData(show: false),
                           titlesData: FlTitlesData(
                             leftTitles: AxisTitles(
@@ -93,10 +93,10 @@ class _TestAverageChartState extends State<TestAverageChart> {
                                     Text("${value.toInt()}%"),
                               ),
                             ),
-                            rightTitles: AxisTitles(
+                            rightTitles: const AxisTitles(
                               sideTitles: SideTitles(showTitles: false),
                             ),
-                            topTitles: AxisTitles(
+                            topTitles: const AxisTitles(
                               sideTitles: SideTitles(showTitles: false),
                             ),
                             bottomTitles: AxisTitles(
@@ -105,12 +105,12 @@ class _TestAverageChartState extends State<TestAverageChart> {
                                 getTitlesWidget: (value, meta) {
                                   final index = value.toInt();
                                   if (index < 0 || index >= titles.length) {
-                                    return SizedBox.shrink();
+                                    return const SizedBox.shrink();
                                   }
                                   final rawTestId = titles[index];
                                   final label = labelForCode(rawTestId);
                                   return Padding(
-                                    padding: EdgeInsets.only(top: 8),
+                                    padding: const EdgeInsets.only(top: 8),
                                     child: SizedBox(
                                       width: 60,
                                       child: Text(
@@ -132,7 +132,7 @@ class _TestAverageChartState extends State<TestAverageChart> {
                             touchTooltipData: BarTouchTooltipData(
                               getTooltipColor: (_) =>
                                   theme.colorScheme.surfaceContainerHighest,
-                              tooltipPadding: EdgeInsets.all(8),
+                              tooltipPadding: const EdgeInsets.all(8),
                               tooltipBorderRadius: BorderRadius.circular(8),
                               getTooltipItem:
                                   (group, groupIndex, rod, rodIndex) {
@@ -149,28 +149,30 @@ class _TestAverageChartState extends State<TestAverageChart> {
                             ),
                             touchCallback: (event, response) {
                               if (event is! FlTapUpEvent) return;
-                              final index =
-                                  response?.spot?.touchedBarGroupIndex;
-                              if (index == null ||
-                                  index < 0 ||
-                                  index >= titles.length) {
-                                return;
-                              }
 
-                              final rawTestId = titles[index];
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => TestAttemptHistory(
-                                    title: labelForCode(rawTestId),
-                                    attempts:
-                                        widget.groupedScores[rawTestId] ?? [],
-                                  ),
-                                ),
-                              );
+                              if (response != null && response.spot != null) {
+                                final index =
+                                    response.spot!.touchedBarGroupIndex;
+                                if (index >= 0 && index < titles.length) {
+                                  final rawTestId = titles[index];
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => TestAttemptHistory(
+                                        title: labelForCode(rawTestId),
+                                        attempts:
+                                            widget.groupedScores[rawTestId] ??
+                                            [],
+                                      ),
+                                    ),
+                                  );
+                                }
+                              }
                             },
                           ),
                         ),
+                        duration: const Duration(milliseconds: 800),
+                        curve: Curves.easeOutCubic,
                       );
                     },
                   ),

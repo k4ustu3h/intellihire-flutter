@@ -94,14 +94,16 @@ class ListRow extends StatelessWidget {
         : endIcon;
 
     return Container(
-      margin: background ? EdgeInsets.symmetric(horizontal: basePadding) : null,
+      margin: background
+          ? const EdgeInsets.symmetric(horizontal: basePadding)
+          : null,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 8,
         children: [
           if (first && title != null)
             Padding(
-              padding: EdgeInsets.only(
+              padding: const EdgeInsets.only(
                 bottom: 4,
                 left: basePadding,
                 right: basePadding,
@@ -121,13 +123,13 @@ class ListRow extends StatelessWidget {
                 onTap: onTapAction,
                 child: Container(
                   height: rowHeight,
-                  padding: EdgeInsets.symmetric(horizontal: basePadding),
+                  padding: const EdgeInsets.symmetric(horizontal: basePadding),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       if (startIcon != null) ...[
                         startIcon!,
-                        SizedBox(width: basePadding),
+                        const SizedBox(width: basePadding),
                       ],
                       Expanded(
                         child: Column(
@@ -141,7 +143,7 @@ class ListRow extends StatelessWidget {
                         ),
                       ),
                       if (effectiveEndIcon != null) ...[
-                        SizedBox(width: basePadding),
+                        const SizedBox(width: basePadding),
                         effectiveEndIcon,
                       ],
                     ],

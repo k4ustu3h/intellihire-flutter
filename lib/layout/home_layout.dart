@@ -24,17 +24,16 @@ class HomeLayout extends StatefulWidget {
 class _HomeLayoutState extends State<HomeLayout> {
   int _selectedIndex = 0;
 
-  final List<String> _titles = ["Home", "Jobs", "Tests", "Profile"];
-
+  final List<String> _titles = const ["Home", "Jobs", "Tests", "Profile"];
   late final List<Widget> _pages;
 
   @override
   void initState() {
     super.initState();
     _pages = [
-      Home(),
-      Jobs(),
-      Tests(),
+      const Home(),
+      const Jobs(),
+      const Tests(),
       Profile(themeController: widget.themeController),
     ];
   }

@@ -7,9 +7,9 @@ class JobCardSkeleton extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Card.outlined(
-      margin: EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.only(bottom: 16),
       child: Padding(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -56,10 +56,11 @@ class JobCardSkeleton extends StatelessWidget {
                   height: 12,
                   color: theme.colorScheme.secondaryContainer,
                 ),
+                growable: false,
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(bottom: 4, top: 8),
+              padding: const EdgeInsets.only(bottom: 4, top: 8),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

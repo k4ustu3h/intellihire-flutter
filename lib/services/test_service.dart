@@ -8,10 +8,7 @@ class TestService {
 
   static Stream<List<Map<String, dynamic>>> getUserTestHistory() {
     final User? currentUser = FirebaseAuth.instance.currentUser;
-
-    if (currentUser == null) {
-      return const Stream.empty();
-    }
+    if (currentUser == null) return const Stream.empty();
 
     return _firestore
         .collection("test_results")
@@ -39,10 +36,7 @@ class TestService {
       final question = questions[i];
       final selected = selectedAnswers[i];
       final correct = question["answer"] as String?;
-
-      if (selected != null && selected == correct) {
-        correctAnswers++;
-      }
+      if (selected != null && selected == correct) correctAnswers++;
     }
 
     final double percentage = (correctAnswers / totalQuestions) * 100.0;
@@ -51,11 +45,9 @@ class TestService {
     final Color backgroundColor = passed
         ? Colors.greenAccent.shade700
         : colorScheme.error;
-
     final Color foregroundColor = passed
         ? colorScheme.onPrimary
         : colorScheme.onError;
-
     final IconData statusIcon = passed
         ? Symbols.check_circle_rounded
         : Symbols.cancel_rounded;
@@ -76,26 +68,26 @@ class TestService {
           .collection("attempts")
           .add(scoreData);
 
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              spacing: 12,
-              children: [
-                Icon(statusIcon, color: foregroundColor),
-                Text(
-                  "Test Submitted! ${passed ? "Passed" : "Failed"} (${percentage.toStringAsFixed(1)}%)",
-                  style: TextStyle(color: foregroundColor),
-                ),
-              ],
-            ),
-            backgroundColor: backgroundColor,
-            duration: Duration(seconds: 5),
-            behavior: SnackBarBehavior.floating,
+      if (!context.mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            spacing: 12,
+            children: [
+              Icon(statusIcon, color: foregroundColor),
+              Text(
+                "Test Submitted! ${passed ? "Passed" : "Failed"} (${percentage.toStringAsFixed(1)}%)",
+                style: TextStyle(color: foregroundColor),
+              ),
+            ],
           ),
-        );
-        Navigator.of(context).pop();
-      }
+          backgroundColor: backgroundColor,
+          duration: Duration(seconds: 5),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      Navigator.of(context).pop();
     } catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -121,12 +113,10 @@ class TestService {
           .where("passed", isEqualTo: true)
           .get();
 
-      final Set<String> passedSkills = {};
-      for (var doc in snapshot.docs) {
-        final testId = doc.data()["testId"] as String?;
-        if (testId != null) passedSkills.add(testId);
-      }
-      return passedSkills;
+      return snapshot.docs
+          .map((doc) => doc.data()["testId"] as String?)
+          .whereType<String>()
+          .toSet();
     } catch (e) {
       return {};
     }

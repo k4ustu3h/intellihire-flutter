@@ -62,22 +62,14 @@ class _RegisterState extends State<Register> {
     ];
   }
 
-  IconData _getIconData(String iconName) {
-    switch (iconName) {
-      case "name":
-        return Symbols.person_rounded;
-      case "email":
-        return Symbols.email_rounded;
-      case "password":
-        return Symbols.password;
-      case "google":
-        return SimpleIcons.google;
-      case "apple":
-        return SimpleIcons.apple;
-      default:
-        return Symbols.error;
-    }
-  }
+  IconData _getIconData(String iconName) => switch (iconName) {
+    "name" => Symbols.person_rounded,
+    "email" => Symbols.email_rounded,
+    "password" => Symbols.password,
+    "google" => SimpleIcons.google,
+    "apple" => SimpleIcons.apple,
+    _ => Symbols.error,
+  };
 
   Future<void> signUp() async {
     setState(() => _loading = true);
@@ -95,7 +87,7 @@ class _RegisterState extends State<Register> {
       if (!mounted) return;
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => HomeLayout(
+          builder: (_) => HomeLayout(
             title: "IntelliHire",
             themeController: widget.themeController,
           ),
@@ -134,7 +126,7 @@ class _RegisterState extends State<Register> {
         child: SizedBox(height: MediaQuery.of(context).padding.top),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           spacing: 16,
           children: [
@@ -151,23 +143,23 @@ class _RegisterState extends State<Register> {
             }),
             FilledButton.icon(
               onPressed: _loading ? null : signUp,
-              icon: Icon(Symbols.app_registration_rounded),
+              icon: const Icon(Symbols.app_registration_rounded),
               label: _loading
-                  ? SizedBox(
+                  ? const SizedBox(
                       height: 20,
                       width: 20,
                       child: ExpressiveLoadingIndicator(),
                     )
-                  : Text("Sign Up"),
+                  : const Text("Sign Up"),
               style: FilledButton.styleFrom(
-                minimumSize: Size(double.infinity, 48),
+                minimumSize: const Size(double.infinity, 48),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
             ),
             Row(
-              children: [
+              children: const [
                 Expanded(child: Divider()),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10),
@@ -182,7 +174,7 @@ class _RegisterState extends State<Register> {
                 icon: Icon(_getIconData(button["iconName"])),
                 label: Text(button["label"]),
                 style: FilledButton.styleFrom(
-                  minimumSize: Size(double.infinity, 48),
+                  minimumSize: const Size(double.infinity, 48),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -193,12 +185,12 @@ class _RegisterState extends State<Register> {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) =>
+                    builder: (_) =>
                         Login(themeController: widget.themeController),
                   ),
                 );
               },
-              child: Text("Already have an account? Login here."),
+              child: const Text("Already have an account? Login here."),
             ),
           ],
         ),

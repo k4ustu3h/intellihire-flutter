@@ -12,17 +12,16 @@ class MyScores extends StatelessWidget {
 
   Map<String, double> _getAverageScores(List<Map<String, dynamic>> scores) {
     final Map<String, List<double>> scoreMap = {};
-    for (var score in scores) {
+    for (final score in scores) {
       final title = score["testId"] as String;
-
       final totalQuestions =
           (score["totalQuestions"] as num?)?.toDouble() ?? 1.0;
       final correct = (score["score"] as num?)?.toDouble() ?? 0.0;
-
       final percentage = (correct / totalQuestions) * 100.0;
 
       scoreMap.putIfAbsent(title, () => []).add(percentage);
     }
+
     final Map<String, double> averageScores = {};
     scoreMap.forEach((testId, values) {
       final average = values.reduce((a, b) => a + b) / values.length;
@@ -35,7 +34,7 @@ class MyScores extends StatelessWidget {
     List<Map<String, dynamic>> scores,
   ) {
     final Map<String, List<Map<String, dynamic>>> map = {};
-    for (var score in scores) {
+    for (final score in scores) {
       final title = score["testId"] as String;
       map.putIfAbsent(title, () => []).add(score);
     }
@@ -44,13 +43,14 @@ class MyScores extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(title: Text("My Scores")),
+      appBar: AppBar(title: const Text("My Scores")),
       body: StreamBuilder<List<Map<String, dynamic>>>(
         stream: TestService.getUserTestHistory(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: LoadingIndicator());
+            return const Center(child: LoadingIndicator());
           }
           if (snapshot.hasError) {
             return Center(child: Text("Error: ${snapshot.error}"));
@@ -59,7 +59,7 @@ class MyScores extends StatelessWidget {
           final scores = snapshot.data ?? [];
 
           if (scores.isEmpty) {
-            return Center(
+            return const Center(
               child: Text(
                 "You haven't completed any tests yet.",
                 style: TextStyle(fontSize: 16),
@@ -68,20 +68,19 @@ class MyScores extends StatelessWidget {
           }
 
           final averageScores = _getAverageScores(scores);
+          final colorSchemeError = theme.colorScheme.error;
           final groupedScores = _groupScoresByTest(scores);
-          final theme = Theme.of(context);
           final keys = averageScores.keys.toList();
 
           return ListView(
             children: [
               Padding(
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 child: TestAverageChart(
                   scores: averageScores,
                   groupedScores: groupedScores,
                 ),
               ),
-
               Column(
                 spacing: 2,
                 children: List.generate(keys.length, (index) {
@@ -91,7 +90,7 @@ class MyScores extends StatelessWidget {
                   final isPassed = average >= 80.0;
                   final color = isPassed
                       ? Colors.greenAccent.shade700
-                      : theme.colorScheme.error;
+                      : colorSchemeError;
 
                   final attempts = groupedScores[rawTitle] ?? [];
 
@@ -119,7 +118,7 @@ class MyScores extends StatelessWidget {
                     ),
                     first: index == 0,
                     last: index == keys.length - 1,
-                    title: Text("Tests Attempted"),
+                    title: const Text("Tests Attempted"),
                     navigateTo: TestAttemptHistory(
                       title: title,
                       attempts: attempts,

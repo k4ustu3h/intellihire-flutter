@@ -46,16 +46,11 @@ class _LoginState extends State<Login> {
     ];
   }
 
-  IconData _getIconData(String iconName) {
-    switch (iconName) {
-      case "email":
-        return Symbols.email_rounded;
-      case "password":
-        return Symbols.password;
-      default:
-        return Symbols.error;
-    }
-  }
+  IconData _getIconData(String iconName) => switch (iconName) {
+    "email" => Symbols.email_rounded,
+    "password" => Symbols.password,
+    _ => Symbols.error,
+  };
 
   Future<void> signIn() async {
     setState(() => _loading = true);
@@ -69,7 +64,7 @@ class _LoginState extends State<Login> {
       if (!mounted) return;
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => HomeLayout(
+          builder: (_) => HomeLayout(
             title: "IntelliHire",
             themeController: widget.themeController,
           ),
@@ -106,7 +101,7 @@ class _LoginState extends State<Login> {
         child: SizedBox(height: MediaQuery.of(context).padding.top),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           spacing: 16,
           children: [
@@ -123,16 +118,16 @@ class _LoginState extends State<Login> {
             }),
             FilledButton.icon(
               onPressed: _loading ? null : signIn,
-              icon: Icon(Symbols.login_rounded),
+              icon: const Icon(Symbols.login_rounded),
               label: _loading
-                  ? SizedBox(
+                  ? const SizedBox(
                       height: 20,
                       width: 20,
                       child: ExpressiveLoadingIndicator(),
                     )
-                  : Text("Sign In"),
+                  : const Text("Sign In"),
               style: FilledButton.styleFrom(
-                minimumSize: Size(double.infinity, 48),
+                minimumSize: const Size(double.infinity, 48),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -142,12 +137,12 @@ class _LoginState extends State<Login> {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) =>
+                    builder: (_) =>
                         Register(themeController: widget.themeController),
                   ),
                 );
               },
-              child: Text("Don't have an account? Register here."),
+              child: const Text("Don't have an account? Register here."),
             ),
           ],
         ),

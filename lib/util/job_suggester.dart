@@ -5,20 +5,27 @@ class JobSuggester {
     required String userCity,
     required String userState,
   }) {
-    if (jobs.isEmpty) return jobs;
+    if (jobs.isEmpty) return const [];
 
     final normalizedUserCity = userCity.trim();
     final normalizedUserState = userState.trim();
+    final bool hasUserSkills = userSkills.isNotEmpty;
 
-    final scoredJobs = jobs.map((job) {
-      final jobSkills = List<String>.from(job["skills"] ?? const []);
-      final numMatchingSkills = userSkills.isEmpty
-          ? 0
-          : jobSkills.where(userSkills.contains).length;
+    final Set<String> skillLookup = hasUserSkills ? userSkills : <String>{};
 
-      final jobType = job["jobType"] as String? ?? "";
-      final jobCity = (job["city"] as String? ?? "").trim();
-      final jobState = (job["state"] as String? ?? "").trim();
+    final List<Map<String, dynamic>> scoredJobs = [];
+
+    for (final job in jobs) {
+      final List<String> jobSkills = List<String>.from(
+        job["skills"] ?? const [],
+      );
+      final int numMatchingSkills = hasUserSkills
+          ? jobSkills.where((skill) => skillLookup.contains(skill)).length
+          : 0;
+
+      final String jobType = job["jobType"] as String? ?? "";
+      final String jobCity = (job["city"] as String? ?? "").trim();
+      final String jobState = (job["state"] as String? ?? "").trim();
 
       int locationScore = 0;
       if (jobType == "Remote") locationScore += 1;
@@ -29,23 +36,28 @@ class JobSuggester {
         locationScore += 3;
       }
 
-      final score = numMatchingSkills * 10 + locationScore;
+      final int score = numMatchingSkills * 10 + locationScore;
 
-      return {...job, "__score": score, "__matches": numMatchingSkills};
-    }).toList();
+      if (!hasUserSkills || numMatchingSkills > 0) {
+        scoredJobs.add({
+          ...job,
+          "__score": score,
+          "__matches": numMatchingSkills,
+        });
+      }
+    }
 
-    final filtered = userSkills.isEmpty
-        ? scoredJobs
-        : scoredJobs.where((j) => (j["__matches"] as int) > 0).toList();
-
-    filtered.sort((a, b) {
-      final scoreDiff = (b["__score"] as int).compareTo(a["__score"] as int);
-      if (scoreDiff != 0) return scoreDiff;
-      return (b["__matches"] as int).compareTo(a["__matches"] as int);
+    scoredJobs.sort((a, b) {
+      final int scoreDiff = (b["__score"] as int).compareTo(
+        a["__score"] as int,
+      );
+      return scoreDiff != 0
+          ? scoreDiff
+          : (b["__matches"] as int).compareTo(a["__matches"] as int);
     });
 
-    return filtered.map((j) {
-      final copy = Map<String, dynamic>.from(j);
+    return scoredJobs.map((job) {
+      final copy = Map<String, dynamic>.from(job);
       copy.remove("__score");
       copy.remove("__matches");
       return copy;

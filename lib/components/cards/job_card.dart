@@ -29,11 +29,11 @@ class JobCard extends StatelessWidget {
       openBuilder: (context, _) => JobDetails(job: job),
       openColor: theme.colorScheme.surface,
       transitionType: ContainerTransitionType.fadeThrough,
-      transitionDuration: Duration(milliseconds: 500),
+      transitionDuration: const Duration(milliseconds: 500),
       closedBuilder: (context, openContainer) {
         return Card.outlined(
           child: Padding(
-            padding: EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               spacing: 8,
@@ -44,7 +44,7 @@ class JobCard extends StatelessWidget {
                     CompanyLogo(job: job),
                     Expanded(
                       child: Padding(
-                        padding: EdgeInsets.only(left: 12),
+                        padding: const EdgeInsets.only(left: 12),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
@@ -91,8 +91,8 @@ class JobCard extends StatelessWidget {
                     ),
                     FilledButton.icon(
                       onPressed: openContainer,
-                      icon: Icon(Symbols.check_rounded),
-                      label: Text("Apply"),
+                      icon: const Icon(Symbols.check_rounded),
+                      label: const Text("Apply"),
                     ),
                   ],
                 ),

@@ -27,7 +27,7 @@ class FilterBottomSheet extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16),
             child: Text(title, style: theme.textTheme.titleSmall),
           ),
           Expanded(
@@ -70,10 +70,10 @@ class FilterBottomSheet extends StatelessWidget {
     final theme = Theme.of(context);
 
     return ListTile(
-      contentPadding: EdgeInsets.symmetric(horizontal: 16),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16),
       leading: isSelected
           ? Icon(Symbols.check_rounded, color: theme.colorScheme.primary)
-          : SizedBox(width: 24),
+          : const SizedBox(width: 24),
       title: Text(title),
       onTap: onTap,
       dense: true,

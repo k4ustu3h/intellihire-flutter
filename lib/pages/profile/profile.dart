@@ -21,16 +21,16 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   final user = FirebaseAuth.instance.currentUser;
 
-  final List<Map<String, dynamic>> _accountItems = [
+  static const _accountItems = [
     {"label": "My Scores", "iconName": "analytics"},
     {"label": "Change Password", "iconName": "lock"},
   ];
 
-  final List<Map<String, dynamic>> _settingsItems = [
+  static const _settingsItems = [
     {"label": "Settings", "iconName": "settings"},
   ];
 
-  final List<Map<String, dynamic>> _supportItems = [
+  static const _supportItems = [
     {"label": "Help Center", "iconName": "help"},
     {"label": "About", "iconName": "info"},
     {"label": "Sign Out", "iconName": "logout"},
@@ -55,11 +55,10 @@ class _ProfileState extends State<Profile> {
     }
   }
 
-  Widget _buildStartIcon(String iconName) {
-    final theme = Theme.of(context).colorScheme;
+  Widget _buildStartIcon(String iconName, Color primaryColor) {
     return CircleAvatar(
-      backgroundColor: theme.primary.withValues(alpha: 0.15),
-      child: Icon(_getIconData(iconName), color: theme.primary),
+      backgroundColor: primaryColor.withAlpha(38),
+      child: Icon(_getIconData(iconName), color: primaryColor),
     );
   }
 
@@ -82,88 +81,71 @@ class _ProfileState extends State<Profile> {
       builder: (context) => AlertDialog(
         title: Text(title),
         content: Text(message),
-        actions: [CloseButton()],
+        actions: const [CloseButton()],
       ),
     );
   }
 
   Widget _buildListGroup(String title, List<Map<String, dynamic>> items) {
+    final theme = Theme.of(context);
+    final primaryColor = theme.colorScheme.primary;
+
     return Column(
       spacing: 2,
       children: List.generate(items.length, (index) {
         final item = items[index];
         final label = item["label"] as String;
         final iconName = item["iconName"] as String;
+        final startIcon = _buildStartIcon(iconName, primaryColor);
+
+        Widget? navigateTo;
+        VoidCallback? onClick;
 
         switch (label) {
           case "My Scores":
-            return ListRow.navigate(
-              title: index == 0 ? Text(title) : null,
-              startIcon: _buildStartIcon(iconName),
-              label: Text(label),
-              navigateTo: MyScores(),
-              first: index == 0,
-              last: index == items.length - 1,
-            );
-
+            navigateTo = const MyScores();
+            break;
           case "Settings":
-            return ListRow.navigate(
-              title: index == 0 ? Text(title) : null,
-              startIcon: _buildStartIcon(iconName),
-              label: Text(label),
-              navigateTo: Settings(themeController: widget.themeController),
-              first: index == 0,
-              last: index == items.length - 1,
-            );
-
+            navigateTo = Settings(themeController: widget.themeController);
+            break;
           case "Change Password":
-            return ListRow(
-              title: index == 0 ? Text(title) : null,
-              startIcon: _buildStartIcon(iconName),
-              label: Text(label),
-              onClick: () {},
-              first: index == 0,
-              last: index == items.length - 1,
-            );
-
+            onClick = () {};
+            break;
           case "Help Center":
-            return ListRow(
-              title: index == 0 ? Text(title) : null,
-              startIcon: _buildStartIcon(iconName),
-              label: Text(label),
-              onClick: () => _showDialog(
-                "Help Center",
-                "Contact support at support@intellihire.com or visit our FAQ.",
-              ),
-              first: index == 0,
-              last: index == items.length - 1,
+            onClick = () => _showDialog(
+              "Help Center",
+              "Contact support at support@intellihire.com or visit our FAQ.",
             );
-
+            break;
           case "About":
-            return ListRow(
-              title: index == 0 ? Text(title) : null,
-              startIcon: _buildStartIcon(iconName),
-              label: Text(label),
-              onClick: () => _showDialog(
-                "About IntelliHire",
-                "IntelliHire: Smart Recruitment & Skill Assessment System.\nVersion 1.0",
-              ),
-              first: index == 0,
-              last: index == items.length - 1,
+            onClick = () => _showDialog(
+              "About IntelliHire",
+              "IntelliHire: Smart Recruitment & Skill Assessment System.\nVersion 1.0",
             );
-
+            break;
           case "Sign Out":
-            return ListRow(
-              title: index == 0 ? Text(title) : null,
-              startIcon: _buildStartIcon(iconName),
-              label: Text(label),
-              onClick: _handleSignOut,
-              first: index == 0,
-              last: index == items.length - 1,
-            );
+            onClick = _handleSignOut;
+            break;
+        }
 
-          default:
-            return SizedBox.shrink();
+        if (navigateTo != null) {
+          return ListRow.navigate(
+            title: index == 0 ? Text(title) : null,
+            startIcon: startIcon,
+            label: Text(label),
+            navigateTo: navigateTo,
+            first: index == 0,
+            last: index == items.length - 1,
+          );
+        } else {
+          return ListRow(
+            title: index == 0 ? Text(title) : null,
+            startIcon: startIcon,
+            label: Text(label),
+            onClick: onClick,
+            first: index == 0,
+            last: index == items.length - 1,
+          );
         }
       }),
     );
@@ -173,18 +155,20 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(vertical: 16),
+        padding: const EdgeInsets.symmetric(vertical: 16),
         child: Column(
           spacing: 12,
           children: [
             Padding(
-              padding: EdgeInsets.all(12),
+              padding: const EdgeInsets.all(12),
               child: ProfileCard(
                 user: user,
                 onEditPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => EditProfile()),
+                    MaterialPageRoute(
+                      builder: (context) => const EditProfile(),
+                    ),
                   );
                 },
               ),

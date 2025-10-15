@@ -22,14 +22,14 @@ class TestAttemptHistory extends StatelessWidget {
       height: size,
       child: TweenAnimationBuilder<double>(
         tween: Tween<double>(begin: 0, end: percentage / 100),
-        duration: Duration(seconds: 1),
+        duration: const Duration(seconds: 1),
         curve: Curves.easeOutCubic,
         builder: (context, value, child) {
           return Stack(
             alignment: Alignment.center,
             children: [
               CircularProgressIndicator(
-                backgroundColor: color.withValues(alpha: 0.15),
+                backgroundColor: color.withAlpha(38),
                 color: color,
                 strokeWidth: 4,
                 strokeCap: StrokeCap.round,
@@ -46,6 +46,9 @@ class TestAttemptHistory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final labelSmallStyle = theme.textTheme.labelSmall?.copyWith(
+      color: theme.colorScheme.onSurfaceVariant,
+    );
 
     final sortedAttempts = List<Map<String, dynamic>>.from(attempts)
       ..sort((a, b) {
@@ -56,10 +59,19 @@ class TestAttemptHistory extends StatelessWidget {
 
     final attemptsCount = sortedAttempts.length;
 
+    String formatDate(DateTime t) =>
+        "${t.day.toString().padLeft(2, '0')}/"
+        "${t.month.toString().padLeft(2, '0')}/"
+        "${t.year}";
+
+    String formatTime(DateTime t) =>
+        "${t.hour.toString().padLeft(2, '0')}:"
+        "${t.minute.toString().padLeft(2, '0')}";
+
     return Scaffold(
       appBar: AppBar(title: Text(title)),
       body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(vertical: ListRow.basePadding),
+        padding: const EdgeInsets.symmetric(vertical: ListRow.basePadding),
         child: Column(
           spacing: 2,
           children: List.generate(attemptsCount, (index) {
@@ -81,14 +93,6 @@ class TestAttemptHistory extends StatelessWidget {
                 ? Symbols.check_circle_rounded
                 : Symbols.cancel_rounded;
 
-            final dateStr =
-                "${timestamp.day.toString().padLeft(2, '0')}/"
-                "${timestamp.month.toString().padLeft(2, '0')}/"
-                "${timestamp.year}";
-            final timeStr =
-                "${timestamp.hour.toString().padLeft(2, '0')}:"
-                "${timestamp.minute.toString().padLeft(2, '0')}";
-
             final attemptNumber = attemptsCount - index;
 
             return ListRow(
@@ -101,18 +105,8 @@ class TestAttemptHistory extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(
-                    dateStr,
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                  Text(
-                    timeStr,
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
+                  Text(formatDate(timestamp), style: labelSmallStyle),
+                  Text(formatTime(timestamp), style: labelSmallStyle),
                 ],
               ),
               first: index == 0,

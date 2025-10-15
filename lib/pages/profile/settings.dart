@@ -16,7 +16,7 @@ class _SettingsState extends State<Settings> {
   Widget _buildLeadingIcon(IconData icon) {
     final colorScheme = Theme.of(context).colorScheme;
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: colorScheme.primary,
         shape: BoxShape.circle,
@@ -34,8 +34,10 @@ class _SettingsState extends State<Settings> {
 
   @override
   Widget build(BuildContext context) {
+    final themeControllerValue = widget.themeController.value;
+
     return Scaffold(
-      appBar: AppBar(title: Text("Settings")),
+      appBar: AppBar(title: const Text("Settings")),
       body: ListView(
         children: [
           Column(
@@ -43,10 +45,10 @@ class _SettingsState extends State<Settings> {
             children: [
               ListRow(
                 startIcon: _buildLeadingIcon(Symbols.palette_rounded),
-                label: Text("Use Dynamic Theming"),
-                description: Text("Uses system wallpaper colors"),
+                label: const Text("Use Dynamic Theming"),
+                description: const Text("Uses system wallpaper colors"),
                 endIcon: Switch(
-                  value: widget.themeController.value,
+                  value: themeControllerValue,
                   onChanged: _toggleDynamicTheme,
                 ),
                 first: true,

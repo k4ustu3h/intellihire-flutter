@@ -22,9 +22,9 @@ class TestCard extends StatelessWidget {
     final defaultColor = colorToHex(theme.colorScheme.onSecondaryContainer);
 
     return Card.outlined(
-      margin: EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.only(bottom: 16),
       child: Padding(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 8,
@@ -37,11 +37,11 @@ class TestCard extends StatelessWidget {
                   height: 48,
                   decoration: BoxDecoration(
                     color: theme.colorScheme.secondaryContainer,
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: const BorderRadius.all(Radius.circular(8)),
                   ),
                   child: hasIcon
                       ? Padding(
-                          padding: EdgeInsets.all(8),
+                          padding: const EdgeInsets.all(8),
                           child: SvgPicture.network(
                             "https://cdn.simpleicons.org/$iconSlug/${iconColor ?? defaultColor}",
                             width: 32,
@@ -84,7 +84,7 @@ class TestCard extends StatelessWidget {
                   iconTheme: IconThemeData(
                     color: theme.colorScheme.onSecondaryContainer,
                   ),
-                  avatar: Icon(Symbols.bar_chart_rounded, size: 18),
+                  avatar: const Icon(Symbols.bar_chart_rounded, size: 18),
                   label: Text(
                     "${test["difficulty"]}",
                     style: theme.textTheme.labelSmall,
@@ -92,8 +92,8 @@ class TestCard extends StatelessWidget {
                 ),
                 FilledButton.icon(
                   onPressed: onStart,
-                  icon: Icon(Symbols.play_arrow_rounded),
-                  label: Text("Start"),
+                  icon: const Icon(Symbols.play_arrow_rounded),
+                  label: const Text("Start"),
                 ),
               ],
             ),

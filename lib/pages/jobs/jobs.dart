@@ -43,21 +43,21 @@ class _JobsState extends State<Jobs> {
     ]);
 
     final fetchedSkills = results[1] as Set<String>;
-    final jobs = results[0] as List<Map<String, dynamic>>;
+    final jobsRaw = results[0] as List<Map<String, dynamic>>;
 
-    if (jobs.isEmpty) return jobs;
+    if (jobsRaw.isEmpty) return jobsRaw;
 
     final states = <String>{};
     final skills = <String>{};
     final jobTypes = <String>{};
 
-    for (var job in jobs) {
+    final jobs = jobsRaw.map((job) {
+      final jobSkills = (job["skills"] as List?)?.cast<String>() ?? [];
       states.add(job["state"] as String);
-      if (job["skills"] is List) {
-        skills.addAll(List<String>.from(job["skills"]));
-      }
+      skills.addAll(jobSkills);
       jobTypes.add(job["jobType"] as String);
-    }
+      return {...job, "skills": jobSkills};
+    }).toList();
 
     if (mounted) {
       setState(() {
@@ -68,6 +68,7 @@ class _JobsState extends State<Jobs> {
         _userPassedSkills = fetchedSkills;
       });
     }
+
     return jobs;
   }
 
@@ -81,23 +82,21 @@ class _JobsState extends State<Jobs> {
     }
 
     return _allJobs.where((job) {
-      bool matchesState =
+      final jobSkills = job["skills"] as List<String>;
+      final matchesState =
           _selectedState == null || job["state"] == _selectedState;
-      bool matchesCity =
+      final matchesCity =
           _selectedCity == null ||
           (job["city"] == _selectedCity && job["state"] == _selectedState);
-      bool matchesSkill = _selectedSkill == null
+      final matchesSkill = _selectedSkill == null
           ? true
-          : List<String>.from(job["skills"]).contains(_selectedSkill);
-      bool matchesJobType =
+          : jobSkills.contains(_selectedSkill);
+      final matchesJobType =
           _selectedJobType == null || job["jobType"] == _selectedJobType;
 
-      bool matchesPersonalSkills = true;
-      if (_isMatchingSkillsActive) {
-        final jobSkills = List<String>.from(job["skills"]);
-
-        matchesPersonalSkills = jobSkills.any(_userPassedSkills.contains);
-      }
+      final matchesPersonalSkills = !_isMatchingSkillsActive
+          ? true
+          : jobSkills.any(_userPassedSkills.contains);
 
       return matchesState &&
           matchesCity &&
@@ -108,9 +107,8 @@ class _JobsState extends State<Jobs> {
   }
 
   List<String> _getAvailableCities() {
-    if (_selectedState == null) return [];
-
-    List<String> cityList = _allJobs
+    if (_selectedState == null) return const [];
+    final cityList = _allJobs
         .where((job) => job["state"] == _selectedState)
         .map((job) => job["city"] as String)
         .toSet()
@@ -125,13 +123,12 @@ class _JobsState extends State<Jobs> {
     required String? selectedValue,
     required ValueChanged<String?> onSelected,
   }) {
-    final bool isSkillFilter = title.contains("Skill");
+    final isSkillFilter = title.contains("Skill");
 
-    final List<String> sheetOptions = isSkillFilter
+    final sheetOptions = isSkillFilter
         ? options.map(labelForCode).toList()
         : options;
-
-    final String? sheetSelectedValue = isSkillFilter
+    final sheetSelectedValue = isSkillFilter
         ? (selectedValue != null ? labelForCode(selectedValue) : null)
         : selectedValue;
 
@@ -143,7 +140,7 @@ class _JobsState extends State<Jobs> {
         options: sheetOptions,
         selectedValue: sheetSelectedValue,
         onSelected: (label) {
-          final String? finalValue = isSkillFilter && label != null
+          final finalValue = isSkillFilter && label != null
               ? codeForLabel(label)
               : label;
 
@@ -158,7 +155,7 @@ class _JobsState extends State<Jobs> {
     final theme = Theme.of(context);
 
     final availableCities = _selectedJobType == "Remote"
-        ? ["Remote"]
+        ? const ["Remote"]
         : _getAvailableCities();
 
     final filteredJobs = _getFilteredJobs();
@@ -169,14 +166,15 @@ class _JobsState extends State<Jobs> {
         builder: (context, snapshot) {
           final isLoading = snapshot.connectionState == ConnectionState.waiting;
           final jobs = snapshot.data ?? [];
+
           if (snapshot.hasError) {
             return Center(child: Text("Error: ${snapshot.error}"));
           }
           if (!isLoading && jobs.isEmpty) {
-            return Center(child: Text("No jobs found."));
+            return const Center(child: Text("No jobs found."));
           }
           if (isLoading) {
-            return JobsSkeleton();
+            return const JobsSkeleton();
           }
 
           return Column(
@@ -184,12 +182,12 @@ class _JobsState extends State<Jobs> {
             children: [
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
-                padding: EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Row(
                   spacing: 8,
                   children: [
                     FilterChip(
-                      label: Text("Match my Skills"),
+                      label: const Text("Match my Skills"),
                       selected: _isMatchingSkillsActive,
                       onSelected: (bool newState) {
                         setState(() {
@@ -244,7 +242,7 @@ class _JobsState extends State<Jobs> {
                           : () {
                               if (_selectedState == null) {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
+                                  const SnackBar(
                                     content: Text("Select a State first."),
                                   ),
                                 );
@@ -278,7 +276,10 @@ class _JobsState extends State<Jobs> {
               ),
 
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 4,
+                ),
                 child: Text(
                   "Showing ${filteredJobs.length} of ${_allJobs.length} jobs.",
                   style: theme.textTheme.bodySmall,
@@ -287,10 +288,10 @@ class _JobsState extends State<Jobs> {
 
               Expanded(
                 child: filteredJobs.isEmpty
-                    ? Center(child: Text("No jobs match your criteria."))
+                    ? const Center(child: Text("No jobs match your criteria."))
                     : ListView.separated(
-                        padding: EdgeInsets.symmetric(horizontal: 16),
-                        separatorBuilder: (_, _) => SizedBox(height: 16),
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        separatorBuilder: (_, _) => const SizedBox(height: 16),
                         itemCount: filteredJobs.length,
                         itemBuilder: (context, index) =>
                             JobCard(job: filteredJobs[index]),

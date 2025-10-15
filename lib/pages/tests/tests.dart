@@ -23,6 +23,8 @@ class _TestsState extends State<Tests> {
 
   @override
   Widget build(BuildContext context) {
+    const padding = EdgeInsets.all(16);
+
     return Scaffold(
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: _testsFuture,
@@ -35,35 +37,36 @@ class _TestsState extends State<Tests> {
           }
 
           if (!isLoading && tests.isEmpty) {
-            return Center(child: Text("No tests available."));
+            return const Center(child: Text("No tests available."));
           }
 
           if (isLoading) {
             return Skeletonizer(
               enabled: true,
               child: ListView.builder(
-                padding: EdgeInsets.all(16),
+                padding: padding,
                 itemCount: 5,
-                itemBuilder: (context, index) => TestCardSkeleton(),
+                itemBuilder: (context, index) => const TestCardSkeleton(),
               ),
             );
           }
 
           return ListView.builder(
-            padding: EdgeInsets.all(16),
+            padding: padding,
             itemCount: tests.length,
             itemBuilder: (context, index) {
               final test = tests[index];
+              final testId = test["_id"].toString();
+              final title = test["title"] as String;
+
               return TestCard(
                 test: test,
                 onStart: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => TestQuestions(
-                        testId: test["_id"].toString(),
-                        title: test["title"] as String,
-                      ),
+                      builder: (_) =>
+                          TestQuestions(testId: testId, title: title),
                     ),
                   );
                 },

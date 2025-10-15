@@ -19,7 +19,7 @@ class NavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return NavigationBar(
-      destinations: <Widget>[
+      destinations: const <Widget>[
         NavigationDestination(
           icon: Icon(Symbols.home_rounded),
           label: "Home",

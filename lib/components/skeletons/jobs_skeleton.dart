@@ -17,10 +17,10 @@ class JobsSkeleton extends StatelessWidget {
         children: [
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
             child: Row(
               spacing: 8,
-              children: [
+              children: const [
                 FilterChipSkeleton(),
                 FilterChipSkeleton(),
                 FilterChipSkeleton(),
@@ -29,7 +29,7 @@ class JobsSkeleton extends StatelessWidget {
           ),
 
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
             child: Text(
               "Showing 00 of 00 jobs.",
               style: theme.textTheme.bodySmall,
@@ -38,9 +38,9 @@ class JobsSkeleton extends StatelessWidget {
 
           Expanded(
             child: ListView.builder(
-              padding: EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               itemCount: 5,
-              itemBuilder: (context, index) => JobCardSkeleton(),
+              itemBuilder: (context, index) => const JobCardSkeleton(),
             ),
           ),
         ],

@@ -9,6 +9,7 @@ class JobDetails extends StatelessWidget {
 
   final Map<String, dynamic> job;
 
+  // Helper for section title
   Widget _sectionTitle(BuildContext context, String title) {
     final theme = Theme.of(context);
     return Text(
@@ -17,8 +18,15 @@ class JobDetails extends StatelessWidget {
     );
   }
 
-  String colorToHex(Color color) {
-    return color.toARGB32().toRadixString(16).substring(2).toUpperCase();
+  // Helper to convert Color to hex string
+  String colorToHex(Color color) =>
+      color.toARGB32().toRadixString(16).substring(2).toUpperCase();
+
+  // Helper for cards to reduce boilerplate
+  Widget _buildCard({required Widget child}) {
+    return Card.outlined(
+      child: Padding(padding: const EdgeInsets.all(20), child: child),
+    );
   }
 
   @override
@@ -35,10 +43,23 @@ class JobDetails extends StatelessWidget {
 
     final defaultColor = colorToHex(theme.colorScheme.onSecondaryContainer);
 
+    final headlineStyle = theme.textTheme.headlineSmall?.copyWith(
+      fontWeight: FontWeight.bold,
+    );
+    final titleMediumStyle = theme.textTheme.titleMedium?.copyWith(
+      color: theme.colorScheme.primary,
+    );
+    final labelMediumStyle = theme.textTheme.labelMedium?.copyWith(
+      color: theme.colorScheme.onSecondaryContainer,
+    );
+
+    final onSurfaceVariant = theme.colorScheme.onSurfaceVariant;
+    final onSurface = theme.colorScheme.onSurface;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text("Job Details"),
-        actions: [
+        title: const Text("Job Details"),
+        actions: const [
           IconButton(icon: Icon(Symbols.share_rounded), onPressed: null),
           IconButton(
             icon: Icon(Symbols.bookmark_border_rounded),
@@ -47,207 +68,183 @@ class JobDetails extends StatelessWidget {
         ],
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           spacing: 16,
           children: [
-            Card.outlined(
-              child: Padding(
-                padding: EdgeInsets.all(20),
-                child: Column(
-                  spacing: 20,
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      spacing: 16,
-                      children: [
-                        CompanyLogo(job: job),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            spacing: 4,
-                            children: [
-                              Text(
-                                job["jobTitle"] ?? "Untitled",
-                                style: theme.textTheme.headlineSmall?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                textAlign: TextAlign.end,
-                              ),
-                              Text(
-                                job["companyName"] ?? "",
-                                style: theme.textTheme.titleMedium?.copyWith(
-                                  color: theme.colorScheme.primary,
-                                ),
-                              ),
-                            ],
-                          ),
+            // Job Header
+            _buildCard(
+              child: Column(
+                spacing: 20,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 16,
+                    children: [
+                      CompanyLogo(job: job),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          spacing: 4,
+                          children: [
+                            Text(
+                              job["jobTitle"] ?? "Untitled",
+                              style: headlineStyle,
+                              textAlign: TextAlign.end,
+                            ),
+                            Text(
+                              job["companyName"] ?? "",
+                              style: titleMediumStyle,
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    Row(
-                      spacing: 12,
-                      children: [
-                        Expanded(
-                          child: FilledButton.icon(
-                            icon: Icon(Symbols.check_rounded),
-                            label: Text("Apply Now"),
-                            onPressed: () =>
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      "Application submitted successfully!",
-                                    ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    spacing: 12,
+                    children: [
+                      Expanded(
+                        child: FilledButton.icon(
+                          icon: const Icon(Symbols.check_rounded),
+                          label: const Text("Apply Now"),
+                          onPressed: () =>
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    "Application submitted successfully!",
                                   ),
                                 ),
+                              ),
+                        ),
+                      ),
+                      OutlinedButton.icon(
+                        icon: const Icon(Symbols.bookmark_border_rounded),
+                        label: const Text("Save"),
+                        onPressed: null,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+
+            // Job Description
+            if (job["description"] != null)
+              _buildCard(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 12,
+                  children: [
+                    _sectionTitle(context, "Job Description"),
+                    Text(job["description"], style: theme.textTheme.bodyLarge),
+                  ],
+                ),
+              ),
+
+            // Skills Required
+            if (skills.isNotEmpty)
+              _buildCard(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 12,
+                  children: [
+                    _sectionTitle(context, "Skills Required"),
+                    Wrap(
+                      spacing: 16,
+                      children: skills.map((skill) {
+                        final label = labelForCode(skill);
+                        return Chip(
+                          backgroundColor: theme.colorScheme.secondaryContainer,
+                          side: BorderSide.none,
+                          avatar: SvgPicture.network(
+                            "https://cdn.simpleicons.org/$skill/$defaultColor",
+                            width: 18,
+                            height: 18,
+                            placeholderBuilder: (context) => Icon(
+                              Symbols.code_rounded,
+                              size: 18,
+                              color: theme.colorScheme.onSecondaryContainer,
+                            ),
                           ),
-                        ),
-                        OutlinedButton.icon(
-                          icon: Icon(Symbols.bookmark_border_rounded),
-                          label: Text("Save"),
-                          onPressed: null,
-                        ),
-                      ],
+                          label: Text(label, style: labelMediumStyle),
+                        );
+                      }).toList(),
                     ),
                   ],
                 ),
               ),
-            ),
-            if (job["description"] != null)
-              Card.outlined(
-                child: Padding(
-                  padding: EdgeInsets.all(20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: 12,
+
+            // Job Information
+            _buildCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 16,
+                children: [
+                  _sectionTitle(context, "Job Information"),
+                  Row(
                     children: [
-                      _sectionTitle(context, "Job Description"),
-                      Text(
-                        job["description"],
-                        style: theme.textTheme.bodyLarge,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            if (skills.isNotEmpty)
-              Card.outlined(
-                child: Padding(
-                  padding: EdgeInsets.all(20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: 12,
-                    children: [
-                      _sectionTitle(context, "Skills Required"),
-                      Wrap(
-                        spacing: 16,
-                        children: skills.map((skill) {
-                          final label = labelForCode(skill);
-                          final iconSlug = skill;
-                          return Chip(
-                            backgroundColor:
-                                theme.colorScheme.secondaryContainer,
-                            side: BorderSide.none,
-                            avatar: SvgPicture.network(
-                              "https://cdn.simpleicons.org/$iconSlug/$defaultColor",
-                              width: 18,
-                              height: 18,
-                              placeholderBuilder: (context) => Icon(
-                                Symbols.code_rounded,
-                                size: 18,
-                                color: theme.colorScheme.onSecondaryContainer,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          spacing: 4,
+                          children: [
+                            Text(
+                              "Job Type",
+                              style: theme.textTheme.titleSmall!.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: onSurfaceVariant,
                               ),
                             ),
-                            label: Text(
-                              label,
-                              style: theme.textTheme.labelMedium?.copyWith(
-                                color: theme.colorScheme.onSecondaryContainer,
+                            Text(
+                              jobType ?? "Not specified",
+                              style: theme.textTheme.bodyLarge?.copyWith(
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
-                          );
-                        }).toList(),
+                          ],
+                        ),
                       ),
-                    ],
-                  ),
-                ),
-              ),
-            Card.outlined(
-              child: Padding(
-                padding: EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  spacing: 16,
-                  children: [
-                    _sectionTitle(context, "Job Information"),
-                    Row(
-                      children: [
+                      if (!isRemote)
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             spacing: 4,
                             children: [
                               Text(
-                                "Job Type",
+                                "Location",
                                 style: theme.textTheme.titleSmall!.copyWith(
                                   fontWeight: FontWeight.w600,
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.onSurfaceVariant,
+                                  color: onSurfaceVariant,
                                 ),
                               ),
-                              Text(
-                                jobType ?? "Not specified",
-                                style: theme.textTheme.bodyLarge?.copyWith(
-                                  fontWeight: FontWeight.w500,
-                                ),
+                              Row(
+                                spacing: 4,
+                                children: [
+                                  Icon(
+                                    Symbols.location_on_rounded,
+                                    size: 16,
+                                    color: onSurface,
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      locationText,
+                                      style: theme.textTheme.titleSmall!
+                                          .copyWith(
+                                            fontWeight: FontWeight.w600,
+                                            color: onSurface,
+                                          ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
                         ),
-                        if (!isRemote)
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              spacing: 4,
-                              children: [
-                                Text(
-                                  "Location",
-                                  style: theme.textTheme.titleSmall!.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.onSurfaceVariant,
-                                  ),
-                                ),
-                                Row(
-                                  spacing: 4,
-                                  children: [
-                                    Icon(
-                                      Symbols.location_on_rounded,
-                                      size: 16,
-                                      color: theme.colorScheme.onSurface,
-                                    ),
-                                    Expanded(
-                                      child: Text(
-                                        locationText,
-                                        style: theme.textTheme.titleSmall!
-                                            .copyWith(
-                                              fontWeight: FontWeight.w600,
-                                              color:
-                                                  theme.colorScheme.onSurface,
-                                            ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                      ],
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
+                ],
               ),
             ),
           ],

@@ -2,7 +2,7 @@ import "package:cloud_firestore/cloud_firestore.dart";
 import "package:intellihire/models/user_profile.dart";
 
 class UserService {
-  final _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<UserProfile> getUserProfile(String uid) async {
     final doc = await _firestore.collection("users").doc(uid).get();

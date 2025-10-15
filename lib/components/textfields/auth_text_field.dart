@@ -23,7 +23,7 @@ class AuthTextField extends StatelessWidget {
       obscureText: obscure,
       decoration: InputDecoration(
         prefixIcon: Icon(icon),
-        border: OutlineInputBorder(),
+        border: const OutlineInputBorder(),
         labelText: label,
       ),
       validator: validator,

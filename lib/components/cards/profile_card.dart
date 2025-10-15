@@ -21,12 +21,12 @@ class ProfileCard extends StatelessWidget {
 
     return Card.outlined(
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           spacing: 16,
           children: [
-            Heroine(
+            const Heroine(
               tag: "profile-avatar-hero",
               child: ProfileAvatar(radius: 32),
             ),
@@ -52,7 +52,7 @@ class ProfileCard extends StatelessWidget {
               ),
             ),
             IconButton(
-              icon: Icon(Symbols.edit_rounded, size: 24),
+              icon: const Icon(Symbols.edit_rounded, size: 24),
               onPressed: onEditPressed,
               tooltip: "Edit Profile",
             ),

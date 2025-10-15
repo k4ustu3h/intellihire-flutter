@@ -17,7 +17,6 @@ class TestQuestions extends StatefulWidget {
 
 class _TestQuestionsState extends State<TestQuestions> {
   late final Future<List<Map<String, dynamic>>> _questionsFuture;
-
   final Map<int, String> _selectedAnswers = {};
   bool _isSubmitting = false;
 
@@ -34,7 +33,6 @@ class _TestQuestionsState extends State<TestQuestions> {
   }) {
     final theme = Theme.of(context);
     final List<TextSpan> spans = [];
-
     final RegExp codeRegex = RegExp(r"`([^`]+)`");
     int lastMatchEnd = 0;
 
@@ -58,9 +56,7 @@ class _TestQuestionsState extends State<TestQuestions> {
           ),
         );
       }
-
       spans.add(TextSpan(text: match.group(1), style: codeStyle));
-
       lastMatchEnd = match.end;
     }
 
@@ -75,7 +71,7 @@ class _TestQuestionsState extends State<TestQuestions> {
     );
   }
 
-  void _handleSubmission(List<Map<String, dynamic>> questions) async {
+  Future<void> _handleSubmission(List<Map<String, dynamic>> questions) async {
     setState(() => _isSubmitting = true);
 
     await TestService.submitTestAndSaveScore(
@@ -85,10 +81,7 @@ class _TestQuestionsState extends State<TestQuestions> {
       questions: questions,
       selectedAnswers: _selectedAnswers,
     );
-
-    if (mounted) {
-      setState(() => _isSubmitting = false);
-    }
+    if (mounted) setState(() => _isSubmitting = false);
   }
 
   @override
@@ -101,7 +94,7 @@ class _TestQuestionsState extends State<TestQuestions> {
         future: _questionsFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: LoadingIndicator());
+            return const Center(child: LoadingIndicator());
           }
           if (snapshot.hasError) {
             return Center(child: Text("Error: ${snapshot.error}"));
@@ -109,7 +102,7 @@ class _TestQuestionsState extends State<TestQuestions> {
 
           final questions = snapshot.data ?? [];
           if (questions.isEmpty) {
-            return Center(child: Text("No questions found."));
+            return const Center(child: Text("No questions found."));
           }
 
           final isComplete = _selectedAnswers.length == questions.length;
@@ -119,16 +112,16 @@ class _TestQuestionsState extends State<TestQuestions> {
             children: [
               Expanded(
                 child: ListView.builder(
-                  padding: EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(16),
                   itemCount: questions.length,
                   itemBuilder: (context, index) {
                     final q = questions[index];
                     final options = List<String>.from(q["options"]);
 
                     return Card.outlined(
-                      margin: EdgeInsets.only(bottom: 16),
+                      margin: const EdgeInsets.only(bottom: 16),
                       child: Padding(
-                        padding: EdgeInsets.all(20),
+                        padding: const EdgeInsets.all(20),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           spacing: 8,
@@ -150,15 +143,13 @@ class _TestQuestionsState extends State<TestQuestions> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               spacing: 8,
                               children: options.map((opt) {
-                                final optionStyle = theme.textTheme.bodyMedium;
-
                                 return RadioListTile<String>(
                                   activeColor: theme.colorScheme.primary,
                                   groupValue: _selectedAnswers[index],
                                   onChanged: (value) {
-                                    setState(() {
-                                      _selectedAnswers[index] = value!;
-                                    });
+                                    setState(
+                                      () => _selectedAnswers[index] = value!,
+                                    );
                                   },
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12),
@@ -166,7 +157,7 @@ class _TestQuestionsState extends State<TestQuestions> {
                                   title: _buildStyledText(
                                     context,
                                     opt,
-                                    baseStyle: optionStyle,
+                                    baseStyle: theme.textTheme.bodyMedium,
                                   ),
                                   value: opt,
                                 );
@@ -180,15 +171,15 @@ class _TestQuestionsState extends State<TestQuestions> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 child: FilledButton.icon(
                   icon: _isSubmitting
-                      ? SizedBox(
+                      ? const SizedBox(
                           width: 20,
                           height: 20,
                           child: ExpressiveLoadingIndicator(),
                         )
-                      : Icon(Symbols.check_rounded),
+                      : const Icon(Symbols.check_rounded),
                   label: Text(_isSubmitting ? "Submitting..." : "Submit"),
                   onPressed: isButtonDisabled
                       ? null
@@ -197,7 +188,7 @@ class _TestQuestionsState extends State<TestQuestions> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    minimumSize: Size(double.infinity, 48),
+                    minimumSize: const Size(double.infinity, 48),
                   ),
                 ),
               ),
