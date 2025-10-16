@@ -9,7 +9,6 @@ class JobDetails extends StatelessWidget {
 
   final Map<String, dynamic> job;
 
-  // Helper for section title
   Widget _sectionTitle(BuildContext context, String title) {
     final theme = Theme.of(context);
     return Text(
@@ -18,11 +17,9 @@ class JobDetails extends StatelessWidget {
     );
   }
 
-  // Helper to convert Color to hex string
   String colorToHex(Color color) =>
       color.toARGB32().toRadixString(16).substring(2).toUpperCase();
 
-  // Helper for cards to reduce boilerplate
   Widget _buildCard({required Widget child}) {
     return Card.outlined(
       child: Padding(padding: const EdgeInsets.all(20), child: child),
@@ -73,7 +70,6 @@ class JobDetails extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           spacing: 16,
           children: [
-            // Job Header
             _buildCard(
               child: Column(
                 spacing: 20,
@@ -130,7 +126,6 @@ class JobDetails extends StatelessWidget {
               ),
             ),
 
-            // Job Description
             if (job["description"] != null)
               _buildCard(
                 child: Column(
@@ -143,7 +138,6 @@ class JobDetails extends StatelessWidget {
                 ),
               ),
 
-            // Skills Required
             if (skills.isNotEmpty)
               _buildCard(
                 child: Column(
@@ -176,7 +170,6 @@ class JobDetails extends StatelessWidget {
                 ),
               ),
 
-            // Job Information
             _buildCard(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

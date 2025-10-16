@@ -28,6 +28,7 @@ class JobCard extends StatelessWidget {
       closedColor: theme.colorScheme.surface,
       openBuilder: (context, _) => JobDetails(job: job),
       openColor: theme.colorScheme.surface,
+      tappable: false,
       transitionType: ContainerTransitionType.fadeThrough,
       transitionDuration: const Duration(milliseconds: 500),
       closedBuilder: (context, openContainer) {

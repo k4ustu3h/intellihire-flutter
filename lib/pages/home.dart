@@ -1,6 +1,8 @@
+import "package:animations/animations.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:intellihire/components/cards/job_card.dart";
+import "package:intellihire/components/search/search_view.dart";
 import "package:intellihire/components/skeletons/cards/suggested_jobs_skeleton.dart";
 import "package:intellihire/models/user_profile.dart";
 import "package:intellihire/services/api_service.dart";
@@ -80,6 +82,42 @@ class _HomeState extends State<Home> {
     );
   }
 
+  Widget _buildSearchBar(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: OpenContainer(
+        closedColor: Theme.of(context).colorScheme.surfaceContainerHigh,
+        closedElevation: 0,
+        closedShape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(28),
+        ),
+        openColor: Theme.of(context).colorScheme.surface,
+        openElevation: 0,
+        transitionType: ContainerTransitionType.fadeThrough,
+        closedBuilder: (context, openContainer) => Container(
+          height: 56,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: Row(
+            spacing: 8,
+            children: [
+              Icon(
+                Symbols.search_rounded,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+              Text(
+                "Search jobs",
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+        ),
+        openBuilder: (context, closeContainer) => const SearchView(),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     const horizontalPadding = 16.0;
@@ -95,6 +133,7 @@ class _HomeState extends State<Home> {
           spacing: 8,
           children: [
             _buildGreeting(context),
+            _buildSearchBar(context),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Text(

@@ -4,7 +4,9 @@ import "package:intellihire/components/skeletons/chips/filter_chip_skeleton.dart
 import "package:skeletonizer/skeletonizer.dart";
 
 class JobsSkeleton extends StatelessWidget {
-  const JobsSkeleton({super.key});
+  const JobsSkeleton({super.key, this.chips = true});
+
+  final bool chips;
 
   @override
   Widget build(BuildContext context) {
@@ -15,27 +17,27 @@ class JobsSkeleton extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-            child: Row(
-              spacing: 8,
-              children: const [
-                FilterChipSkeleton(),
-                FilterChipSkeleton(),
-                FilterChipSkeleton(),
-              ],
+          if (chips) ...[
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+              child: Row(
+                spacing: 8,
+                children: const [
+                  FilterChipSkeleton(),
+                  FilterChipSkeleton(),
+                  FilterChipSkeleton(),
+                ],
+              ),
             ),
-          ),
-
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-            child: Text(
-              "Showing 00 of 00 jobs.",
-              style: theme.textTheme.bodySmall,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+              child: Text(
+                "Showing 00 of 00 jobs.",
+                style: theme.textTheme.bodySmall,
+              ),
             ),
-          ),
-
+          ],
           Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.symmetric(horizontal: 16),
