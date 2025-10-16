@@ -1,3 +1,4 @@
+import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 
 class AuthTextField extends StatelessWidget {
@@ -24,7 +25,7 @@ class AuthTextField extends StatelessWidget {
       decoration: InputDecoration(
         prefixIcon: Icon(icon),
         border: const OutlineInputBorder(),
-        labelText: label,
+        labelText: label.tr(),
       ),
       validator: validator,
     );

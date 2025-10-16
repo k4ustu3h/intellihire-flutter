@@ -1,3 +1,4 @@
+import "package:easy_localization/easy_localization.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:heroine/heroine.dart";
@@ -37,12 +38,12 @@ class ProfileCard extends StatelessWidget {
                 spacing: 4,
                 children: [
                   Text(
-                    user?.displayName ?? "Not available",
+                    user?.displayName ?? "not_available".tr(),
                     style: textTheme.headlineSmall,
                     overflow: TextOverflow.ellipsis,
                   ),
                   Text(
-                    user?.email ?? "Not available",
+                    user?.email ?? "not_available".tr(),
                     style: textTheme.bodyLarge!.copyWith(
                       color: theme.onSurfaceVariant,
                     ),
@@ -54,7 +55,7 @@ class ProfileCard extends StatelessWidget {
             IconButton(
               icon: const Icon(Symbols.edit_rounded, size: 24),
               onPressed: onEditPressed,
-              tooltip: "Edit Profile",
+              tooltip: "edit_profile".tr(),
             ),
           ],
         ),

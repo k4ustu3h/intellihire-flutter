@@ -1,3 +1,4 @@
+import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:heroine/heroine.dart";
 import "package:intellihire/util/auth/auth_gate.dart";
@@ -22,6 +23,9 @@ class IntelliHire extends StatelessWidget {
               theme: lightTheme(lightDynamic),
               darkTheme: darkTheme(darkDynamic),
               themeMode: ThemeMode.system,
+              locale: context.locale,
+              localizationsDelegates: context.localizationDelegates,
+              supportedLocales: context.supportedLocales,
               navigatorObservers: [HeroineController()],
               home: AuthGate(themeController: themeController),
             );

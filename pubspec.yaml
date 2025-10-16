@@ -13,6 +13,7 @@ dependencies:
   cached_network_image: ^3.4.1
   cloud_firestore: ^6.0.3
   dynamic_color: ^1.8.1
+  easy_localization: ^3.0.8
   expressive_loading_indicator: ^0.0.1
   firebase_auth: ^6.1.1
   firebase_core: ^4.2.0
@@ -40,4 +41,5 @@ dev_dependencies:
 flutter:
   assets:
     - .env
+    - assets/translations/
   uses-material-design: true

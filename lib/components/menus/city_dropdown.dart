@@ -1,3 +1,4 @@
+import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:intellihire/data/india_states_cities.dart";
 import "package:material_symbols_icons/symbols.dart";
@@ -28,10 +29,10 @@ class CityDropdown extends StatelessWidget {
         isExpanded: true,
         menuMaxHeight: 300,
         value: selectedCity,
-        decoration: const InputDecoration(
-          labelText: "City",
-          prefixIcon: Icon(Symbols.location_city_rounded),
-          border: OutlineInputBorder(),
+        decoration: InputDecoration(
+          labelText: "city".tr(),
+          prefixIcon: const Icon(Symbols.location_city_rounded),
+          border: const OutlineInputBorder(),
         ),
         items: cities
             .map(
@@ -43,7 +44,7 @@ class CityDropdown extends StatelessWidget {
             .toList(),
         onChanged: enabled ? onChanged : null,
         validator: (value) =>
-            value == null || value.isEmpty ? "City cannot be empty" : null,
+            value == null || value.isEmpty ? "city_required".tr() : null,
       ),
     );
   }

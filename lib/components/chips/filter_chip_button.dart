@@ -1,3 +1,4 @@
+import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:material_symbols_icons/symbols.dart";
 
@@ -18,7 +19,7 @@ class FilterChipButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context).colorScheme;
-    final displayLabel = selectedValue ?? label;
+    final displayLabel = (selectedValue ?? label).tr();
 
     final isSelected = selectedValue != null;
 

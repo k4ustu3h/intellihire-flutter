@@ -1,4 +1,5 @@
 import "package:animations/animations.dart";
+import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:intellihire/components/icons/company_logo.dart";
 import "package:intellihire/pages/jobs/job_details.dart";
@@ -17,7 +18,7 @@ class JobCard extends StatelessWidget {
     final isRemote = jobType == "Remote";
 
     final locationText = isRemote
-        ? "Remote"
+        ? "remote".tr()
         : "${job["city"] as String}, ${job["state"] as String}";
 
     final locationIcon = isRemote
@@ -30,6 +31,7 @@ class JobCard extends StatelessWidget {
       openColor: theme.colorScheme.surface,
       transitionType: ContainerTransitionType.fadeThrough,
       transitionDuration: const Duration(milliseconds: 500),
+      tappable: false,
       closedBuilder: (context, openContainer) {
         return Card.outlined(
           child: Padding(
@@ -92,7 +94,7 @@ class JobCard extends StatelessWidget {
                     FilledButton.icon(
                       onPressed: openContainer,
                       icon: const Icon(Symbols.check_rounded),
-                      label: const Text("Apply"),
+                      label: Text("apply".tr()),
                     ),
                   ],
                 ),

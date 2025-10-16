@@ -1,3 +1,4 @@
+import "package:easy_localization/easy_localization.dart";
 import "package:fl_chart/fl_chart.dart";
 import "package:flutter/material.dart";
 import "package:intellihire/pages/profile/scores/test_attempt_history.dart";
@@ -38,7 +39,7 @@ class _TestAverageChartState extends State<TestAverageChart> {
           spacing: 16,
           children: [
             Text(
-              "Average Score by Test",
+              "average_score_by_test".tr(),
               style: theme.textTheme.titleLarge,
               textAlign: TextAlign.center,
             ),

@@ -197,7 +197,7 @@ class _JobsState extends State<Jobs> {
                     ),
 
                     FilterChipButton(
-                      label: "Job Type",
+                      label: "job_type",
                       icon: Symbols.work_rounded,
                       selectedValue: _selectedJobType,
                       onTap: () => _openFilterSheet(
@@ -216,7 +216,7 @@ class _JobsState extends State<Jobs> {
                       ),
                     ),
                     FilterChipButton(
-                      label: "State",
+                      label: "state",
                       icon: Symbols.location_on,
                       selectedValue: _selectedState,
                       onTap: _selectedJobType == "Remote"
@@ -234,7 +234,7 @@ class _JobsState extends State<Jobs> {
                             ),
                     ),
                     FilterChipButton(
-                      label: "City",
+                      label: "city",
                       icon: Symbols.location_city,
                       selectedValue: _selectedCity,
                       onTap: _selectedJobType == "Remote"
@@ -258,7 +258,7 @@ class _JobsState extends State<Jobs> {
                             },
                     ),
                     FilterChipButton(
-                      label: "Skill",
+                      label: "skill",
                       icon: Symbols.code,
                       selectedValue: _selectedSkill != null
                           ? labelForCode(_selectedSkill!)

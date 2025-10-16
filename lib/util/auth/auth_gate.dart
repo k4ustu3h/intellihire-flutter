@@ -20,10 +20,7 @@ class AuthGate extends StatelessWidget {
         }
 
         if (snapshot.hasData) {
-          return HomeLayout(
-            title: "IntelliHire",
-            themeController: themeController,
-          );
+          return HomeLayout(themeController: themeController);
         }
         return Login(themeController: themeController);
       },

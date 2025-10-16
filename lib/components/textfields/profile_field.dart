@@ -1,3 +1,4 @@
+import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 
 class ProfileField extends StatelessWidget {
@@ -25,7 +26,7 @@ class ProfileField extends StatelessWidget {
       child: TextFormField(
         controller: controller,
         decoration: InputDecoration(
-          labelText: label,
+          labelText: label.tr(),
           prefixIcon: icon != null ? Icon(icon) : null,
           border: const OutlineInputBorder(),
           enabled: enabled,
@@ -33,7 +34,7 @@ class ProfileField extends StatelessWidget {
         keyboardType: keyboardType,
         validator: (value) {
           if (requiredField && enabled && (value == null || value.isEmpty)) {
-            return "$label cannot be empty";
+            return tr("field_required", args: [label]);
           }
           return null;
         },

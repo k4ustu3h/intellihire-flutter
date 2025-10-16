@@ -1,3 +1,4 @@
+import "package:easy_localization/easy_localization.dart";
 import "package:expressive_loading_indicator/expressive_loading_indicator.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
@@ -29,19 +30,19 @@ class _LoginState extends State<Login> {
     _fields = [
       {
         "controller": _emailController,
-        "labelText": "Email",
+        "labelText": "email".tr(),
         "iconName": "email",
         "obscureText": false,
         "validator": (String? v) =>
-            v == null || v.isEmpty ? "Enter email" : null,
+            v == null || v.isEmpty ? "enter_email".tr() : null,
       },
       {
         "controller": _passwordController,
-        "labelText": "Password",
+        "labelText": "password".tr(),
         "iconName": "password",
         "obscureText": true,
         "validator": (String? v) =>
-            v == null || v.isEmpty ? "Enter password" : null,
+            v == null || v.isEmpty ? "enter_password".tr() : null,
       },
     ];
   }
@@ -64,18 +65,15 @@ class _LoginState extends State<Login> {
       if (!mounted) return;
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (_) => HomeLayout(
-            title: "IntelliHire",
-            themeController: widget.themeController,
-          ),
+          builder: (_) => HomeLayout(themeController: widget.themeController),
         ),
       );
     } on FirebaseAuthException catch (e) {
       if (!mounted) return;
       final errorMessage =
           (e.code == "user-not-found" || e.code == "wrong-password")
-          ? "Invalid email or password."
-          : e.message ?? "Login failed.";
+          ? "invalid_email_password".tr()
+          : e.message ?? "login_failed".tr();
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text(errorMessage)));
@@ -105,8 +103,8 @@ class _LoginState extends State<Login> {
         child: Column(
           spacing: 16,
           children: [
-            Text("Welcome Back", style: textTheme.displaySmall),
-            Text("Login to your account", style: textTheme.titleMedium),
+            Text("welcome_back".tr(), style: textTheme.displaySmall),
+            Text("login_to_account".tr(), style: textTheme.titleMedium),
             ..._fields.map((field) {
               return AuthTextField(
                 controller: field["controller"],
@@ -125,7 +123,7 @@ class _LoginState extends State<Login> {
                       width: 20,
                       child: ExpressiveLoadingIndicator(),
                     )
-                  : const Text("Sign In"),
+                  : Text("sign_in".tr()),
               style: FilledButton.styleFrom(
                 minimumSize: const Size(double.infinity, 48),
                 shape: RoundedRectangleBorder(
@@ -142,7 +140,7 @@ class _LoginState extends State<Login> {
                   ),
                 );
               },
-              child: const Text("Don't have an account? Register here."),
+              child: Text("dont_have_account".tr()),
             ),
           ],
         ),

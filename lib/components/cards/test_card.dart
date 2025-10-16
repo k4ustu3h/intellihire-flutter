@@ -1,3 +1,4 @@
+import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_svg/flutter_svg.dart";
 import "package:material_symbols_icons/symbols.dart";
@@ -93,7 +94,7 @@ class TestCard extends StatelessWidget {
                 FilledButton.icon(
                   onPressed: onStart,
                   icon: const Icon(Symbols.play_arrow_rounded),
-                  label: const Text("Start"),
+                  label: Text("start".tr()),
                 ),
               ],
             ),

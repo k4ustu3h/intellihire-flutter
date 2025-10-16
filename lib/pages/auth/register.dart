@@ -1,3 +1,4 @@
+import "package:easy_localization/easy_localization.dart";
 import "package:expressive_loading_indicator/expressive_loading_indicator.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
@@ -32,33 +33,33 @@ class _RegisterState extends State<Register> {
     _fields = [
       {
         "controller": _nameController,
-        "labelText": "Name",
+        "labelText": "name".tr(),
         "iconName": "name",
         "obscureText": false,
         "validator": (String? v) =>
-            v == null || v.isEmpty ? "Enter your name" : null,
+            v == null || v.isEmpty ? "enter_name".tr() : null,
       },
       {
         "controller": _emailController,
-        "labelText": "Email",
+        "labelText": "email".tr(),
         "iconName": "email",
         "obscureText": false,
         "validator": (String? v) =>
-            v == null || v.isEmpty ? "Enter email" : null,
+            v == null || v.isEmpty ? "enter_email".tr() : null,
       },
       {
         "controller": _passwordController,
-        "labelText": "Password",
+        "labelText": "password".tr(),
         "iconName": "password",
         "obscureText": true,
         "validator": (String? v) =>
-            v != null && v.length < 6 ? "Password too short" : null,
+            v != null && v.length < 6 ? "password_too_short".tr() : null,
       },
     ];
 
     _buttons = [
-      {"label": "Continue with Google", "iconName": "google"},
-      {"label": "Continue with Apple", "iconName": "apple"},
+      {"label": "continue_with_google".tr(), "iconName": "google"},
+      {"label": "continue_with_apple".tr(), "iconName": "apple"},
     ];
   }
 
@@ -87,18 +88,15 @@ class _RegisterState extends State<Register> {
       if (!mounted) return;
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (_) => HomeLayout(
-            title: "IntelliHire",
-            themeController: widget.themeController,
-          ),
+          builder: (_) => HomeLayout(themeController: widget.themeController),
         ),
       );
     } on FirebaseAuthException catch (e) {
       if (!mounted) return;
       final errorMessage = switch (e.code) {
-        "weak-password" => "The password provided is too weak.",
-        "email-already-in-use" => "An account already exists for that email.",
-        _ => e.message ?? "Registration failed.",
+        "weak-password" => "weak_password".tr(),
+        "email-already-in-use" => "email_already_in_use".tr(),
+        _ => e.message ?? "registration_failed".tr(),
       };
       ScaffoldMessenger.of(
         context,
@@ -130,8 +128,8 @@ class _RegisterState extends State<Register> {
         child: Column(
           spacing: 16,
           children: [
-            Text("Create an Account", style: textTheme.displaySmall),
-            Text("Enter your details", style: textTheme.titleMedium),
+            Text("create_account".tr(), style: textTheme.displaySmall),
+            Text("enter_details".tr(), style: textTheme.titleMedium),
             ..._fields.map((field) {
               return AuthTextField(
                 controller: field["controller"],
@@ -150,7 +148,7 @@ class _RegisterState extends State<Register> {
                       width: 20,
                       child: ExpressiveLoadingIndicator(),
                     )
-                  : const Text("Sign Up"),
+                  : Text("sign_up".tr()),
               style: FilledButton.styleFrom(
                 minimumSize: const Size(double.infinity, 48),
                 shape: RoundedRectangleBorder(
@@ -159,13 +157,16 @@ class _RegisterState extends State<Register> {
               ),
             ),
             Row(
-              children: const [
-                Expanded(child: Divider()),
+              children: [
+                const Expanded(child: Divider()),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: Text("Or", style: TextStyle(color: Colors.grey)),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Text(
+                    "or".tr(),
+                    style: const TextStyle(color: Colors.grey),
+                  ),
                 ),
-                Expanded(child: Divider()),
+                const Expanded(child: Divider()),
               ],
             ),
             ..._buttons.map((button) {
@@ -190,7 +191,7 @@ class _RegisterState extends State<Register> {
                   ),
                 );
               },
-              child: const Text("Already have an account? Login here."),
+              child: Text("already_have_account".tr()),
             ),
           ],
         ),
