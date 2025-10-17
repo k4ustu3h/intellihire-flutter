@@ -17,8 +17,13 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+
+  final _emailFocus = FocusNode();
+  final _passwordFocus = FocusNode();
+
   bool _loading = false;
 
   late final List<Map<String, dynamic>> _fields;
@@ -34,6 +39,9 @@ class _LoginState extends State<Login> {
         "obscureText": false,
         "validator": (String? v) =>
             v == null || v.isEmpty ? "Enter email" : null,
+        "focusNode": _emailFocus,
+        "onSubmit": (_) => _passwordFocus.requestFocus(),
+        "textInputAction": TextInputAction.next,
       },
       {
         "controller": _passwordController,
@@ -42,6 +50,9 @@ class _LoginState extends State<Login> {
         "obscureText": true,
         "validator": (String? v) =>
             v == null || v.isEmpty ? "Enter password" : null,
+        "focusNode": _passwordFocus,
+        "onSubmit": (_) => signIn(),
+        "textInputAction": TextInputAction.done,
       },
     ];
   }
@@ -53,6 +64,8 @@ class _LoginState extends State<Login> {
   };
 
   Future<void> signIn() async {
+    if (!_formKey.currentState!.validate()) return;
+
     setState(() => _loading = true);
 
     try {
@@ -88,6 +101,8 @@ class _LoginState extends State<Login> {
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _emailFocus.dispose();
+    _passwordFocus.dispose();
     super.dispose();
   }
 
@@ -102,49 +117,57 @@ class _LoginState extends State<Login> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: Column(
-          spacing: 16,
-          children: [
-            Text("Welcome Back", style: textTheme.displaySmall),
-            Text("Login to your account", style: textTheme.titleMedium),
-            ..._fields.map((field) {
-              return AuthTextField(
-                controller: field["controller"],
-                label: field["labelText"],
-                icon: _getIconData(field["iconName"]),
-                obscure: field["obscureText"],
-                validator: field["validator"],
-              );
-            }),
-            FilledButton.icon(
-              onPressed: _loading ? null : signIn,
-              icon: const Icon(Symbols.login_rounded),
-              label: _loading
-                  ? const SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: ExpressiveLoadingIndicator(),
-                    )
-                  : const Text("Sign In"),
-              style: FilledButton.styleFrom(
-                minimumSize: const Size(double.infinity, 48),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            spacing: 16,
+            children: [
+              Text("Welcome Back", style: textTheme.displaySmall),
+              Text("Login to your account", style: textTheme.titleMedium),
+              ..._fields.map((field) {
+                return AuthTextField(
+                  controller: field["controller"],
+                  label: field["labelText"],
+                  icon: _getIconData(field["iconName"]),
+                  obscure: field["obscureText"],
+                  validator: field["validator"],
+                  focusNode: field["focusNode"],
+                  textInputAction: field["textInputAction"],
+                  onFieldSubmitted: field["onSubmit"],
+                );
+              }),
+
+              FilledButton.icon(
+                onPressed: _loading ? null : signIn,
+                icon: const Icon(Symbols.login_rounded),
+                label: _loading
+                    ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: ExpressiveLoadingIndicator(),
+                      )
+                    : const Text("Sign In"),
+                style: FilledButton.styleFrom(
+                  minimumSize: const Size(double.infinity, 48),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
               ),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) =>
-                        Register(themeController: widget.themeController),
-                  ),
-                );
-              },
-              child: const Text("Don't have an account? Register here."),
-            ),
-          ],
+
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) =>
+                          Register(themeController: widget.themeController),
+                    ),
+                  );
+                },
+                child: const Text("Don't have an account? Register here."),
+              ),
+            ],
+          ),
         ),
       ),
     );

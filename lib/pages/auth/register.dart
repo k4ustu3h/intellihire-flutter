@@ -18,9 +18,16 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  final _formKey = GlobalKey<FormState>();
+
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+
+  final _emailFocus = FocusNode();
+  final _nameFocus = FocusNode();
+  final _passwordFocus = FocusNode();
+
   bool _loading = false;
 
   late final List<Map<String, dynamic>> _fields;
@@ -32,27 +39,36 @@ class _RegisterState extends State<Register> {
     _fields = [
       {
         "controller": _nameController,
+        "focusNode": _nameFocus,
         "labelText": "Name",
         "iconName": "name",
         "obscureText": false,
+        "onSubmit": (_) => _emailFocus.requestFocus(),
+        "textInputAction": TextInputAction.next,
         "validator": (String? v) =>
             v == null || v.isEmpty ? "Enter your name" : null,
       },
       {
         "controller": _emailController,
+        "focusNode": _emailFocus,
         "labelText": "Email",
         "iconName": "email",
         "obscureText": false,
+        "onSubmit": (_) => _passwordFocus.requestFocus(),
+        "textInputAction": TextInputAction.next,
         "validator": (String? v) =>
             v == null || v.isEmpty ? "Enter email" : null,
       },
       {
         "controller": _passwordController,
+        "focusNode": _passwordFocus,
         "labelText": "Password",
         "iconName": "password",
         "obscureText": true,
+        "onSubmit": (_) => signUp(),
+        "textInputAction": TextInputAction.done,
         "validator": (String? v) =>
-            v != null && v.length < 6 ? "Password too short" : null,
+            v == null || v.length < 6 ? "Password too short" : null,
       },
     ];
 
@@ -72,6 +88,8 @@ class _RegisterState extends State<Register> {
   };
 
   Future<void> signUp() async {
+    if (!_formKey.currentState!.validate()) return;
+
     setState(() => _loading = true);
 
     try {
@@ -112,7 +130,10 @@ class _RegisterState extends State<Register> {
   void dispose() {
     _nameController.dispose();
     _emailController.dispose();
+    _emailFocus.dispose();
+    _nameFocus.dispose();
     _passwordController.dispose();
+    _passwordFocus.dispose();
     super.dispose();
   }
 
@@ -127,72 +148,78 @@ class _RegisterState extends State<Register> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: Column(
-          spacing: 16,
-          children: [
-            Text("Create an Account", style: textTheme.displaySmall),
-            Text("Enter your details", style: textTheme.titleMedium),
-            ..._fields.map((field) {
-              return AuthTextField(
-                controller: field["controller"],
-                label: field["labelText"],
-                icon: _getIconData(field["iconName"]),
-                obscure: field["obscureText"],
-                validator: field["validator"],
-              );
-            }),
-            FilledButton.icon(
-              onPressed: _loading ? null : signUp,
-              icon: const Icon(Symbols.app_registration_rounded),
-              label: _loading
-                  ? const SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: ExpressiveLoadingIndicator(),
-                    )
-                  : const Text("Sign Up"),
-              style: FilledButton.styleFrom(
-                minimumSize: const Size(double.infinity, 48),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-            ),
-            Row(
-              children: const [
-                Expanded(child: Divider()),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: Text("Or", style: TextStyle(color: Colors.grey)),
-                ),
-                Expanded(child: Divider()),
-              ],
-            ),
-            ..._buttons.map((button) {
-              return FilledButton.icon(
-                onPressed: () {},
-                icon: Icon(_getIconData(button["iconName"])),
-                label: Text(button["label"]),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            spacing: 16,
+            children: [
+              Text("Create an Account", style: textTheme.displaySmall),
+              Text("Enter your details", style: textTheme.titleMedium),
+              ..._fields.map((field) {
+                return AuthTextField(
+                  controller: field["controller"],
+                  label: field["labelText"],
+                  icon: _getIconData(field["iconName"]),
+                  obscure: field["obscureText"],
+                  validator: field["validator"],
+                  focusNode: field["focusNode"],
+                  textInputAction: field["textInputAction"],
+                  onFieldSubmitted: field["onSubmit"],
+                );
+              }),
+              FilledButton.icon(
+                onPressed: _loading ? null : signUp,
+                icon: const Icon(Symbols.app_registration_rounded),
+                label: _loading
+                    ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: ExpressiveLoadingIndicator(),
+                      )
+                    : const Text("Sign Up"),
                 style: FilledButton.styleFrom(
                   minimumSize: const Size(double.infinity, 48),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-              );
-            }),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) =>
-                        Login(themeController: widget.themeController),
+              ),
+              Row(
+                children: const [
+                  Expanded(child: Divider()),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: Text("Or", style: TextStyle(color: Colors.grey)),
+                  ),
+                  Expanded(child: Divider()),
+                ],
+              ),
+              ..._buttons.map((button) {
+                return FilledButton.icon(
+                  icon: Icon(_getIconData(button["iconName"])),
+                  label: Text(button["label"]),
+                  onPressed: () {},
+                  style: FilledButton.styleFrom(
+                    minimumSize: const Size(double.infinity, 48),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
                 );
-              },
-              child: const Text("Already have an account? Login here."),
-            ),
-          ],
+              }),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) =>
+                          Login(themeController: widget.themeController),
+                    ),
+                  );
+                },
+                child: const Text("Already have an account? Login here."),
+              ),
+            ],
+          ),
         ),
       ),
     );
