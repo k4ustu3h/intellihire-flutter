@@ -1,7 +1,9 @@
+import "package:custom_refresh_indicator/custom_refresh_indicator.dart";
 import "package:flutter/material.dart";
 import "package:intellihire/components/bottomsheets/filter_bottom_sheet.dart";
 import "package:intellihire/components/cards/job_card.dart";
 import "package:intellihire/components/chips/filter_chip_button.dart";
+import "package:intellihire/components/loading/loading_indicator.dart";
 import "package:intellihire/components/skeletons/jobs_skeleton.dart";
 import "package:intellihire/services/api_service.dart";
 import "package:intellihire/services/test_service.dart";
@@ -70,6 +72,13 @@ class _JobsState extends State<Jobs> {
     }
 
     return jobs;
+  }
+
+  Future<void> _onRefresh() async {
+    await _fetchAndProcessJobs();
+    setState(() {
+      _jobsFuture = _fetchAndProcessJobs();
+    });
   }
 
   List<Map<String, dynamic>> _getFilteredJobs() {
@@ -177,127 +186,148 @@ class _JobsState extends State<Jobs> {
             return const JobsSkeleton();
           }
 
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Row(
-                  spacing: 8,
+          return CustomMaterialIndicator(
+            indicatorBuilder: (context, controller) {
+              return Center(child: LoadingIndicator());
+            },
+            onRefresh: _onRefresh,
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(
+                parent: AlwaysScrollableScrollPhysics(),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 16,
                   children: [
-                    FilterChip(
-                      label: const Text("Match my Skills"),
-                      selected: _isMatchingSkillsActive,
-                      onSelected: (bool newState) {
-                        setState(() {
-                          _isMatchingSkillsActive = newState;
-                        });
-                      },
-                    ),
-
-                    FilterChipButton(
-                      label: "Job Type",
-                      icon: Symbols.work_rounded,
-                      selectedValue: _selectedJobType,
-                      onTap: () => _openFilterSheet(
-                        title: "Filter by Job Type",
-                        options: _availableJobTypes,
-                        selectedValue: _selectedJobType,
-                        onSelected: (val) {
-                          setState(() {
-                            _selectedJobType = val;
-                            if (val == "Remote" || val == null) {
-                              _selectedState = null;
-                              _selectedCity = null;
-                            }
-                          });
-                        },
-                      ),
-                    ),
-                    FilterChipButton(
-                      label: "State",
-                      icon: Symbols.location_on,
-                      selectedValue: _selectedState,
-                      onTap: _selectedJobType == "Remote"
-                          ? null
-                          : () => _openFilterSheet(
-                              title: "Filter by State",
-                              options: _availableStates,
-                              selectedValue: _selectedState,
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Row(
+                        spacing: 8,
+                        children: [
+                          FilterChip(
+                            label: const Text("Match my Skills"),
+                            selected: _isMatchingSkillsActive,
+                            onSelected: (bool newState) {
+                              setState(() {
+                                _isMatchingSkillsActive = newState;
+                              });
+                            },
+                          ),
+                          FilterChipButton(
+                            label: "Job Type",
+                            icon: Symbols.work_rounded,
+                            selectedValue: _selectedJobType,
+                            onTap: () => _openFilterSheet(
+                              title: "Filter by Job Type",
+                              options: _availableJobTypes,
+                              selectedValue: _selectedJobType,
                               onSelected: (val) {
                                 setState(() {
-                                  _selectedState = val;
-                                  _selectedCity = null;
+                                  _selectedJobType = val;
+                                  if (val == "Remote" || val == null) {
+                                    _selectedState = null;
+                                    _selectedCity = null;
+                                  }
                                 });
                               },
                             ),
-                    ),
-                    FilterChipButton(
-                      label: "City",
-                      icon: Symbols.location_city,
-                      selectedValue: _selectedCity,
-                      onTap: _selectedJobType == "Remote"
-                          ? null
-                          : () {
-                              if (_selectedState == null) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text("Select a State first."),
+                          ),
+                          FilterChipButton(
+                            label: "State",
+                            icon: Symbols.location_on,
+                            selectedValue: _selectedState,
+                            onTap: _selectedJobType == "Remote"
+                                ? null
+                                : () => _openFilterSheet(
+                                    title: "Filter by State",
+                                    options: _availableStates,
+                                    selectedValue: _selectedState,
+                                    onSelected: (val) {
+                                      setState(() {
+                                        _selectedState = val;
+                                        _selectedCity = null;
+                                      });
+                                    },
                                   ),
-                                );
-                                return;
-                              }
-                              _openFilterSheet(
-                                title: "Cities in $_selectedState",
-                                options: availableCities,
-                                selectedValue: _selectedCity,
-                                onSelected: (val) =>
-                                    setState(() => _selectedCity = val),
-                              );
-                            },
-                    ),
-                    FilterChipButton(
-                      label: "Skill",
-                      icon: Symbols.code,
-                      selectedValue: _selectedSkill != null
-                          ? labelForCode(_selectedSkill!)
-                          : null,
-                      onTap: () => _openFilterSheet(
-                        title: "Filter by Skill",
-                        options: _availableSkills,
-                        selectedValue: _selectedSkill,
-                        onSelected: (code) =>
-                            setState(() => _selectedSkill = code),
+                          ),
+                          FilterChipButton(
+                            label: "City",
+                            icon: Symbols.location_city,
+                            selectedValue: _selectedCity,
+                            onTap: _selectedJobType == "Remote"
+                                ? null
+                                : () {
+                                    if (_selectedState == null) {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                            "Select a State first.",
+                                          ),
+                                        ),
+                                      );
+                                      return;
+                                    }
+                                    _openFilterSheet(
+                                      title: "Cities in $_selectedState",
+                                      options: availableCities,
+                                      selectedValue: _selectedCity,
+                                      onSelected: (val) =>
+                                          setState(() => _selectedCity = val),
+                                    );
+                                  },
+                          ),
+                          FilterChipButton(
+                            label: "Skill",
+                            icon: Symbols.code,
+                            selectedValue: _selectedSkill != null
+                                ? labelForCode(_selectedSkill!)
+                                : null,
+                            onTap: () => _openFilterSheet(
+                              title: "Filter by Skill",
+                              options: _availableSkills,
+                              selectedValue: _selectedSkill,
+                              onSelected: (code) =>
+                                  setState(() => _selectedSkill = code),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
+
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(
+                        "Showing ${filteredJobs.length} of ${_allJobs.length} jobs.",
+                        style: theme.textTheme.bodySmall,
+                      ),
+                    ),
+
+                    filteredJobs.isEmpty
+                        ? const Center(
+                            child: Padding(
+                              padding: EdgeInsets.only(top: 64),
+                              child: Text("No jobs match your criteria."),
+                            ),
+                          )
+                        : ListView.separated(
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            separatorBuilder: (_, _) =>
+                                const SizedBox(height: 16),
+                            itemCount: filteredJobs.length,
+                            itemBuilder: (context, index) =>
+                                JobCard(job: filteredJobs[index]),
+                          ),
                   ],
                 ),
               ),
-
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 4,
-                ),
-                child: Text(
-                  "Showing ${filteredJobs.length} of ${_allJobs.length} jobs.",
-                  style: theme.textTheme.bodySmall,
-                ),
-              ),
-
-              Expanded(
-                child: filteredJobs.isEmpty
-                    ? const Center(child: Text("No jobs match your criteria."))
-                    : ListView.separated(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        separatorBuilder: (_, _) => const SizedBox(height: 16),
-                        itemCount: filteredJobs.length,
-                        itemBuilder: (context, index) =>
-                            JobCard(job: filteredJobs[index]),
-                      ),
-              ),
-            ],
+            ),
           );
         },
       ),

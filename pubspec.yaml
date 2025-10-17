@@ -12,6 +12,7 @@ dependencies:
   animations: ^2.1.0
   cached_network_image: ^3.4.1
   cloud_firestore: ^6.0.3
+  custom_refresh_indicator: ^4.0.1
   dynamic_color: ^1.8.1
   expressive_loading_indicator: ^0.0.1
   firebase_auth: ^6.1.1
