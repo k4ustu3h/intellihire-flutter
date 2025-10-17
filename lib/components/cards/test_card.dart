@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import "package:flutter_svg/flutter_svg.dart";
+import "package:intellihire/components/icons/test_icon.dart";
 import "package:material_symbols_icons/symbols.dart";
 
 class TestCard extends StatelessWidget {
@@ -8,18 +8,9 @@ class TestCard extends StatelessWidget {
   final Map<String, dynamic> test;
   final VoidCallback onStart;
 
-  String colorToHex(Color color) {
-    return color.toARGB32().toRadixString(16).substring(2).toUpperCase();
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final iconSlug = test["icon"] as String?;
-    final iconColor = test["color"] as String?;
-    final hasIcon = iconSlug != null && iconSlug.isNotEmpty;
-
-    final defaultColor = colorToHex(theme.colorScheme.onSecondaryContainer);
 
     return Card.outlined(
       margin: const EdgeInsets.only(bottom: 16),
@@ -32,32 +23,7 @@ class TestCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                  width: 48,
-                  height: 48,
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.secondaryContainer,
-                    borderRadius: const BorderRadius.all(Radius.circular(8)),
-                  ),
-                  child: hasIcon
-                      ? Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: SvgPicture.network(
-                            "https://cdn.simpleicons.org/$iconSlug/${iconColor ?? defaultColor}",
-                            width: 32,
-                            height: 32,
-                            placeholderBuilder: (context) => Icon(
-                              Symbols.image_rounded,
-                              size: 32,
-                              color: theme.colorScheme.onSecondaryContainer,
-                            ),
-                          ),
-                        )
-                      : Icon(
-                          Symbols.code_rounded,
-                          color: theme.colorScheme.onSecondaryContainer,
-                        ),
-                ),
+                TestLogo(test: test, size: 48),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [

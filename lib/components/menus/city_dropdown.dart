@@ -27,7 +27,7 @@ class CityDropdown extends StatelessWidget {
       child: DropdownButtonFormField<String>(
         isExpanded: true,
         menuMaxHeight: 300,
-        value: selectedCity,
+        initialValue: selectedCity,
         decoration: const InputDecoration(
           labelText: "City",
           prefixIcon: Icon(Symbols.location_city_rounded),
