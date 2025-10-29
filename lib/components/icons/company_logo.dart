@@ -48,12 +48,12 @@ class CompanyLogo extends StatelessWidget {
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: theme.colorScheme.secondaryContainer,
+        color: theme.colorScheme.inverseSurface,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Icon(
         Symbols.business_center_rounded,
-        color: theme.colorScheme.onSecondaryContainer,
+        color: theme.colorScheme.onInverseSurface,
         size: size * 0.6,
       ),
     );
@@ -67,7 +67,7 @@ class CompanyLogo extends StatelessWidget {
       child: Container(
         width: size,
         height: size,
-        color: theme.colorScheme.secondaryContainer,
+        color: theme.colorScheme.inverseSurface,
         child: Padding(
           padding: EdgeInsets.all(size * 0.167), // 8px for 48px size
           child: SvgPicture.network(

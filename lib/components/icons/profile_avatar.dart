@@ -23,6 +23,7 @@ class ProfileAvatar extends StatelessWidget {
     final bool hasFinalImage = finalImageProvider != null;
 
     return CircleAvatar(
+      backgroundColor: Theme.of(context).colorScheme.inverseSurface,
       backgroundImage: finalImageProvider,
       radius: radius,
       child: !hasFinalImage
