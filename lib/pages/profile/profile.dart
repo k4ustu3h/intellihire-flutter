@@ -3,6 +3,7 @@ import "package:flutter/material.dart";
 import "package:intellihire/components/cards/profile_card.dart";
 import "package:intellihire/components/lists/list_row.dart";
 import "package:intellihire/pages/auth/login.dart";
+import "package:intellihire/pages/profile/bookmarks.dart";
 import "package:intellihire/pages/profile/edit_profile.dart";
 import "package:intellihire/pages/profile/scores/my_scores.dart";
 import "package:intellihire/pages/profile/settings.dart";
@@ -24,6 +25,7 @@ class _ProfileState extends State<Profile> {
   static const _accountItems = [
     {"label": "My Scores", "iconName": "analytics"},
     {"label": "Change Password", "iconName": "lock"},
+    {"label": "Bookmarks", "iconName": "bookmark"},
   ];
 
   static const _settingsItems = [
@@ -38,6 +40,8 @@ class _ProfileState extends State<Profile> {
 
   IconData _getIconData(String iconName) {
     switch (iconName) {
+      case "bookmark":
+        return Symbols.bookmark_rounded;
       case "settings":
         return Symbols.settings_rounded;
       case "help":
@@ -102,6 +106,9 @@ class _ProfileState extends State<Profile> {
         VoidCallback? onClick;
 
         switch (label) {
+          case "Bookmarks":
+            navigateTo = const Bookmarks();
+            break;
           case "My Scores":
             navigateTo = const MyScores();
             break;
