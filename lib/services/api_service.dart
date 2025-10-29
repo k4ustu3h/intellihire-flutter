@@ -40,4 +40,30 @@ class ApiService {
 
   static Future<List<Map<String, dynamic>>> fetchTestQuestions(String testId) =>
       _getList("/api/tests/$testId");
+
+  static Future<Map<String, dynamic>> getJobById(String jobId) async {
+    final uri = Uri.parse("$_baseUrl/api/jobs/$jobId");
+    http.Response res;
+
+    try {
+      res = await http.get(uri).timeout(_timeout);
+    } catch (e) {
+      throw Exception("Network error while fetching job: $e");
+    }
+
+    if (res.statusCode == 200) {
+      try {
+        final data = json.decode(res.body);
+        if (data is Map<String, dynamic>) {
+          return data;
+        } else {
+          throw Exception("Unexpected response format: ${res.body}");
+        }
+      } catch (e) {
+        throw Exception("Failed to parse job data: $e");
+      }
+    } else {
+      throw Exception("Failed to fetch job: ${res.statusCode} - ${res.body}");
+    }
+  }
 }

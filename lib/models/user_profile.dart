@@ -1,5 +1,6 @@
 class UserProfile {
   final String uid;
+  final List<String> bookmarks;
   final String firstName;
   final String lastName;
   final String city;
@@ -8,6 +9,7 @@ class UserProfile {
 
   const UserProfile({
     required this.uid,
+    this.bookmarks = const [],
     this.firstName = "",
     this.lastName = "",
     this.city = "",
@@ -16,6 +18,7 @@ class UserProfile {
   });
 
   Map<String, dynamic> toMap() => {
+    "bookmarkedJobs": bookmarks,
     "firstName": firstName,
     "lastName": lastName,
     "city": city,
@@ -26,6 +29,7 @@ class UserProfile {
   factory UserProfile.fromMap(Map<String, dynamic> data, String uid) {
     return UserProfile(
       uid: uid,
+      bookmarks: List<String>.from(data["bookmarkedJobs"] ?? []),
       firstName: data["firstName"] as String? ?? "",
       lastName: data["lastName"] as String? ?? "",
       city: data["city"] as String? ?? "",

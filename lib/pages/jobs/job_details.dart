@@ -1,13 +1,64 @@
 import "package:flutter/material.dart";
 import "package:flutter_svg/flutter_svg.dart";
 import "package:intellihire/components/icons/company_logo.dart";
+import "package:intellihire/util/bookmark_helper.dart";
 import "package:intellihire/util/code_labeler.dart";
 import "package:material_symbols_icons/symbols.dart";
 
-class JobDetails extends StatelessWidget {
+class JobDetails extends StatefulWidget {
   const JobDetails({super.key, required this.job});
 
   final Map<String, dynamic> job;
+
+  @override
+  State<JobDetails> createState() => _JobDetailsState();
+}
+
+class _JobDetailsState extends State<JobDetails> {
+  bool _isBookmarked = false;
+  bool _loading = false;
+
+  String? get _jobId {
+    final id = widget.job["id"] ?? widget.job["_id"] ?? widget.job["jobId"];
+    return id?.toString();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initBookmarkStatus();
+  }
+
+  Future<void> _initBookmarkStatus() async {
+    final jobId = _jobId;
+    if (jobId == null) return;
+
+    final bookmarked = await BookmarkHelper.isBookmarked(jobId);
+    if (!mounted) return;
+
+    setState(() => _isBookmarked = bookmarked);
+  }
+
+  Future<void> _toggleBookmark() async {
+    if (_loading) return;
+    final jobId = _jobId;
+    if (jobId == null) return;
+
+    setState(() => _loading = true);
+
+    final updatedStatus = await BookmarkHelper.toggleBookmark(
+      context: context,
+      jobId: jobId,
+      isCurrentlyBookmarked: _isBookmarked,
+    );
+
+    if (mounted) {
+      setState(() {
+        _isBookmarked = updatedStatus;
+        _loading = false;
+      });
+    }
+  }
 
   Widget _sectionTitle(BuildContext context, String title) {
     final theme = Theme.of(context);
@@ -29,6 +80,7 @@ class JobDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final job = widget.job;
 
     final jobType = job["jobType"] as String?;
     final isRemote = jobType == "Remote";
@@ -58,10 +110,6 @@ class JobDetails extends StatelessWidget {
         title: const Text("Job Details"),
         actions: const [
           IconButton(icon: Icon(Symbols.share_rounded), onPressed: null),
-          IconButton(
-            icon: Icon(Symbols.bookmark_border_rounded),
-            onPressed: null,
-          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -116,9 +164,11 @@ class JobDetails extends StatelessWidget {
                         ),
                       ),
                       OutlinedButton.icon(
-                        icon: const Icon(Symbols.bookmark_border_rounded),
-                        label: const Text("Save"),
-                        onPressed: null,
+                        icon: _isBookmarked
+                            ? Icon(Symbols.bookmark_rounded, fill: 1)
+                            : Icon(Symbols.bookmark_add_rounded),
+                        label: Text(_isBookmarked ? "Saved" : "Save"),
+                        onPressed: _toggleBookmark,
                       ),
                     ],
                   ),
