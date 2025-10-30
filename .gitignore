@@ -21,11 +21,15 @@ doc/api/
 *.js.deps
 *.js.map
 
+# Flutter files
 .flutter-plugins
 .flutter-plugins-dependencies
-/.idea
 
-#Firebase
+# IDE files
+.idea
+!.idea/icon.png
+
+# Firebase
 android/app/google-services.json
 firebase.json
 firepit-log.txt

@@ -56,13 +56,11 @@ jobs:
         run: |
           TAG_NAME=${GITHUB_REF##*/}
 
-          # Find the previous tag (if any)
           PREV_TAG=$(git tag --sort=-creatordate | grep -A1 "$TAG_NAME" | tail -n1)
 
           if [ -z "$PREV_TAG" ] || [ "$PREV_TAG" = "$TAG_NAME" ]; then
             NOTES="Initial release."
           else
-            # Generate commit list between previous and current tag
             COMMITS=$(git log ${PREV_TAG}..${TAG_NAME} --pretty=format:"- %s (%h)" --no-merges)
             if [ -z "$COMMITS" ]; then
               COMMITS="No new commits since last release."
