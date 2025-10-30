@@ -1,0 +1,77 @@
+name: Build Release APK
+
+on:
+  push:
+    tags:
+      - "v*"
+
+env:
+  FLUTTER_VERSION: "3.35.7"
+
+permissions:
+  contents: write
+
+jobs:
+  build_release_apk:
+    name: Build Release APK
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2.21.0
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+
+      - name: Create .env file
+        run: |
+          echo "FIREBASE_API_KEY=${{ secrets.FIREBASE_API_KEY }}" >> .env
+          echo "FIREBASE_PROJECT_ID=${{ secrets.FIREBASE_PROJECT_ID }}" >> .env
+          echo "FIREBASE_MESSAGING_SENDER_ID=${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}" >> .env
+          echo "FIREBASE_STORAGE_BUCKET=${{ secrets.FIREBASE_STORAGE_BUCKET }}" >> .env
+          echo "FIREBASE_ANDROID_APP_ID=${{ secrets.FIREBASE_ANDROID_APP_ID }}" >> .env
+          echo "FIREBASE_IOS_APP_ID=${{ secrets.FIREBASE_IOS_APP_ID }}" >> .env
+          echo "FIREBASE_IOS_BUNDLE_ID=${{ secrets.FIREBASE_IOS_BUNDLE_ID }}" >> .env
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build APK
+        run: flutter build apk --release
+
+      - name: Set APK name
+        run: |
+          TAG_NAME=${GITHUB_REF##*/}
+          echo "APK_NAME=IntelliHire-${TAG_NAME}.apk" >> $GITHUB_ENV
+
+      - name: Copy APK to root with new name
+        run: cp build/app/outputs/flutter-apk/app-release.apk "$APK_NAME"
+
+      - name: Create GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG_NAME=${GITHUB_REF##*/}
+
+          # Find the previous tag (if any)
+          PREV_TAG=$(git tag --sort=-creatordate | grep -A1 "$TAG_NAME" | tail -n1)
+
+          if [ -z "$PREV_TAG" ] || [ "$PREV_TAG" = "$TAG_NAME" ]; then
+            NOTES="Initial release."
+          else
+            # Generate commit list between previous and current tag
+            COMMITS=$(git log ${PREV_TAG}..${TAG_NAME} --pretty=format:"- %s (%h)" --no-merges)
+            if [ -z "$COMMITS" ]; then
+              COMMITS="No new commits since last release."
+            fi
+            NOTES="### Changes since ${PREV_TAG}\n\n${COMMITS}\n\n**Full Changelog:** https://github.com/${{ github.repository }}/compare/${PREV_TAG}...${TAG_NAME}"
+          fi
+
+          echo -e "$NOTES" > RELEASE_NOTES.md
+
+          gh release create "$TAG_NAME" "$APK_NAME" \
+            --title "IntelliHire $TAG_NAME" \
+            --notes-file RELEASE_NOTES.md

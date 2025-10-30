@@ -1,4 +1,4 @@
-name: Nightly APK Release
+name: Build Nightly APK
 
 on:
   push:
@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   build_apk:
-    name: Build APK
+    name: Build Nightly APK
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
