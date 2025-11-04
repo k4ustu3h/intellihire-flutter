@@ -1,5 +1,6 @@
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
+import "package:google_fonts/google_fonts.dart";
 import "package:intellihire/components/navigation/navbar.dart";
 import "package:intellihire/pages/home.dart";
 import "package:intellihire/pages/jobs/jobs.dart";
@@ -24,7 +25,12 @@ class HomeLayout extends StatefulWidget {
 class _HomeLayoutState extends State<HomeLayout> {
   int _selectedIndex = 0;
 
-  final List<String> _titles = const ["Home", "Jobs", "Tests", "Profile"];
+  final List<String> _titles = const [
+    "IntelliHire",
+    "Jobs",
+    "Tests",
+    "Profile",
+  ];
   late final List<Widget> _pages;
 
   @override
@@ -47,8 +53,17 @@ class _HomeLayoutState extends State<HomeLayout> {
     final user = FirebaseAuth.instance.currentUser;
 
     return Scaffold(
-      appBar: AppBar(title: Text(_titles[_selectedIndex])),
-      body: Center(child: _pages[_selectedIndex]),
+      appBar: AppBar(
+        title: Text(
+          _titles[_selectedIndex],
+          style: GoogleFonts.afacad(
+            color: Theme.of(context).colorScheme.primary,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+
+      body: IndexedStack(index: _selectedIndex, children: _pages),
       bottomNavigationBar: NavBar(
         selectedIndex: _selectedIndex,
         onDestinationSelected: _onItemTapped,
