@@ -2,7 +2,6 @@ import "package:fl_chart/fl_chart.dart";
 import "package:flutter/material.dart";
 import "package:intellihire/pages/profile/scores/test_attempt_history.dart";
 import "package:intellihire/util/code_labeler.dart";
-import "package:motor/motor.dart";
 
 class TestAverageChart extends StatefulWidget {
   final Map<String, double> scores;
@@ -49,15 +48,14 @@ class _TestAverageChartState extends State<TestAverageChart> {
                 height: 300,
                 child: Padding(
                   padding: const EdgeInsets.all(16),
-                  child: MotionBuilder<List<double>>(
-                    motion: MaterialSpringMotion.expressiveEffectsDefault(),
-                    value: values,
-                    from: List.filled(values.length, 0.0),
-                    converter: MotionConverter.custom(
-                      normalize: (list) => list.cast<double>(),
-                      denormalize: (list) => list,
-                    ),
-                    builder: (context, animatedValues, child) {
+                  child: TweenAnimationBuilder<double>(
+                    duration: const Duration(milliseconds: 800),
+                    curve: Curves.easeOutCubic,
+                    tween: Tween<double>(begin: 0, end: 1),
+                    builder: (context, progress, _) {
+                      final animatedValues = values
+                          .map((v) => v * progress)
+                          .toList();
                       return BarChart(
                         BarChartData(
                           barGroups: List.generate(titles.length, (index) {
@@ -171,8 +169,6 @@ class _TestAverageChartState extends State<TestAverageChart> {
                             },
                           ),
                         ),
-                        duration: const Duration(milliseconds: 800),
-                        curve: Curves.easeOutCubic,
                       );
                     },
                   ),
