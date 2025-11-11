@@ -26,6 +26,7 @@ class JobCard extends StatelessWidget {
 
     return OpenContainer(
       closedColor: theme.colorScheme.surface,
+      closedElevation: 0,
       openBuilder: (context, _) => JobDetails(job: job),
       openColor: theme.colorScheme.surface,
       tappable: false,

@@ -15,7 +15,16 @@ class TestLogo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final defaultColor = _colorToHex(theme.colorScheme.onSecondaryContainer);
+    final isDark = theme.brightness == Brightness.dark;
+
+    final iconBackground = isDark
+        ? theme.colorScheme.inverseSurface
+        : theme.colorScheme.secondaryContainer;
+    final iconForeground = isDark
+        ? theme.colorScheme.onInverseSurface
+        : theme.colorScheme.onSecondaryContainer;
+
+    final defaultColor = _colorToHex(iconForeground);
 
     final iconSlug = test["icon"] as String?;
     final iconColor = test["color"] as String?;
@@ -29,7 +38,7 @@ class TestLogo extends StatelessWidget {
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: theme.colorScheme.secondaryContainer,
+        color: iconBackground,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Center(
@@ -37,8 +46,8 @@ class TestLogo extends StatelessWidget {
           width: size * 0.5,
           height: size * 0.5,
           child: LoadingIndicator(
-            backgroundColor: theme.colorScheme.secondaryContainer,
-            color: theme.colorScheme.onSecondaryContainer,
+            backgroundColor: iconBackground,
+            color: iconForeground,
           ),
         ),
       ),
@@ -48,12 +57,12 @@ class TestLogo extends StatelessWidget {
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: theme.colorScheme.inverseSurface,
+        color: iconBackground,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Icon(
         Symbols.code_rounded,
-        color: theme.colorScheme.onInverseSurface,
+        color: iconForeground,
         size: size * 0.6,
       ),
     );
@@ -65,7 +74,7 @@ class TestLogo extends StatelessWidget {
       child: Container(
         width: size,
         height: size,
-        color: theme.colorScheme.inverseSurface,
+        color: iconBackground,
         child: Padding(
           padding: EdgeInsets.all(size * 0.167), // ~8px for 48px
           child: SvgPicture.network(

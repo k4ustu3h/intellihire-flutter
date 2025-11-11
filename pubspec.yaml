@@ -25,7 +25,7 @@ dependencies:
   flutter_svg: ^2.2.2
   google_fonts: ^6.3.2
   heroine: ^0.5.0+2
-  http: ^1.5.0
+  http: ^1.6.0
   image_picker: ^1.2.0
   material_symbols_icons: ^4.2874.0
   shared_preferences: ^2.5.3
