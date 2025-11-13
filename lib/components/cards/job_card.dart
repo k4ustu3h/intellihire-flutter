@@ -1,6 +1,6 @@
 import "package:animations/animations.dart";
 import "package:flutter/material.dart";
-import "package:intellihire/components/icons/company_logo.dart";
+import "package:intellihire/components/icons/entity_logo.dart";
 import "package:intellihire/pages/jobs/job_details.dart";
 import "package:material_symbols_icons/symbols.dart";
 
@@ -43,7 +43,7 @@ class JobCard extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    CompanyLogo(job: job),
+                    EntityLogo.company(job: job),
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.only(left: 12),

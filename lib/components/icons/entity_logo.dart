@@ -3,11 +3,51 @@ import "package:flutter_svg/flutter_svg.dart";
 import "package:intellihire/components/loading/loading_indicator.dart";
 import "package:material_symbols_icons/symbols.dart";
 
-class CompanyLogo extends StatelessWidget {
-  const CompanyLogo({super.key, required this.job, this.size = 48});
-
-  final Map<String, dynamic> job;
+class EntityLogo extends StatelessWidget {
+  final Map<String, dynamic> data;
   final double size;
+  final IconData fallbackIcon;
+  final String iconSlugKey;
+  final String iconColorKey;
+
+  const EntityLogo({
+    super.key,
+    required this.data,
+    required this.size,
+    required this.fallbackIcon,
+    required this.iconSlugKey,
+    required this.iconColorKey,
+  });
+
+  factory EntityLogo.company({
+    Key? key,
+    required Map<String, dynamic> job,
+    double size = 48,
+  }) {
+    return EntityLogo(
+      key: key,
+      data: job,
+      size: size,
+      fallbackIcon: Symbols.business_center_rounded,
+      iconSlugKey: "iconSlug",
+      iconColorKey: "iconColor",
+    );
+  }
+
+  factory EntityLogo.test({
+    Key? key,
+    required Map<String, dynamic> test,
+    double size = 48,
+  }) {
+    return EntityLogo(
+      key: key,
+      data: test,
+      size: size,
+      fallbackIcon: Symbols.code_rounded,
+      iconSlugKey: "icon",
+      iconColorKey: "color",
+    );
+  }
 
   String _colorToHex(Color color) =>
       color.toARGB32().toRadixString(16).substring(2).toUpperCase();
@@ -26,11 +66,11 @@ class CompanyLogo extends StatelessWidget {
 
     final defaultColor = _colorToHex(iconForeground);
 
-    final iconSlug = job["iconSlug"] as String?;
-    final iconColor = job["iconColor"] as String?;
-    final hasIconData = iconSlug != null && iconSlug.isNotEmpty;
+    final iconSlug = data[iconSlugKey] as String?;
+    final iconColor = data[iconColorKey] as String?;
+    final hasIcon = iconSlug != null && iconSlug.isNotEmpty;
 
-    final String svgUrl = hasIconData
+    final String svgUrl = hasIcon
         ? "https://cdn.simpleicons.org/$iconSlug/${iconColor ?? defaultColor}"
         : "";
 
@@ -60,14 +100,10 @@ class CompanyLogo extends StatelessWidget {
         color: iconBackground,
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Icon(
-        Symbols.business_center_rounded,
-        color: iconForeground,
-        size: size * 0.6,
-      ),
+      child: Icon(fallbackIcon, color: iconForeground, size: size * 0.6),
     );
 
-    if (!hasIconData) {
+    if (!hasIcon) {
       return errorIconPlaceholder;
     }
 
@@ -78,7 +114,7 @@ class CompanyLogo extends StatelessWidget {
         height: size,
         color: iconBackground,
         child: Padding(
-          padding: EdgeInsets.all(size * 0.167), // 8px for 48px size
+          padding: EdgeInsets.all(size * 0.167), // ~8px for 48px
           child: SvgPicture.network(
             svgUrl,
             fit: BoxFit.contain,

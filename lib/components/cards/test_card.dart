@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import "package:intellihire/components/icons/test_icon.dart";
+import "package:intellihire/components/icons/entity_logo.dart";
 import "package:material_symbols_icons/symbols.dart";
 
 class TestCard extends StatelessWidget {
@@ -23,7 +23,7 @@ class TestCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                TestLogo(test: test, size: 48),
+                EntityLogo.test(test: test),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [

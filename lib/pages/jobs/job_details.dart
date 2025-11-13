@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter_svg/flutter_svg.dart";
-import "package:intellihire/components/icons/company_logo.dart";
+import "package:intellihire/components/icons/entity_logo.dart";
 import "package:intellihire/util/bookmark_helper.dart";
 import "package:intellihire/util/code_labeler.dart";
 import "package:material_symbols_icons/symbols.dart";
@@ -126,7 +126,7 @@ class _JobDetailsState extends State<JobDetails> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     spacing: 16,
                     children: [
-                      CompanyLogo(job: job),
+                      EntityLogo.company(job: job),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
