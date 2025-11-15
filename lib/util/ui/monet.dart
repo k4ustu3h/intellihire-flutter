@@ -49,6 +49,13 @@ ThemeData darkTheme(ColorScheme? dynamicColorScheme) {
 ThemeData _buildTheme(ColorScheme baseScheme) {
   final scheme = baseScheme.harmonized();
 
+  final transitions = PageTransitionsTheme(
+    builders: {
+      .android: PredictiveBackPageTransitionsBuilder(),
+      .iOS: CupertinoPageTransitionsBuilder(),
+    },
+  );
+
   final buttonShape = WidgetStateProperty.resolveWith<OutlinedBorder>((states) {
     final radius = states.contains(WidgetState.pressed) ? 8.0 : 24.0;
     return RoundedRectangleBorder(borderRadius: .circular(radius));
@@ -76,6 +83,7 @@ ThemeData _buildTheme(ColorScheme baseScheme) {
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: ButtonStyle(shape: buttonShape),
     ),
+    pageTransitionsTheme: transitions,
     switchTheme: switchTheme,
     textButtonTheme: TextButtonThemeData(
       style: ButtonStyle(shape: buttonShape),

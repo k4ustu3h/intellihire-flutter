@@ -24,7 +24,7 @@ android {
 
     defaultConfig {
         applicationId = "k4ustu3h.intellihire"
-        minSdk = 32
+        minSdk = 33
         targetSdk = 36
         versionCode = flutter.versionCode
         versionName = flutter.versionName
