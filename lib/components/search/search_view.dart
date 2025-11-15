@@ -80,7 +80,7 @@ class _SearchViewState extends State<SearchView> {
           autofocus: true,
           decoration: const InputDecoration(
             hintText: "Search jobs...",
-            border: InputBorder.none,
+            border: .none,
           ),
         ),
       ),
@@ -89,7 +89,7 @@ class _SearchViewState extends State<SearchView> {
           : _filteredJobs.isEmpty
           ? const Center(child: Text("No jobs match your search."))
           : ListView.separated(
-              padding: const EdgeInsets.all(16),
+              padding: const .all(16),
               itemCount: _filteredJobs.length,
               separatorBuilder: (_, _) => const SizedBox(height: 16),
               itemBuilder: (context, index) =>

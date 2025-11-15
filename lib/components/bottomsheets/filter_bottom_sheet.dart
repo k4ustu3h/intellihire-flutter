@@ -24,10 +24,10 @@ class FilterBottomSheet extends StatelessWidget {
         maxHeight: MediaQuery.of(context).size.height * 0.75,
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const .all(16),
             child: Text(title, style: theme.textTheme.titleSmall),
           ),
           Expanded(
@@ -70,7 +70,7 @@ class FilterBottomSheet extends StatelessWidget {
     final theme = Theme.of(context);
 
     return ListTile(
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+      contentPadding: const .symmetric(horizontal: 16),
       leading: isSelected
           ? Icon(Symbols.check_rounded, color: theme.colorScheme.primary)
           : const SizedBox(width: 24),

@@ -45,7 +45,7 @@ class ListRow extends StatelessWidget {
 
   TextStyle _labelStyle(BuildContext context) => Theme.of(
     context,
-  ).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.w500, fontSize: 16);
+  ).textTheme.titleMedium!.copyWith(fontWeight: .w500, fontSize: 16);
 
   TextStyle _descriptionStyle(BuildContext context) =>
       Theme.of(context).textTheme.bodySmall!.copyWith(
@@ -55,7 +55,7 @@ class ListRow extends StatelessWidget {
 
   TextStyle _titleStyle(BuildContext context) =>
       Theme.of(context).textTheme.titleSmall!.copyWith(
-        fontWeight: FontWeight.w600,
+        fontWeight: .w600,
         color: Theme.of(context).colorScheme.onSurfaceVariant,
       );
 
@@ -64,8 +64,8 @@ class ListRow extends StatelessWidget {
     final theme = Theme.of(context);
 
     final borderRadius = BorderRadius.vertical(
-      top: Radius.circular(first ? 16 : 2),
-      bottom: Radius.circular(last ? 16 : 2),
+      top: .circular(first ? 16 : 2),
+      bottom: .circular(last ? 16 : 2),
     );
 
     final styledLabel = DefaultTextStyle.merge(
@@ -94,16 +94,14 @@ class ListRow extends StatelessWidget {
         : endIcon;
 
     return Container(
-      margin: background
-          ? const EdgeInsets.symmetric(horizontal: basePadding)
-          : null,
+      margin: background ? const .symmetric(horizontal: basePadding) : null,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         spacing: 8,
         children: [
           if (first && title != null)
             Padding(
-              padding: const EdgeInsets.only(
+              padding: const .only(
                 bottom: 4,
                 left: basePadding,
                 right: basePadding,
@@ -123,9 +121,9 @@ class ListRow extends StatelessWidget {
                 onTap: onTapAction,
                 child: Container(
                   height: rowHeight,
-                  padding: const EdgeInsets.symmetric(horizontal: basePadding),
+                  padding: const .symmetric(horizontal: basePadding),
                   child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    crossAxisAlignment: .center,
                     children: [
                       if (startIcon != null) ...[
                         startIcon!,
@@ -133,8 +131,8 @@ class ListRow extends StatelessWidget {
                       ],
                       Expanded(
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: .start,
+                          mainAxisAlignment: .center,
                           spacing: verticalTextSpacing,
                           children: [
                             styledLabel,

@@ -24,34 +24,34 @@ class _SkeletonList extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return ListView.separated(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      scrollDirection: Axis.horizontal,
+      padding: const .symmetric(horizontal: 16),
+      scrollDirection: .horizontal,
       itemCount: 4,
       separatorBuilder: (_, _) => const SizedBox(width: 12),
       itemBuilder: (context, index) => SizedBox(
         width: screenWidth * 0.8,
         child: Card.outlined(
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
+            padding: const .fromLTRB(16, 16, 16, 12),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: .start,
+              mainAxisSize: .min,
               spacing: 8,
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: .spaceBetween,
                   children: [
                     Container(
                       width: 48,
                       height: 48,
                       decoration: BoxDecoration(
                         color: secondaryColor,
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: .circular(8),
                       ),
                     ),
                     Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: .end,
+                      mainAxisSize: .min,
                       spacing: 6,
                       children: [
                         Container(
@@ -69,29 +69,29 @@ class _SkeletonList extends StatelessWidget {
                   ],
                 ),
                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: .start,
+                  mainAxisSize: .min,
                   spacing: 4,
                   children: List.generate(
                     3,
                     (_) => Container(
-                      width: double.infinity,
+                      width: .infinity,
                       height: 12,
                       color: secondaryColor,
                     ),
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 8),
+                  padding: const .only(top: 8),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: .spaceBetween,
                     children: [
                       Container(
                         width: 90,
                         height: 32,
                         decoration: BoxDecoration(
                           color: secondaryColor,
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: .circular(8),
                         ),
                       ),
                       Container(
@@ -99,7 +99,7 @@ class _SkeletonList extends StatelessWidget {
                         height: 40,
                         decoration: BoxDecoration(
                           color: primaryColor,
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: .circular(20),
                         ),
                       ),
                     ],

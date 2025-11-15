@@ -58,7 +58,7 @@ class _HomeLayoutState extends State<HomeLayout> {
           _titles[_selectedIndex],
           style: GoogleFonts.afacad(
             color: Theme.of(context).colorScheme.primary,
-            fontWeight: FontWeight.bold,
+            fontWeight: .bold,
           ),
         ),
       ),

@@ -30,37 +30,37 @@ class JobCard extends StatelessWidget {
       openBuilder: (context, _) => JobDetails(job: job),
       openColor: theme.colorScheme.surface,
       tappable: false,
-      transitionType: ContainerTransitionType.fadeThrough,
+      transitionType: .fadeThrough,
       transitionDuration: const Duration(milliseconds: 500),
       closedBuilder: (context, openContainer) {
         return Card.outlined(
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const .all(16),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: .start,
               spacing: 8,
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: .spaceBetween,
                   children: [
                     EntityLogo.company(job: job),
                     Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 12),
+                        padding: const .only(left: 12),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
+                          crossAxisAlignment: .end,
                           children: [
                             Text(
                               job["jobTitle"] as String,
                               style: theme.textTheme.titleLarge,
                               maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
+                              overflow: .ellipsis,
                             ),
                             Text(
                               job["companyName"] as String,
                               style: theme.textTheme.bodyMedium,
                               maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
+                              overflow: .ellipsis,
                             ),
                           ],
                         ),
@@ -72,14 +72,14 @@ class JobCard extends StatelessWidget {
                   job["description"] as String,
                   style: theme.textTheme.bodySmall,
                   maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
+                  overflow: .ellipsis,
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: .spaceBetween,
                   children: [
                     Chip(
                       backgroundColor: theme.colorScheme.secondaryContainer,
-                      side: BorderSide.none,
+                      side: .none,
                       iconTheme: IconThemeData(
                         color: theme.colorScheme.onSecondaryContainer,
                       ),

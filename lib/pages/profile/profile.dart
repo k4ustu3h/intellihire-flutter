@@ -162,12 +162,12 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(vertical: 16),
+        padding: const .symmetric(vertical: 16),
         child: Column(
           spacing: 12,
           children: [
             Padding(
-              padding: const EdgeInsets.all(12),
+              padding: const .all(12),
               child: ProfileCard(
                 user: user,
                 onEditPressed: () {

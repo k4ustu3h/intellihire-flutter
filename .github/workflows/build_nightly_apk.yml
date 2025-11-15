@@ -6,9 +6,6 @@ on:
       - main
   pull_request:
 
-env:
-  FLUTTER_VERSION: "3.35.7"
-
 permissions:
   contents: write
 
@@ -23,7 +20,9 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2.21.0
         with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          flutter-version-file: pubspec.yaml
+      - run: flutter --version
 
       - name: Create .env file
         run: |

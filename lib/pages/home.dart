@@ -35,7 +35,7 @@ class _HomeState extends State<Home> {
     final results = await Future.wait([
       ApiService.fetchJobs(),
       TestService.getPassedSkills(),
-      if (uid != null) _userService.getUserProfile(uid) else Future.value(null),
+      if (uid != null) _userService.getUserProfile(uid) else .value(null),
     ]);
 
     final fetchedJobs = results[0] as List<Map<String, dynamic>>;
@@ -60,16 +60,14 @@ class _HomeState extends State<Home> {
     final firstName = displayName.split(" ").first;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const .symmetric(horizontal: 16),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         spacing: 4,
         children: [
           Text(
             "Hello, $firstName",
-            style: theme.textTheme.headlineMedium?.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
+            style: theme.textTheme.headlineMedium?.copyWith(fontWeight: .w600),
           ),
           Text(
             "Let's land your dream job",
@@ -84,19 +82,17 @@ class _HomeState extends State<Home> {
 
   Widget _buildSearchBar(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const .symmetric(horizontal: 16, vertical: 8),
       child: OpenContainer(
         closedColor: Theme.of(context).colorScheme.surfaceContainerHigh,
         closedElevation: 0,
-        closedShape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(28),
-        ),
+        closedShape: RoundedRectangleBorder(borderRadius: .circular(28)),
         openColor: Theme.of(context).colorScheme.surface,
         openElevation: 0,
-        transitionType: ContainerTransitionType.fadeThrough,
+        transitionType: .fadeThrough,
         closedBuilder: (context, openContainer) => Container(
           height: 56,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: const .symmetric(horizontal: 16, vertical: 12),
           child: Row(
             spacing: 8,
             children: [
@@ -125,21 +121,21 @@ class _HomeState extends State<Home> {
     return FutureBuilder<List<Map<String, dynamic>>>(
       future: _jobsFuture,
       builder: (context, snapshot) {
-        final isLoading = snapshot.connectionState == ConnectionState.waiting;
+        final isLoading = snapshot.connectionState == .waiting;
         final jobs = snapshot.data ?? [];
 
         return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           spacing: 8,
           children: [
             _buildGreeting(context),
             _buildSearchBar(context),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
+              padding: const .symmetric(horizontal: 24),
               child: Text(
                 "Jobs suggested for you",
                 style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w600,
+                  fontWeight: .w600,
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
               ),
@@ -149,9 +145,9 @@ class _HomeState extends State<Home> {
                 : jobs.isEmpty
                 ? Center(
                     child: Padding(
-                      padding: const EdgeInsets.all(24),
+                      padding: const .all(24),
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: .center,
                         spacing: 16,
                         children: [
                           Icon(
@@ -163,7 +159,7 @@ class _HomeState extends State<Home> {
                             _userPassedSkills.isEmpty
                                 ? "Complete your first assessment to unlock personalized jobs!"
                                 : "No jobs matching your passed skills found.",
-                            textAlign: TextAlign.center,
+                            textAlign: .center,
                             style: Theme.of(context).textTheme.titleMedium,
                           ),
                         ],
@@ -173,10 +169,8 @@ class _HomeState extends State<Home> {
                 : SizedBox(
                     height: 210,
                     child: ListView.separated(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: horizontalPadding,
-                      ),
-                      scrollDirection: Axis.horizontal,
+                      padding: const .symmetric(horizontal: horizontalPadding),
+                      scrollDirection: .horizontal,
                       itemCount: jobs.length,
                       separatorBuilder: (_, _) => const SizedBox(width: 12),
                       itemBuilder: (context, index) => SizedBox(

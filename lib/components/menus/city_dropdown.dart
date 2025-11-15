@@ -23,8 +23,8 @@ class CityDropdown extends StatelessWidget {
         : <String>[];
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: DropdownButtonFormField<String>(
+      padding: const .symmetric(vertical: 8),
+      child: DropdownButtonFormField(
         isExpanded: true,
         menuMaxHeight: 300,
         initialValue: selectedCity,
@@ -35,9 +35,9 @@ class CityDropdown extends StatelessWidget {
         ),
         items: cities
             .map(
-              (city) => DropdownMenuItem<String>(
+              (city) => DropdownMenuItem(
                 value: city,
-                child: Text(city, overflow: TextOverflow.ellipsis),
+                child: Text(city, overflow: .ellipsis),
               ),
             )
             .toList(),

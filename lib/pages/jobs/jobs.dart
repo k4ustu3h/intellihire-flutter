@@ -152,7 +152,6 @@ class _JobsState extends State<Jobs> {
           final finalValue = isSkillFilter && label != null
               ? codeForLabel(label)
               : label;
-
           onSelected(finalValue);
         },
       ),
@@ -196,14 +195,14 @@ class _JobsState extends State<Jobs> {
                 parent: AlwaysScrollableScrollPhysics(),
               ),
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
+                padding: const .symmetric(vertical: 8),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: .start,
                   spacing: 16,
                   children: [
                     SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      scrollDirection: .horizontal,
+                      padding: const .symmetric(horizontal: 16),
                       child: Row(
                         spacing: 8,
                         children: [
@@ -300,7 +299,7 @@ class _JobsState extends State<Jobs> {
                     ),
 
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      padding: const .symmetric(horizontal: 16),
                       child: Text(
                         "Showing ${filteredJobs.length} of ${_allJobs.length} jobs.",
                         style: theme.textTheme.bodySmall,
@@ -310,14 +309,14 @@ class _JobsState extends State<Jobs> {
                     filteredJobs.isEmpty
                         ? const Center(
                             child: Padding(
-                              padding: EdgeInsets.only(top: 64),
+                              padding: .only(top: 64),
                               child: Text("No jobs match your criteria."),
                             ),
                           )
                         : ListView.separated(
                             physics: const NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            padding: const .symmetric(horizontal: 16),
                             separatorBuilder: (_, _) =>
                                 const SizedBox(height: 16),
                             itemCount: filteredJobs.length,

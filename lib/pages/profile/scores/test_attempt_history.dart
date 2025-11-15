@@ -26,13 +26,13 @@ class TestAttemptHistory extends StatelessWidget {
         curve: Curves.easeOutCubic,
         builder: (context, value, child) {
           return Stack(
-            alignment: Alignment.center,
+            alignment: .center,
             children: [
               CircularProgressIndicator(
                 backgroundColor: color.withAlpha(38),
                 color: color,
                 strokeWidth: 4,
-                strokeCap: StrokeCap.round,
+                strokeCap: .round,
                 value: value,
               ),
               Icon(icon, color: color, size: iconRadius),
@@ -71,7 +71,7 @@ class TestAttemptHistory extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text(title)),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(vertical: ListRow.basePadding),
+        padding: const .symmetric(vertical: ListRow.basePadding),
         child: Column(
           spacing: 2,
           children: List.generate(attemptsCount, (index) {
@@ -102,8 +102,8 @@ class TestAttemptHistory extends StatelessWidget {
               ),
               startIcon: _buildStartIcon(icon, color, percentage),
               endIcon: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: .center,
+                crossAxisAlignment: .end,
                 children: [
                   Text(formatDate(timestamp), style: labelSmallStyle),
                   Text(formatTime(timestamp), style: labelSmallStyle),

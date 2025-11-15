@@ -16,11 +16,8 @@ class _SettingsState extends State<Settings> {
   Widget _buildLeadingIcon(IconData icon) {
     final colorScheme = Theme.of(context).colorScheme;
     return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: colorScheme.primary,
-        shape: BoxShape.circle,
-      ),
+      padding: const .all(10),
+      decoration: BoxDecoration(color: colorScheme.primary, shape: .circle),
       child: Icon(icon, color: colorScheme.onPrimary, size: 24),
     );
   }
@@ -41,7 +38,7 @@ class _SettingsState extends State<Settings> {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text("Disable dynamic theming to use manual dark mode."),
-        behavior: SnackBarBehavior.floating,
+        behavior: .floating,
         duration: Duration(seconds: 3),
       ),
     );
@@ -84,9 +81,7 @@ class _SettingsState extends State<Settings> {
               final index = entry.key;
               final item = entry.value;
               return ListRow(
-                title: index == 0
-                    ? const Text("Theme")
-                    : null,
+                title: index == 0 ? const Text("Theme") : null,
                 startIcon: _buildLeadingIcon(item["icon"] as IconData),
                 label: Text(item["label"] as String),
                 description: Text(item["desc"] as String),

@@ -11,7 +11,7 @@ class FilterChipSkeleton extends StatelessWidget {
       child: DecoratedBox(
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.secondaryContainer,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: .circular(8),
         ),
       ),
     );

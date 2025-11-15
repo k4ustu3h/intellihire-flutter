@@ -21,9 +21,9 @@ class ProfileCard extends StatelessWidget {
 
     return Card.outlined(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+        padding: const .symmetric(horizontal: 16, vertical: 24),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: .center,
           spacing: 16,
           children: [
             const Heroine(
@@ -33,20 +33,20 @@ class ProfileCard extends StatelessWidget {
 
             Expanded(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: .start,
                 spacing: 4,
                 children: [
                   Text(
                     user?.displayName ?? "Not available",
                     style: textTheme.headlineSmall,
-                    overflow: TextOverflow.ellipsis,
+                    overflow: .ellipsis,
                   ),
                   Text(
                     user?.email ?? "Not available",
                     style: textTheme.bodyLarge!.copyWith(
                       color: theme.onSurfaceVariant,
                     ),
-                    overflow: TextOverflow.ellipsis,
+                    overflow: .ellipsis,
                   ),
                 ],
               ),

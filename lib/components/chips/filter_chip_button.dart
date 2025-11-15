@@ -37,7 +37,7 @@ class FilterChipButton extends StatelessWidget {
       ),
       backgroundColor: backgroundColor,
       label: Row(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: .min,
         spacing: 4,
         children: [
           Text(displayLabel, style: TextStyle(color: foregroundColor)),

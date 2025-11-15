@@ -38,14 +38,13 @@ class _TestQuestionsState extends State<TestQuestions> {
 
     final TextStyle codeStyle = theme.textTheme.labelLarge!.copyWith(
       fontFamily: "monospace",
-      fontWeight: FontWeight.w600,
+      fontWeight: .w600,
       backgroundColor: theme.colorScheme.surfaceContainer,
       color: theme.colorScheme.onSurfaceVariant,
     );
 
     final TextStyle normalStyle =
-        baseStyle ??
-        theme.textTheme.titleMedium!.copyWith(fontWeight: FontWeight.w600);
+        baseStyle ?? theme.textTheme.titleMedium!.copyWith(fontWeight: .w600);
 
     for (final match in codeRegex.allMatches(text)) {
       if (match.start > lastMatchEnd) {
@@ -112,22 +111,22 @@ class _TestQuestionsState extends State<TestQuestions> {
             children: [
               Expanded(
                 child: ListView.builder(
-                  padding: const EdgeInsets.all(16),
+                  padding: const .all(16),
                   itemCount: questions.length,
                   itemBuilder: (context, index) {
                     final q = questions[index];
                     final options = List<String>.from(q["options"]);
 
                     return Card.outlined(
-                      margin: const EdgeInsets.only(bottom: 16),
+                      margin: const .only(bottom: 16),
                       child: Padding(
-                        padding: const EdgeInsets.all(20),
+                        padding: const .all(20),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: .start,
                           spacing: 8,
                           children: [
                             Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment: .start,
                               spacing: 8,
                               children: [
                                 Text(
@@ -140,7 +139,7 @@ class _TestQuestionsState extends State<TestQuestions> {
                               ],
                             ),
                             Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment: .start,
                               spacing: 8,
                               children: options.map((opt) {
                                 return RadioListTile<String>(
@@ -152,7 +151,7 @@ class _TestQuestionsState extends State<TestQuestions> {
                                     );
                                   },
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
+                                    borderRadius: .circular(12),
                                   ),
                                   title: _buildStyledText(
                                     context,
@@ -171,7 +170,7 @@ class _TestQuestionsState extends State<TestQuestions> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(16),
+                padding: const .all(16),
                 child: FilledButton.icon(
                   icon: _isSubmitting
                       ? const SizedBox(
@@ -185,10 +184,8 @@ class _TestQuestionsState extends State<TestQuestions> {
                       ? null
                       : () => _handleSubmission(questions),
                   style: FilledButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    minimumSize: const Size(double.infinity, 48),
+                    shape: RoundedRectangleBorder(borderRadius: .circular(12)),
+                    minimumSize: const Size(.infinity, 48),
                   ),
                 ),
               ),

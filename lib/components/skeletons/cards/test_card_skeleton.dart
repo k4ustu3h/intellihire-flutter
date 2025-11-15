@@ -10,28 +10,28 @@ class TestCardSkeleton extends StatelessWidget {
     final primaryColor = theme.colorScheme.primary;
 
     return Card.outlined(
-      margin: const EdgeInsets.only(bottom: 16),
+      margin: const .only(bottom: 16),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const .all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: .start,
+          mainAxisSize: .min,
           spacing: 8,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: .spaceBetween,
               children: [
                 Container(
                   width: 48,
                   height: 48,
                   decoration: BoxDecoration(
                     color: secondaryColor,
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: .circular(8),
                   ),
                 ),
                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: .end,
+                  mainAxisSize: .min,
                   spacing: 6,
                   children: [
                     Container(width: 180, height: 24, color: secondaryColor),
@@ -40,29 +40,29 @@ class TestCardSkeleton extends StatelessWidget {
               ],
             ),
             Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: .start,
+              mainAxisSize: .min,
               spacing: 4,
               children: List.generate(
                 2,
                 (_) => Container(
-                  width: double.infinity,
+                  width: .infinity,
                   height: 12,
                   color: secondaryColor,
                 ),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(bottom: 4, top: 8),
+              padding: const .only(bottom: 4, top: 8),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: .spaceBetween,
                 children: [
                   Container(
                     width: 60,
                     height: 32,
                     decoration: BoxDecoration(
                       color: secondaryColor,
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: .circular(8),
                     ),
                   ),
                   Container(
@@ -70,7 +70,7 @@ class TestCardSkeleton extends StatelessWidget {
                     height: 40,
                     decoration: BoxDecoration(
                       color: primaryColor,
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: .circular(20),
                     ),
                   ),
                 ],

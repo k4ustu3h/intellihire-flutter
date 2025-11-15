@@ -25,7 +25,7 @@ class MyScores extends StatelessWidget {
     final Map<String, double> averageScores = {};
     scoreMap.forEach((testId, values) {
       final average = values.reduce((a, b) => a + b) / values.length;
-      averageScores[testId] = double.parse(average.toStringAsFixed(1));
+      averageScores[testId] = .parse(average.toStringAsFixed(1));
     });
     return averageScores;
   }
@@ -75,7 +75,7 @@ class MyScores extends StatelessWidget {
           return ListView(
             children: [
               Padding(
-                padding: const EdgeInsets.all(16),
+                padding: const .all(16),
                 child: TestAverageChart(
                   scores: averageScores,
                   groupedScores: groupedScores,
@@ -102,16 +102,14 @@ class MyScores extends StatelessWidget {
                       color: color,
                     ),
                     label: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: .spaceBetween,
                       children: [
-                        Expanded(
-                          child: Text(title, overflow: TextOverflow.ellipsis),
-                        ),
+                        Expanded(child: Text(title, overflow: .ellipsis)),
                         Text(
                           "${average.toStringAsFixed(1)}%",
                           style: theme.textTheme.titleMedium!.copyWith(
                             color: color,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: .bold,
                           ),
                         ),
                       ],

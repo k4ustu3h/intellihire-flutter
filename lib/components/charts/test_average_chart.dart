@@ -31,23 +31,23 @@ class _TestAverageChartState extends State<TestAverageChart> {
 
     return Card.outlined(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const .all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: .center,
           spacing: 16,
           children: [
             Text(
               "Average Score by Test",
               style: theme.textTheme.titleLarge,
-              textAlign: TextAlign.center,
+              textAlign: .center,
             ),
             SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
+              scrollDirection: .horizontal,
               child: SizedBox(
                 width: totalWidth < screenWidth ? screenWidth : totalWidth,
                 height: 300,
                 child: Padding(
-                  padding: const EdgeInsets.all(16),
+                  padding: const .all(16),
                   child: TweenAnimationBuilder<double>(
                     duration: const Duration(milliseconds: 800),
                     curve: Curves.easeOutCubic,
@@ -58,7 +58,7 @@ class _TestAverageChartState extends State<TestAverageChart> {
                           .toList();
                       return BarChart(
                         BarChartData(
-                          barGroups: List.generate(titles.length, (index) {
+                          barGroups: .generate(titles.length, (index) {
                             final value = animatedValues[index];
                             final isPassed =
                                 widget.scores[titles[index]]! >= 80.0;
@@ -73,7 +73,7 @@ class _TestAverageChartState extends State<TestAverageChart> {
                                   toY: value,
                                   color: color,
                                   width: 24,
-                                  borderRadius: BorderRadius.circular(6),
+                                  borderRadius: .circular(6),
                                 ),
                               ],
                               showingTooltipIndicators: const [0],
@@ -108,14 +108,14 @@ class _TestAverageChartState extends State<TestAverageChart> {
                                   final rawTestId = titles[index];
                                   final label = labelForCode(rawTestId);
                                   return Padding(
-                                    padding: const EdgeInsets.only(top: 8),
+                                    padding: const .only(top: 8),
                                     child: SizedBox(
                                       width: 60,
                                       child: Text(
                                         label,
                                         style: theme.textTheme.labelSmall,
-                                        textAlign: TextAlign.center,
-                                        overflow: TextOverflow.ellipsis,
+                                        textAlign: .center,
+                                        overflow: .ellipsis,
                                         maxLines: 2,
                                       ),
                                     ),
@@ -130,8 +130,8 @@ class _TestAverageChartState extends State<TestAverageChart> {
                             touchTooltipData: BarTouchTooltipData(
                               getTooltipColor: (_) =>
                                   theme.colorScheme.surfaceContainerHighest,
-                              tooltipPadding: const EdgeInsets.all(8),
-                              tooltipBorderRadius: BorderRadius.circular(8),
+                              tooltipPadding: const .all(8),
+                              tooltipBorderRadius: .circular(8),
                               getTooltipItem:
                                   (group, groupIndex, rod, rodIndex) {
                                     final rawTestId = titles[group.x];
@@ -140,7 +140,7 @@ class _TestAverageChartState extends State<TestAverageChart> {
                                       "$label\n${rod.toY.toStringAsFixed(1)}%",
                                       TextStyle(
                                         color: theme.colorScheme.onSurface,
-                                        fontWeight: FontWeight.bold,
+                                        fontWeight: .bold,
                                       ),
                                     );
                                   },

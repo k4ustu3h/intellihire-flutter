@@ -84,7 +84,7 @@ class TestService {
           ),
           backgroundColor: backgroundColor,
           duration: Duration(seconds: 5),
-          behavior: SnackBarBehavior.floating,
+          behavior: .floating,
         ),
       );
       Navigator.of(context).pop();

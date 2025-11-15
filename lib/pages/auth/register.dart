@@ -143,11 +143,11 @@ class _RegisterState extends State<Register> {
 
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(MediaQuery.of(context).padding.top),
+        preferredSize: .fromHeight(MediaQuery.of(context).padding.top),
         child: SizedBox(height: MediaQuery.of(context).padding.top),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const .all(16),
         child: Form(
           key: _formKey,
           child: Column(
@@ -178,17 +178,15 @@ class _RegisterState extends State<Register> {
                       )
                     : const Text("Sign Up"),
                 style: FilledButton.styleFrom(
-                  minimumSize: const Size(double.infinity, 48),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                  minimumSize: const Size(.infinity, 48),
+                  shape: RoundedRectangleBorder(borderRadius: .circular(12)),
                 ),
               ),
               Row(
                 children: const [
                   Expanded(child: Divider()),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    padding: .symmetric(horizontal: 10),
                     child: Text("Or", style: TextStyle(color: Colors.grey)),
                   ),
                   Expanded(child: Divider()),
@@ -200,10 +198,8 @@ class _RegisterState extends State<Register> {
                   label: Text(button["label"]),
                   onPressed: () {},
                   style: FilledButton.styleFrom(
-                    minimumSize: const Size(double.infinity, 48),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
+                    minimumSize: const Size(.infinity, 48),
+                    shape: RoundedRectangleBorder(borderRadius: .circular(12)),
                   ),
                 );
               }),

@@ -13,19 +13,19 @@ class TestCard extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Card.outlined(
-      margin: const EdgeInsets.only(bottom: 16),
+      margin: const .only(bottom: 16),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const .all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           spacing: 8,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: .spaceBetween,
               children: [
                 EntityLogo.test(test: test),
                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                  crossAxisAlignment: .end,
                   children: [
                     Text(
                       test["title"] as String,
@@ -39,14 +39,14 @@ class TestCard extends StatelessWidget {
               test["description"] as String,
               style: theme.textTheme.bodySmall,
               maxLines: 3,
-              overflow: TextOverflow.ellipsis,
+              overflow: .ellipsis,
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: .spaceBetween,
               children: [
                 Chip(
                   backgroundColor: theme.colorScheme.secondaryContainer,
-                  side: BorderSide.none,
+                  side: .none,
                   iconTheme: IconThemeData(
                     color: theme.colorScheme.onSecondaryContainer,
                   ),

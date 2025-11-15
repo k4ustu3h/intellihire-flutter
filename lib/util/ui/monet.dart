@@ -7,7 +7,7 @@ const _brandSeedColor = Colors.blueAccent;
 final _lightColorScheme = ColorScheme.fromSeed(seedColor: _brandSeedColor);
 final _darkColorScheme = ColorScheme.fromSeed(
   seedColor: _brandSeedColor,
-  brightness: Brightness.dark,
+  brightness: .dark,
 );
 
 Widget monet({
@@ -22,12 +22,12 @@ Widget monet({
       if (lightDynamic != null && darkDynamic != null) {
         lightScheme = ColorScheme.fromSeed(
           seedColor: Color(lightDynamic.primary.toARGB32()),
-          brightness: Brightness.light,
+          brightness: .light,
         ).harmonized();
 
         darkScheme = ColorScheme.fromSeed(
           seedColor: Color(darkDynamic.primary.toARGB32()),
-          brightness: Brightness.dark,
+          brightness: .dark,
         ).harmonized();
       }
       return builder(
@@ -51,7 +51,7 @@ ThemeData _buildTheme(ColorScheme baseScheme) {
 
   final buttonShape = WidgetStateProperty.resolveWith<OutlinedBorder>((states) {
     final radius = states.contains(WidgetState.pressed) ? 8.0 : 24.0;
-    return RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius));
+    return RoundedRectangleBorder(borderRadius: .circular(radius));
   });
 
   final switchTheme = SwitchThemeData(

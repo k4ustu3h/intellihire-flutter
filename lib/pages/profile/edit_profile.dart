@@ -71,9 +71,7 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   Future<void> _pickAndUploadImage() async {
-    final pickedFile = await ImagePicker().pickImage(
-      source: ImageSource.gallery,
-    );
+    final pickedFile = await ImagePicker().pickImage(source: .gallery);
     if (pickedFile == null) return;
 
     setState(() {
@@ -162,7 +160,7 @@ class _EditProfileState extends State<EditProfile> {
     if (_isLoading) return const Center(child: LoadingIndicator());
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      crossAxisAlignment: .stretch,
       children: [
         ProfileField(
           controller: _firstNameController,
@@ -205,7 +203,7 @@ class _EditProfileState extends State<EditProfile> {
           controller: _phoneNumberController,
           label: "Phone Number",
           icon: Symbols.phone_rounded,
-          keyboardType: TextInputType.phone,
+          keyboardType: .phone,
           enabled: !isBusy,
         ),
         ProfileField(
@@ -241,15 +239,13 @@ class _EditProfileState extends State<EditProfile> {
       appBar: AppBar(
         actions: [
           Padding(
-            padding: const EdgeInsets.only(right: 16),
+            padding: const .only(right: 16),
             child: FilledButton.icon(
               icon: const Icon(Symbols.save_rounded),
               label: const Text("Save Profile"),
               onPressed: isBusy || _isLoading ? null : _saveProfile,
               style: const ButtonStyle(
-                padding: WidgetStatePropertyAll(
-                  EdgeInsets.symmetric(horizontal: 16),
-                ),
+                padding: WidgetStatePropertyAll(.symmetric(horizontal: 16)),
               ),
             ),
           ),
@@ -257,15 +253,15 @@ class _EditProfileState extends State<EditProfile> {
         title: const Text("Edit Profile"),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: const .all(16),
         child: Form(
           key: _formKey,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment: .stretch,
             children: [
               Center(
                 child: Padding(
-                  padding: const EdgeInsets.only(bottom: 24),
+                  padding: const .only(bottom: 24),
                   child: Stack(
                     children: [
                       Heroine(

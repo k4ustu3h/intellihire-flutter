@@ -15,12 +15,12 @@ class JobsSkeleton extends StatelessWidget {
     return Skeletonizer(
       enabled: true,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           if (chips) ...[
             SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+              scrollDirection: .horizontal,
+              padding: const .symmetric(horizontal: 16, vertical: 4),
               child: Row(
                 spacing: 8,
                 children: const [
@@ -31,7 +31,7 @@ class JobsSkeleton extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+              padding: const .symmetric(horizontal: 16, vertical: 4),
               child: Text(
                 "Showing 00 of 00 jobs.",
                 style: theme.textTheme.bodySmall,
@@ -40,7 +40,7 @@ class JobsSkeleton extends StatelessWidget {
           ],
           Expanded(
             child: ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const .symmetric(horizontal: 16),
               itemCount: 5,
               itemBuilder: (context, index) => const JobCardSkeleton(),
             ),

@@ -79,7 +79,7 @@ class EntityLogo extends StatelessWidget {
       height: size,
       decoration: BoxDecoration(
         color: iconBackground,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: .circular(8),
       ),
       child: Center(
         child: SizedBox(
@@ -98,7 +98,7 @@ class EntityLogo extends StatelessWidget {
       height: size,
       decoration: BoxDecoration(
         color: iconBackground,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: .circular(8),
       ),
       child: Icon(fallbackIcon, color: iconForeground, size: size * 0.6),
     );
@@ -108,16 +108,16 @@ class EntityLogo extends StatelessWidget {
     }
 
     return ClipRRect(
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: .circular(8),
       child: Container(
         width: size,
         height: size,
         color: iconBackground,
         child: Padding(
-          padding: EdgeInsets.all(size * 0.167), // ~8px for 48px
+          padding: .all(size * 0.167), // ~8px for 48px
           child: SvgPicture.network(
             svgUrl,
-            fit: BoxFit.contain,
+            fit: .contain,
             placeholderBuilder: (context) => loadingIndicator,
             errorBuilder: (context, error, stackTrace) => errorIconPlaceholder,
           ),

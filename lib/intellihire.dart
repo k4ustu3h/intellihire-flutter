@@ -22,10 +22,8 @@ class IntelliHire extends StatelessWidget {
               theme: lightTheme(lightDynamic),
               darkTheme: darkTheme(darkDynamic),
               themeMode: useDynamicTheme
-                  ? ThemeMode.system
-                  : (themeController.useDarkMode
-                        ? ThemeMode.dark
-                        : ThemeMode.light),
+                  ? .system
+                  : (themeController.useDarkMode ? .dark : .light),
               navigatorObservers: [HeroineController()],
               home: AuthGate(themeController: themeController),
             );

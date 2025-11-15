@@ -64,7 +64,7 @@ class _JobDetailsState extends State<JobDetails> {
     final theme = Theme.of(context);
     return Text(
       title,
-      style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+      style: theme.textTheme.titleLarge?.copyWith(fontWeight: .bold),
     );
   }
 
@@ -73,7 +73,7 @@ class _JobDetailsState extends State<JobDetails> {
 
   Widget _buildCard({required Widget child}) {
     return Card.outlined(
-      child: Padding(padding: const EdgeInsets.all(20), child: child),
+      child: Padding(padding: const .all(20), child: child),
     );
   }
 
@@ -93,7 +93,7 @@ class _JobDetailsState extends State<JobDetails> {
     final defaultColor = colorToHex(theme.colorScheme.onSecondaryContainer);
 
     final headlineStyle = theme.textTheme.headlineSmall?.copyWith(
-      fontWeight: FontWeight.bold,
+      fontWeight: .bold,
     );
     final titleMediumStyle = theme.textTheme.titleMedium?.copyWith(
       color: theme.colorScheme.primary,
@@ -113,9 +113,9 @@ class _JobDetailsState extends State<JobDetails> {
         ],
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: const .all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: .stretch,
           spacing: 16,
           children: [
             _buildCard(
@@ -123,19 +123,19 @@ class _JobDetailsState extends State<JobDetails> {
                 spacing: 20,
                 children: [
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: .start,
                     spacing: 16,
                     children: [
                       EntityLogo.company(job: job),
                       Expanded(
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
+                          crossAxisAlignment: .end,
                           spacing: 4,
                           children: [
                             Text(
                               job["jobTitle"] ?? "Untitled",
                               style: headlineStyle,
-                              textAlign: TextAlign.end,
+                              textAlign: .end,
                             ),
                             Text(
                               job["companyName"] ?? "",
@@ -179,7 +179,7 @@ class _JobDetailsState extends State<JobDetails> {
             if (job["description"] != null)
               _buildCard(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: .start,
                   spacing: 12,
                   children: [
                     _sectionTitle(context, "Job Description"),
@@ -191,7 +191,7 @@ class _JobDetailsState extends State<JobDetails> {
             if (skills.isNotEmpty)
               _buildCard(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: .start,
                   spacing: 12,
                   children: [
                     _sectionTitle(context, "Skills Required"),
@@ -201,7 +201,7 @@ class _JobDetailsState extends State<JobDetails> {
                         final label = labelForCode(skill);
                         return Chip(
                           backgroundColor: theme.colorScheme.secondaryContainer,
-                          side: BorderSide.none,
+                          side: .none,
                           avatar: SvgPicture.network(
                             "https://cdn.simpleicons.org/$skill/$defaultColor",
                             width: 18,
@@ -222,7 +222,7 @@ class _JobDetailsState extends State<JobDetails> {
 
             _buildCard(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: .start,
                 spacing: 16,
                 children: [
                   _sectionTitle(context, "Job Information"),
@@ -230,20 +230,20 @@ class _JobDetailsState extends State<JobDetails> {
                     children: [
                       Expanded(
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: .start,
                           spacing: 4,
                           children: [
                             Text(
                               "Job Type",
                               style: theme.textTheme.titleSmall!.copyWith(
-                                fontWeight: FontWeight.w600,
+                                fontWeight: .w600,
                                 color: onSurfaceVariant,
                               ),
                             ),
                             Text(
                               jobType ?? "Not specified",
                               style: theme.textTheme.bodyLarge?.copyWith(
-                                fontWeight: FontWeight.w500,
+                                fontWeight: .w500,
                               ),
                             ),
                           ],
@@ -252,13 +252,13 @@ class _JobDetailsState extends State<JobDetails> {
                       if (!isRemote)
                         Expanded(
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            crossAxisAlignment: .start,
                             spacing: 4,
                             children: [
                               Text(
                                 "Location",
                                 style: theme.textTheme.titleSmall!.copyWith(
-                                  fontWeight: FontWeight.w600,
+                                  fontWeight: .w600,
                                   color: onSurfaceVariant,
                                 ),
                               ),
@@ -275,7 +275,7 @@ class _JobDetailsState extends State<JobDetails> {
                                       locationText,
                                       style: theme.textTheme.titleSmall!
                                           .copyWith(
-                                            fontWeight: FontWeight.w600,
+                                            fontWeight: .w600,
                                             color: onSurface,
                                           ),
                                     ),

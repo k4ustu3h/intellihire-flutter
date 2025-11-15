@@ -60,7 +60,7 @@ class _BookmarksState extends State<Bookmarks> {
           : bookmarkedJobs.isEmpty
           ? const Center(child: Text("No bookmarked jobs found."))
           : ListView.separated(
-              padding: const EdgeInsets.all(16),
+              padding: const .all(16),
               itemCount: bookmarkedJobs.length,
               separatorBuilder: (_, _) => const SizedBox(height: 12),
               itemBuilder: (_, index) => JobCard(job: bookmarkedJobs[index]),

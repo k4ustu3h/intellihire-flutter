@@ -29,7 +29,7 @@ class _TestsState extends State<Tests> {
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: _testsFuture,
         builder: (context, snapshot) {
-          final isLoading = snapshot.connectionState == ConnectionState.waiting;
+          final isLoading = snapshot.connectionState == .waiting;
           final tests = snapshot.data ?? [];
 
           if (snapshot.hasError) {
